@@ -1,0 +1,85 @@
+<?php
+if ($itemData->singleItemUrl) :
+    $aUrlBegin = '<a href="' . $itemData->singleItemUrl . '">';
+    $aUrlEnd   = '</a>';
+else :
+    $aUrlBegin = '';
+    $aUrlEnd   = '';
+endif;
+
+// trailer have often pictures with white background
+if ($allData->itemType == 'engine' || $allData->itemType == 'trailer') :
+    $addBorder = ' border';
+else :
+    $addBorder = '';
+endif; ?>
+<div class="yachtino-tiles-item">
+    <div class="yachtino-tiles-item-image<?php echo $addBorder; ?>"><?php
+echo $aUrlBegin; ?><img src="<?php echo esc_url($itemData->pics[0]['url']); ?>" decoding="async" loading="lazy" alt=""><?php echo $aUrlEnd; ?></div>
+    <div class="yachtino-tiles-item-data<?php echo $addBorder; ?>">
+        <h3 class="yachtino-tiles-item-title"><?php echo $aUrlBegin . $itemData->model . $aUrlEnd; ?></h3>
+<?php
+if ($allData->itemType == 'cboat') : ?>
+        <div class="yachtino-tiles-item-line-c"><?php echo $itemData->singlePoints['lying']; ?></div>
+        <div class="yachtino-tiles-item-line">
+            <div><?php echo $itemData->singlePoints['yearBuilt']; ?></div>
+            <div><?php echo $itemData->singlePoints['length']; ?></div>
+        </div>
+        <div class="yachtino-tiles-item-line">
+            <div><?php echo $itemData->boatType; ?></div>
+            <div><?php echo $itemData->singlePoints['allCabins']; ?></div>
+        </div>
+        <div class="yachtino-tiles-item-line">
+            <div><?php echo $itemData->singlePoints['price']; ?></div>
+            <div><?php echo $itemData->singlePoints['discount']; ?></div>
+        </div>
+<?php
+elseif ($allData->itemType == 'sboat') : ?>
+        <div class="yachtino-tiles-item-line-c"><?php echo $itemData->singlePoints['specLine']; ?></div>
+        <div class="yachtino-tiles-item-line">
+            <div><?php echo $itemData->singlePoints['yearBuilt']; ?></div>
+            <div><?php echo $itemData->singlePoints['length']; ?></div>
+        </div>
+        <div class="yachtino-tiles-item-line">
+            <div><?php
+    if ($itemData->priceOld) : ?>
+            <span class="yachtino-list-price-old"><?php echo $itemData->priceOld; ?></span>
+<?php
+    endif; ?>
+            <span class="yachtino-tiles-item-price"><?php echo $itemData->price; ?></span></div>
+            <div><?php echo $itemData->singlePoints['lying']; ?></div>
+        </div>
+<?php
+elseif ($allData->itemType == 'engine') : ?>
+        <div class="yachtino-tiles-item-line">
+            <div><?php echo $itemData->singlePoints['yearBuilt']; ?></div>
+            <div><?php echo $itemData->singlePoints['power']; ?></div>
+        </div>
+        <div class="yachtino-tiles-item-line">
+            <div><?php
+    if ($itemData->priceOld) : ?>
+            <span class="yachtino-list-price-old"><?php echo $itemData->priceOld; ?></span>
+<?php
+    endif; ?>
+            <span class="yachtino-tiles-item-price"><?php echo $itemData->price; ?></span></div>
+            <div><?php echo $itemData->singlePoints['lying']; ?></div>
+        </div>
+<?php
+elseif ($allData->itemType == 'trailer') : ?>
+        <div class="yachtino-tiles-item-line">
+            <div><?php echo $itemData->singlePoints['yearBuilt']; ?></div>
+            <div><?php echo $itemData->singlePoints['length']; ?></div>
+        </div>
+        <div class="yachtino-tiles-item-line">
+            <div><?php
+    if ($itemData->priceOld) : ?>
+            <span class="yachtino-list-price-old"><?php echo $itemData->priceOld; ?></span>
+<?php
+    endif; ?>
+            <span class="yachtino-tiles-item-price"><?php echo $itemData->price; ?></span></div>
+            <div><?php echo $itemData->singlePoints['lying']; ?></div>
+        </div>
+<?php
+endif; ?>
+    </div>
+</div>

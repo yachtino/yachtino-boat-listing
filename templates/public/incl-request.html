@@ -1,0 +1,134 @@
+<div class="yachtino-request-wrapper">
+    <div class="yachtino-request">
+        <h2><?php echo $requestData->translation['headline']; ?></h2>
+        <div class="yachtino-request-flex">
+            <div class="yachtino-request-details"><?php
+if (!empty($requestData->userData['logo'])) : ?>
+                <img src="<?php echo esc_url($requestData->userData['logo']); ?>" alt="Logo"><br><br>
+<?php
+endif;
+foreach ($requestData->userData['data'] as $row) : ?>
+                <div class="yachtino-request-details-row">
+                    <div class="yachtino-request-details-row-name"><?php echo $row['name']; ?>:</div>
+                    <div class="yachtino-request-details-row-value"><?php echo $row['value']; ?></div>
+                </div>
+<?php
+endforeach;
+if (!empty($requestData->userData['web'])) : ?>
+                <div class="yachtino-request-details-row">
+                    <div class="yachtino-request-details-row-name"></div>
+                    <div class="yachtino-request-details-row-value"><?php echo $requestData->userData['web']; ?></div>
+                </div>
+<?php
+endif; ?>
+            </div>
+            <div id="yachtino-request-form-box">
+            <a id="yo-request" name="yo-request"></a>
+                <div class="yachtino-msgbox yachtino-msgbox-err yachtino-hidden" id="yachtino-request-msgbox-err"><?php echo $requestData->translation['fieldsRequired']; ?></div>
+                <div class="yachtino-msgbox yachtino-msgbox-ok yachtino-hidden" id="yachtino-request-msgbox-ok"><?php echo $requestData->translation['emailSent']; ?></div>
+                <form id="yachtino-request-form">
+                    <input type="hidden" id="yachtino-reqfield-itid" value="<?php echo esc_attr($requestData->itemId); ?>">
+                    <input type="hidden" id="yachtino-reqfield-itemtype" value="<?php echo esc_attr($requestData->itemType); ?>">
+                    <input type="hidden" id="yachtino-reqfield-lg" value="<?php echo esc_attr($requestData->language); ?>">
+                    <div class="yachtino-request-error">
+                        <?php echo $requestData->translation['fieldsRequired']; ?>
+                    </div>
+                    <div class="yachtino-request-row required">
+                        <div class="yachtino-request-row-name"><label for="yachtino-reqfield-cname" id="l-yachtino-reqfield-cname"><?php
+                        echo $requestData->translation['cname']; ?></label></div>
+                        <div class="yachtino-request-row-value">
+                            <input type="text" id="yachtino-reqfield-cname" required>
+                        </div>
+                    </div>
+                    <div class="yachtino-request-row required">
+                        <div class="yachtino-request-row-name"><label for="yachtino-reqfield-cemail" id="l-yachtino-reqfield-cemail"><?php
+                        echo $requestData->translation['cemail']; ?></label></div>
+                        <div class="yachtino-request-row-value">
+                            <input type="email" id="yachtino-reqfield-cemail" required>
+                        </div>
+                    </div>
+                    <div class="yachtino-request-row">
+                        <div class="yachtino-request-row-name"><label for="yachtino-reqfield-cphone" id="l-yachtino-reqfield-cphone"><?php
+                        echo $requestData->translation['cphone']; ?></label></div>
+                        <div class="yachtino-request-row-value">
+                            <input type="text" id="yachtino-reqfield-cphone">
+                        </div>
+                    </div>
+                    <div class="yachtino-request-row">
+                        <div class="yachtino-request-row-name"><label for="yachtino-reqfield-caddress" id="l-yachtino-reqfield-caddress"><?php
+                        echo $requestData->translation['caddress']; ?></label></div>
+                        <div class="yachtino-request-row-value">
+                            <input type="text" id="yachtino-reqfield-caddress">
+                        </div>
+                    </div>
+                    <div class="yachtino-request-row">
+                        <div class="yachtino-request-row-name"><label for="yachtino-reqfield-ccity" id="l-yachtino-reqfield-ccity"><?php
+                        echo $requestData->translation['cpostcode']; ?> / <?php echo $requestData->translation['ccity']; ?></label></div>
+                        <div class="yachtino-request-row-value">
+                            <input type="text" class="yachtino-request-field-postcode" id="yachtino-reqfield-cpostcode"> <input type="text" class="yachtino-request-field-city" id="yachtino-reqfield-ccity">
+                        </div>
+                    </div>
+                    <div class="yachtino-request-row required">
+                        <div class="yachtino-request-row-name"><label for="yachtino-reqfield-ccountry" id="l-yachtino-reqfield-ccountry"><?php
+                        echo $requestData->translation['ccountry']; ?></label></div>
+                        <div class="yachtino-request-row-value">
+                            <select id="yachtino-reqfield-ccountry" required>
+                            <option value="">------------------</option>
+<?php
+foreach ($requestData->editOptions['ccountry'] as $row) : ?>
+    <option value="<?php echo esc_attr($row->id); ?>"><?php echo str_replace('&', '&amp;', $row->name); ?></option>
+<?php
+endforeach; ?></select>
+                        </div>
+                    </div>
+<?php
+if ($requestData->itemType == 'cboat') : ?>
+                    <div class="yachtino-request-row">
+                        <div class="yachtino-request-row-name"><label for="yachtino-reqfield-caddress" id="l-yachtino-reqfield-caddress"><?php
+                        echo $requestData->translation['chTime']; ?></label></div>
+                        <div class="yachtino-request-row-value">
+                            <input type="text" id="yachtino-reqfield-datef" class="yachtino-request-field-date1" placeholder="<?php
+                        echo esc_attr($requestData->translation['datef']); ?>" required>
+                            <input type="text" id="yachtino-reqfield-datet" class="yachtino-request-field-date2" placeholder="<?php
+                        echo esc_attr($requestData->translation['datet']); ?>" required>
+                        </div>
+                    </div>
+<?php
+endif; ?>
+                    <div class="yachtino-request-row required">
+                        <div class="yachtino-request-row-name"><label for="yachtino-reqfield-ctext" id="l-yachtino-reqfield-ctext"><?php
+                        echo $requestData->translation['ctext']; ?></label></div>
+                        <div class="yachtino-request-row-value">
+                            <textarea id="yachtino-reqfield-ctext" required></textarea>
+                        </div>
+                    </div>
+                    <div class="yachtino-request-row">
+                        <div class="yachtino-request-row-name" style="opacity: 0;"></div>
+                        <div class="yachtino-request-row-value">
+                            <input type="submit" id="yachtino-request-submit" value="<?php echo esc_attr($requestData->translation['sendRequest']); ?>">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+if ($requestData->itemType == 'cboat') : ?>
+<script type="text/javascript">
+window.onload = function()
+{
+    jQuery.datepicker.setDefaults(jQuery.datepicker.regional['<?php echo $requestData->language; ?>']);
+    jQuery('body').on('focus', '#yachtino-reqfield-datef, #yachtino-reqfield-datet', function() {
+        jQuery(this).datepicker({
+            minDate: '0',
+            maxDate: '+2Y',
+            dateFormat: '<?php echo $requestData->jsDateFormat; ?>',
+            firstDay: 1,
+            changeFirstDay: false
+        });
+    });
+}
+</script>
+<?php
+endif; ?>

@@ -1,0 +1,1214 @@
+/**
+ * Yachtino boat listing - WordPress plugin.
+ * @author      Yachtino
+ * @package     yachtino
+ */
+div.yachtino-article-wrapper {
+    width: 100%;
+    display: block;
+}
+
+div.yachtino-discounts-wrapper {
+    width: 100%;
+    height: 100%;
+    border: 1px solid #ffcdcd;
+    background-color: #ffefef;
+    padding: 5px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    color: #831c1c;
+}
+
+div.yachtino-discounts-wrapper h2 {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+div.yachtino-discounts-wrapper h3 {
+    margin: 0 0 5px 0;
+    padding: 0;
+    width: 100%;
+    font-size: 14px;
+    font-weight: 600;
+    color: #831c1c;
+}
+div.yachtino-discounts-constraint {
+    color: #000;
+    margin-bottom: 5px;
+}
+
+/* ######### right part of detail view ###################################### */
+
+div.yachtino-article-wrapper div.yachtino-image-wrapper {
+    width: calc(50% - 10px);
+    height: 100%;
+    margin-left: 10px;
+    padding: 5px 0 5px 5px;
+    float: right;
+}
+
+/* ########### article detail view ########################################### */
+
+div.yachtino-article-wrapper div.yachtino-detail-wrapper {
+    width: calc(50% - 5px);
+    height: 100%;
+    margin: 5px 5px 5px 0;
+    float: left;
+}
+
+div.yachtino-article-wrapper div.yachtino-detail-wrapper div.yachtino-detail-block {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+div.yachtino-detail-block div.yachtino-detail-row {
+    display: flex;
+    width: 100%;
+    margin-top: 5px;
+    float: left;
+    font-size: 13px;
+}
+
+div.yachtino-detail-block div.yachtino-detail-row.highlight div.yachtino-detail-row-value {
+    color: #ef9900;
+}
+
+div.yachtino-detail-block div.yachtino-detail-row div.yachtino-detail-row-value span.highlight {
+    color: #c00000;
+}
+
+div.yachtino-detail-block div.yachtino-detail-row div.yachtino-detail-row-value span.yachtino-old-price {
+    color: #000;
+    text-decoration: line-through;
+    font-weight: 400;
+    margin-right: 3px;
+}
+
+div.yachtino-detail-row.highlight div.yachtino-detail-row-value {
+    white-space: nowrap;
+}
+
+div.yachtino-detail-row.highlight div.yachtino-detail-row-value span.yachtino-add-to-price {
+    color: #000;
+    font-size: 0.95em;
+    white-space: normal;
+    font-weight: 400;
+}
+
+div.yachtino-detail-block div.yachtino-detail-row.bold div.yachtino-detail-row-value,
+div.yachtino-detail-block div.yachtino-detail-row div.yachtino-detail-row-value span.bold {
+    font-weight: 600;
+}
+
+div.yachtino-detail-block div.yachtino-detail-row:first-child {
+    margin-top: 0;
+}
+
+div.yachtino-detail-row div.yachtino-detail-row-name {
+    width: 60%;
+    margin-left: 5px;
+}
+
+div.yachtino-detail-row div.yachtino-detail-row-name:after {
+    content: ':';
+}
+
+div.yachtino-detail-row div.yachtino-detail-row-value {
+    width: calc(40% - 5px);
+    margin-right: 5px;
+    text-align: left;
+    word-wrap: normal;
+    white-space: revert;
+}
+
+div.yachtino-article-wrapper div.yachtino-detail-wrapper h2 {
+    margin: 25px 0 0 0;
+    padding: 0;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+div.yachtino-article-wrapper div.yachtino-detail-wrapper h2:first-child {
+    margin-top: 0;
+}
+
+div.yachtino-equipment-trailer {
+    display: block;
+    width: 100%;
+    height: 100%;
+    margin-top: 15px;
+}
+
+div.yachtino-equipment-wrapper div {
+    margin: 0;
+    padding: 0;
+    display: block;
+}
+
+div.yachtino-equipment-wrapper {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin-top: 15px;
+}
+
+div.yachtino-equipment {
+    width: calc(100% - 30px);
+    height: calc(100% - 30px);
+}
+
+div.yachtino-equipment .eqhead {
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+div.yachtino-equipment div.yachtino-equipment-item-wrapper {
+    width: 100%;
+    height: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+div.yachtino-equipment div.yachtino-equipment-item-wrapper:last-child {
+    margin-bottom: 0;
+}
+
+div.yachtino-equipment div.yachtino-equipment-item-wrapper h3 {
+    margin: 0;
+    padding: 0;
+    font-weight: bold;
+    font-size: 14px;
+    color: #9e9e9e;
+    display: flex;
+}
+
+div.yachtino-equipment-item-wrapper div.yachtino-equipment-item-text {
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    padding-top: 5px;
+}
+
+div.yachtino-equipment.ajax-toggler h2 span {
+    font-size: 12px;
+    padding-left: 5px;
+    cursor: pointer;
+}
+
+div.yachtino-equipment.ajax-toggler div.yachtino-equipment-item-wrapper h3 {
+    cursor: pointer;
+}
+
+div.yachtino-equipment.ajax-toggler div.yachtino-equipment-item-wrapper h3:before {
+    content: ':: ';
+    padding-right: 5px;
+}
+
+div.yachtino-equipment.ajax-toggler div.yachtino-equipment-item-wrapper div.yachtino-equipment-item-text {
+    display: none;
+}
+
+/* ############ customer request ########################################### */
+
+div.yachtino-request-wrapper {
+    width: 100%;
+    height: 100%;
+    margin-top: 15px;
+}
+
+div.yachtino-request-wrapper div {
+    margin: 0;
+    padding: 0;
+}
+
+div.yachtino-request-wrapper div.yachtino-request {
+    width: 100%;
+    height: 100%;
+}
+
+div.yachtino-request-wrapper div.yachtino-request h2 {
+    padding: 0;
+    font-weight: bold;
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+div.yachtino-request div.yachtino-request-flex {
+    display: flex;
+}
+
+div.yachtino-request div.yachtino-request-flex div.yachtino-request-details {
+    flex: 0 0 50%;
+    height: 100%;
+}
+
+div.yachtino-request div.yachtino-request-flex #yachtino-request-form-box {
+    display: block;
+    flex: 0 0 50%;
+    height: 100%;
+}
+
+div.yachtino-request div.yachtino-request-flex.only-details,
+div.yachtino-request div.yachtino-request-flex.only-form {
+    display: block;
+}
+
+#yachtino-request-form-box div.yachtino-request-error {
+    padding: 8px;
+    display: block;
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
+    border-radius: 6px;
+    background-color: #bae9ff;
+    border: 1px solid #a0dcf8;
+}
+
+#yachtino-request-form-box div.yachtino-request-row {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    margin-top: 10px;
+}
+
+div.yachtino-request-row div.yachtino-request-row-name {
+    width: 50%;
+    font-size: 14px;
+    padding-top: 5px;
+}
+
+div.yachtino-request-row div.yachtino-request-row-name:after {
+    content: ':';
+}
+
+div.yachtino-request-row div.yachtino-request-row-value {
+    width: 50%;
+}
+
+div.yachtino-request-row div.yachtino-request-row-value input,
+div.yachtino-request-row div.yachtino-request-row-value textarea,
+div.yachtino-request-row div.yachtino-request-row-value select {
+    width: 100%;
+    padding: 0.875rem 10px;
+    margin: 0;
+    background-color: #fff;
+    border-radius: 2px;
+    box-shadow: none;
+    outline: 0;
+    font-weight: 400;
+    height: 35px !important;
+    transition: all 150ms ease-in-out;
+    color: #888;
+    border: 1px solid #888;
+}
+
+div.yachtino-request-row div.yachtino-request-row-value select {
+    padding: 0 10px;
+}
+
+div.yachtino-request-row div.yachtino-request-row-value input[type=text],
+div.yachtino-request-row div.yachtino-request-row-value select {
+    height: 30px;
+}
+
+div.yachtino-request-row div.yachtino-request-row-value textarea {
+    height: 100px;
+    max-height: 100px;
+    min-height: 100px;
+}
+
+div.yachtino-request-row div.yachtino-request-row-value input[type=text]:focus {
+    border: 1px solid #333;
+    color: #333;
+}
+
+#yachtino-request-form-box div.yachtino-request-row.required div.yachtino-request-row-name:after {
+    content: ' (*):';
+    color: red;
+}
+
+div.yachtino-request-row div.yachtino-request-row-value #yachtino-request-submit,
+#yachtino-searchform-submit {
+    text-decoration: none;
+    padding: 6px 12px 6px 12px;
+    margin: 0;
+    display: inline-block;
+    transition: all 250ms ease-in-out;
+    border-radius: 0.1875rem;
+    background-color: #e9e9e9;
+    color: #a3a4a5;
+    border: 1px solid #bbb;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+div.yachtino-request-row div.yachtino-request-row-value #yachtino-request-submit:hover,
+#yachtino-searchform-submit:hover {
+    border: 1px solid #bbb;
+    background-color: #d6d6d6;
+    color: #000;
+    font-size: inherit;
+}
+
+div.yachtino-request-row div.yachtino-request-row-value input[type=text].yachtino-request-field-postcode {
+    width: 33%;
+    float: left;
+}
+
+div.yachtino-request-row div.yachtino-request-row-value input[type=text].yachtino-request-field-city {
+    width: 63%;
+    float: right;
+}
+
+div.yachtino-request-row div.yachtino-request-row-value input[type=text].yachtino-request-field-date1 {
+    width: 48%;
+    float: left;
+}
+
+div.yachtino-request-row div.yachtino-request-row-value input[type=text].yachtino-request-field-date2 {
+    width: 48%;
+    float: right;
+}
+div.yachtino-request-details {
+    width: 100%;
+}
+
+div.yachtino-request div.yachtino-request-details-row {
+    width: 100%;
+    display: flex;
+    font-size: 14px;
+}
+
+div.yachtino-request-details-row-name {
+    width: 30%;
+}
+
+div.yachtino-request-details-row-value {
+    width: 70%;
+}
+
+/* special requests - transport, insurance, financing */
+#yachtino-specrequest-box {
+    margin: 0 0 20px 0;
+}
+#yachtino-specrequest-box .yachtino-specreq-mainbox {
+    display: flex;
+    max-width: 100%;
+    align-items: flex-start;
+    flex-wrap: nowrap;
+}
+#yachtino-specrequest-box .yachtino-specreq-mainbox > div:last-of-type {
+    margin-left: 15px;
+}
+
+#yachtino-specrequest-box h2 {
+    font-weight: 600;
+    font-size: 1.2em;
+    margin: 0;
+    padding: 0;
+}
+
+#yachtino-specrequest-box .yachtino-specreq-table {
+    display: table;
+    border-collapse: collapse;
+    margin: 10px 10px 0 0;
+}
+
+#yachtino-specrequest-box .yachtino-specreq-row {
+    display: table-row;
+}
+
+#yachtino-specrequest-box .yachtino-specreq-row > div {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#yachtino-specrequest-box .yachtino-specreq-row-value {
+    width: 200px;
+    min-width: 200px;
+}
+
+#yachtino-specrequest-box label,
+#yachtino-specrequest-box select,
+#yachtino-specrequest-box input[type=text] {
+    display: inline-block;
+    text-align: left;
+}
+#yachtino-specrequest-box label {
+    padding: 8px 5px 0 0;
+}
+
+#yachtino-specrequest-box select,
+#yachtino-specrequest-box input[type=text] {
+    height: 28px;
+    min-height: 28px !important;
+    padding: 5px 5px 5px 8px !important;
+}
+#yachtino-specrequest-box select,
+#yachtino-specrequest-box textarea,
+#yachtino-specrequest-box input[type=text] {
+    margin: 5px 0 0 0;
+}
+
+#yachtino-specrequest-box label,
+#yachtino-specrequest-box select,
+#yachtino-specrequest-box textarea,
+#yachtino-specrequest-box input[type=text] {
+    font-size: 13px !important;
+}
+
+#yachtino-specrequest-box .yachtino-specreq-field-postcode {
+    width: 33%;
+    float: left;
+}
+
+#yachtino-specrequest-box .yachtino-specreq-field-city {
+    width: 63%;
+    float: right;
+}
+
+#yachtino-specreqfield-advPay1, #yachtino-specreqfield-advPay2 {
+    width: calc(100% - 1.5em);
+}
+
+#yachtino-specrequest-submit {
+    margin-top: 15px;
+}
+
+/* buttons in detail view */
+div.yachtino-spec-request-one {
+    width: 250px;
+    cursor: pointer;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media screen and (max-width: 780px) {
+    #yachtino-specrequest-box .yachtino-specreq-row-value {
+        width: 150px;
+        min-width: 150px;
+    }
+}
+
+/* @media screen and (max-width: 680px) { */
+    /* #yachtino-specrequest-box .yachtino-specreq-row-value { */
+        /* width: 110px; */
+        /* min-width: 110px; */
+    /* } */
+/* } */
+
+@media screen and (max-width: 680px) {
+    #yachtino-specrequest-box .yachtino-specreq-mainbox {
+        flex-wrap: wrap;
+    }
+    #yachtino-specrequest-box .yachtino-specreq-mainbox > div:last-of-type {
+        margin-left: 0;
+    }
+    #yachtino-specrequest-box .yachtino-specreq-table {
+        display: block;
+        width: 100%;
+    }
+    #yachtino-specrequest-box .yachtino-specreq-row {
+        display: block;
+    }
+    #yachtino-specrequest-box .yachtino-specreq-row > div {
+        display: block;
+    }
+
+    #yachtino-specrequest-box .yachtino-specreq-row-value {
+        width: 99%;
+        padding-top: 0;
+    }
+
+    #yachtino-specrequest-box select,
+    #yachtino-specrequest-box textarea,
+    #yachtino-specrequest-box input[type=text] {
+        margin: 0 0 5px 0;
+    }
+    #yachtino-specrequest-box .yachtino-specreq-row-name label {
+        margin-bottom: 0;
+    }
+    #yachtino-specrequest-box .yachtino-specreq-row div.yachtino-nophone {
+        display: none;
+    }
+}
+
+/* ################# article list ############################## */
+
+div.yachtino-articles {
+    display: block;
+    float: left;
+    width: 100%;
+}
+
+div.yachtino-articles div.yachtino-articles-list {
+    display: block;
+    float: left;
+}
+
+div.yachtino-articles.adv-filtering div.yachtino-articles-list {
+    display: block;
+    flex: 0 1 70%;
+}
+
+div.yachtino-articles-list p {
+    margin: 0;
+    padding: 0;
+}
+
+div.yachtino-articles-list h2 {
+    width: 100%;
+    margin: 0 0 7px 0;
+    padding: 0;
+}
+
+div.yachtino-list-item {
+    width: 100%;
+    display: flex;
+    /* max-height: 210px; */
+    float: left;
+    margin-bottom: 20px;
+}
+
+div.yachtino-list-item-image {
+    width: 222px;
+    height: 155px;
+    text-align: center;
+    overflow: hidden;
+    border-radius: 6px;
+    margin-right: 10px;
+}
+
+div.yachtino-list-item-image img {
+    width: 222px;
+    height: 155px;
+    border-radius: 6px;
+    object-fit: cover;
+    transition: .3s ease-in-out;
+}
+
+div.yachtino-list-item-image img:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+div.yachtino-list-item-data {
+    width: 65%;
+    font-size: 14px;
+    padding-top: 3px;
+}
+
+div.yachtino-list-item-data h3.yachtino-list-item-title {
+    margin: -3px 0 3px 0;
+    padding: 0;
+    line-height: 1;
+}
+
+div.yachtino-list-item-data h3.yachtino-list-item-title a {
+    font-size: 16px;
+    line-height: 1;
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+}
+
+div.yachtino-list-item-data div.yachtino-list-item-line {
+    width: 100%;
+    padding-bottom: 3px;
+}
+
+div.yachtino-list-item span.yachtino-list-price-value {
+    color: #ef9900;
+    font-weight: 500;
+}
+
+span.yachtino-list-price-old {
+    text-decoration: line-through;
+    color: #000;
+}
+
+span.yachtino-list-discount {
+    font-weight: 600;
+    color: #C00;
+}
+
+@media screen and (max-width: 720px) {
+
+    div.yachtino-list-item {
+        display: block;
+        border-bottom: 3px solid #333;
+        float: left;
+        padding-bottom: 15px;
+        margin-bottom: 10px;
+    }
+
+    div.yachtino-articles-list div.yachtino-list-item:last-of-type {
+        margin-bottom: 0;
+    }
+
+    div.yachtino-list-item {
+        max-height: inherit;
+    }
+
+    div.yachtino-list-item-image {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        width: 100%;
+        height: 35%;
+    }
+
+    div.yachtino-list-item-image img {
+        width: 100%;
+        height: 35%;
+    }
+
+    div.yachtino-list-item-image,
+    div.yachtino-list-item-data {
+        float: left;
+        width: 100%;
+    }
+}
+
+/* ############ article list as tiles ####################################### */
+div.yachtino-articles div.yachtino-articles-tiles {
+    display: block;
+}
+
+div.yachtino-tiles-block {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: left;
+    gap: 12px 12px; /* row, column */
+}
+
+div.yachtino-tiles-item {
+    /* width: calc((100% / 4) - 9px);
+    display: block;
+    flex: 0.3 0.3 240px; */
+    min-width: 250px;
+    max-width: 300px;
+    flex: 1 1 20%;
+    margin: 0 0 8px 0;
+}
+
+div.yachtino-tiles-item-image {
+    width: 100%;
+    height: 225px;
+    overflow: hidden;
+    border-radius: 6px 6px 0 0;
+}
+
+div.yachtino-tiles-item-image.border {
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+div.yachtino-tiles-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 6px 6px 0 0;
+    transition: .3s ease-in-out;
+}
+
+div.yachtino-tiles-item-image img:hover {
+    transform: scale(1.1);
+    opacity: 0.8;
+}
+
+div.yachtino-tiles-item-data {
+    width: 100%;
+    margin: 0;
+    padding: 1px 8px 8px 8px;
+    background-color: #F3F5F8;
+    /* background-color: #ddd; */
+    border-radius: 0 0 6px 6px;
+}
+
+div.yachtino-tiles-item-data.border {
+    border-top: 1px solid #ddd;
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+h3.yachtino-tiles-item-title, h3.yachtino-tiles-item-title a {
+    display: block;
+    font-size: 16px;
+    line-height: 1;
+    text-decoration: none;
+    text-align: center;
+    margin: 5px 0 5px 0;
+    padding: 0;
+    width: 98%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.yachtino-tiles-item-line {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.yachtino-tiles-item-line div {
+    max-width: 70%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.yachtino-tiles-item-line-c {
+    display: block;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.yachtino-tiles-item-price {
+    color: #ef9900;
+    font-weight: 600;
+}
+
+/* phone portrait */
+@media screen and (max-width: 620px) {
+
+    div.yachtino-articles div.yachtino-articles-tiles {
+        float: none;
+    }
+
+    div.yachtino-tiles-block {
+        display: block;
+    }
+
+    div.yachtino-tiles-item {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 25px;
+    }
+
+    div.yachtino-tiles-item-image {
+        width: 100%;
+        height: 290px;
+    }
+}
+
+/* ############ pagination ####################################### */
+
+div.yachtino-paging-wrapper {
+    width: 100%;
+    margin-bottom: 15px !important;
+    float: left;
+    margin-top: 1px !important;
+    text-align: center;
+}
+
+div.yachtino-paging-wrapper ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+
+div.yachtino-paging-wrapper ul li.yachtino-paging-page,
+div.yachtino-paging-wrapper ul li.yachtino-paging-page a {
+    display: inline-block;
+}
+
+div.yachtino-paging-wrapper ul li.yachtino-paging-page a,
+div.yachtino-paging-wrapper ul li.yachtino-paging-page.active {
+    margin-right: 3px;
+    margin-bottom: 5px;
+    margin-right: 3px;
+
+    text-decoration: none;
+    box-shadow: none !important;
+    padding: 4px 7px 4px 7px;
+    border-radius: 3px;
+    font-size: 13px;
+    text-align: center;
+    transition: all 250ms ease-in-out;
+}
+
+div.yachtino-paging-wrapper ul li.yachtino-paging-page a {
+    color: #d6d6d6;
+    border: 1px solid #d6d6d6;
+}
+
+div.yachtino-paging-wrapper ul li.yachtino-paging-page.active {
+    color: #000;
+    border: 1px solid #686868;
+}
+
+div.yachtino-paging-wrapper ul li.yachtino-paging-page.previous-page a,
+div.yachtino-paging-wrapper ul li.yachtino-paging-page.next-page a {
+    color: #7a7a7a;
+}
+
+div.yachtino-paging-wrapper ul li.yachtino-paging-page a:hover {
+    border-color: #686868;
+    color: #000;
+}
+
+div.yachtino-paging-wrapper ul li.yachtino-paging-page a,
+div.yachtino-paging-wrapper ul li.yachtino-paging-page a:hover,
+div.yachtino-paging-wrapper ul li.yachtino-paging-page.active {
+    height: 32px;
+    font-weight: 400;
+    font-size: 0.9em;
+    overflow: hidden;
+}
+
+/* ########## search form - filtering ##################### */
+
+div.yachtino-articles.adv-filtering {
+    display: flex;
+}
+
+#yachtino-searchform-left {
+    display: block;
+    flex: 0 1 30%;
+    min-width: 25%;
+    max-width: 300px;
+    margin-right: 10px;
+    position: relative;
+}
+
+div.yachtino-filters {
+    width: 100%;
+    border-radius: 3px;
+    border: 1px solid #e5e5e5;
+    padding: 12px;
+}
+
+#yachtino-searchform-left div.yachtino-filters {
+    text-align: center;
+}
+
+#yachtino-searchform-top div.yachtino-filters {
+    background-color: #F5F7FA;
+    margin-bottom: 15px;
+}
+
+#yachtino-searchform-top div.yachtino-searchbox {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+
+#yachtino-searchform-top div.yachtino-filters select,
+#yachtino-searchform-top div.yachtino-filters input {
+    background-color: #fff;
+}
+
+div.yachtino-filters h2 {
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    padding-right: 20px;
+}
+
+#yachtino-searchform-left div.yachtino-filters h2 {
+    margin: 0 0 5px 8px;
+}
+
+#yachtino-searchform-top div.yachtino-filters h2 {
+    margin: 0 0 8px 5px;
+}
+
+#yachtino-searchform-top div.yachtino-filters-headbox {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;;
+}
+
+#yachtino-searchform-left label.yachtino-searchlabel,
+#yachtino-searchform-left select.yachtino-searchfield,
+#yachtino-searchform-left input.yachtino-searchfield,
+#yachtino-searchform-left div.yachtino-searchfield-double select {
+    display: block;
+    font-size: 13px !important;
+    text-align: left;
+    margin: 0;
+}
+#yachtino-searchform-left label.yachtino-searchlabel {
+    padding: 8px 5px 0 8px;
+    line-height: 1.6em;
+}
+
+#yachtino-searchform-left .yachtino-searchfield,
+#yachtino-searchform-left div.yachtino-searchfield-double select,
+#yachtino-searchform-top .yachtino-searchfield,
+#yachtino-searchform-top div.yachtino-searchfield-double select {
+    height: 28px;
+    min-height: 28px !important;
+    padding: 3px 5px 3px 8px;
+}
+
+#yachtino-searchform-left label.yachtino-searchlabel.search-chosen {
+    font-weight: 600;
+}
+
+#yachtino-searchform-left .yachtino-searchfield.search-chosen,
+#yachtino-searchform-left .yachtino-searchfield-double select.search-chosen {
+    background-color: #e9e9e9;
+}
+
+#yachtino-searchform-top .yachtino-searchfield.search-chosen,
+#yachtino-searchform-top .yachtino-searchfield-double select.search-chosen {
+    background-color: #ddd;
+}
+
+#yachtino-searchform-left div.yachtino-filters-field {
+    width: 100%;
+}
+
+#yachtino-searchform-top div.yachtino-filters-field {
+    /* width: calc((100% / 4) - 10px); */
+    min-width: 240px;
+    max-width: 300px;
+    flex: 1 1 20%;
+    margin: 0 5px 10px 5px;
+}
+
+#yachtino-searchform-left div.yachtino-searchfield-double,
+#yachtino-searchform-top div.yachtino-searchfield-double {
+    display: flex;
+}
+
+#yachtino-searchform-left div.yachtino-searchfield-double select.first,
+#yachtino-searchform-top div.yachtino-searchfield-double select.first {
+    width: calc(50% - 3px);
+    margin-right: 6px;
+}
+
+#yachtino-searchform-left div.yachtino-searchfield-double select.second,
+#yachtino-searchform-top div.yachtino-searchfield-double select.second {
+    width: calc(50% - 3px);
+}
+
+#yachtino-searchform-left div.yachtino-searchform-checkbox {
+    width: 100%;
+    text-align: left;
+    margin-top: 8px
+}
+
+#yachtino-searchform-submit {
+    width: 100%;
+    margin-top: 4px;
+}
+
+#yachtino-searchform-left div.yachtino-searchform-actions {
+    display: flex;
+}
+
+#yachtino-searchform-left div.yachtino-searchform-actions a {
+    font-size: 13px;
+}
+
+#yachtino-searchform-left div.yachtino-searchform-actions div.yachtino-searchform-reset {
+    width: 50%;
+    margin: 5px 5px 0px 8px;
+    text-align: left;
+}
+
+#yachtino-searchform-left div.yachtino-searchform-actions div.yachtino-searchform-alert {
+    width: 50%;
+    margin: 5px 8px 0px 5px;
+    text-align: right;
+}
+
+
+/* tablet portrait
+@media screen and (max-width: 880px) {
+
+    #yachtino-searchform-top div.yachtino-filters-field {
+        width: calc((100% / 3) - 10px);
+    }
+} */
+
+/* tablet portrait */
+@media screen and (max-width: 720px) {
+
+    #yachtino-searchform-top div.yachtino-filters-field,
+    #yachtino-searchform-left div.yachtino-filters-field {
+        /* width: calc((100% / 2) - 10px); */
+        max-width: 100%;
+    }
+
+    #yachtino-searchform-left {
+        width: 100%;
+        max-width: 100%;
+        margin-bottom: 15px;
+    }
+
+    div.yachtino-articles.adv-filtering {
+        display: block;
+    }
+
+    div.yachtino-articles.adv-filtering div.yachtino-articles-list {
+        width: 100%;
+    }
+
+    /* hide search form for phones - open with javascript */
+    #yachtino-searchform-top div.yachtino-searchbox,
+    #yachtino-searchform-left div.yachtino-searchbox {
+        display: none;
+    }
+
+}
+
+/* phone portrait */
+@media screen and (max-width: 420px) {
+
+    /* #yachtino-searchform-top div.yachtino-searchbox {
+        display: block;
+    } */
+
+    /* #yachtino-searchform-top div.yachtino-filters-field {
+        width: 99%;
+    } */
+}
+
+/* ############## charter boat detail ################## */
+
+div.yachtino-charter {
+    width: 100%;
+    height: 100%;
+    float: left;
+    margin-top: 25px;
+    font-size: 13px;
+}
+
+div.yachtino-charter h2 {
+    padding: 0;
+    font-weight: bold;
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+div.yachtino-charter div.yachtino-charter-possibilities {
+    width: 100%;
+    float: left;
+    margin-bottom: 10px;
+}
+
+div.yachtino-charter div.yachtino-charter-seasons-wrapper {
+    width: 100%;
+    height: 100%;
+    float: left;
+    display: block;
+    margin-bottom: 15px;
+}
+
+div.yachtino-charter h3 {
+    font-size: 15px;
+    font-weight: bold;
+    padding: 0;
+    margin: 15px 0 0 0;
+}
+div.yachtino-charter-seasons-boxes {
+    display: flex;
+    width: 100%;
+    flex-wrap:wrap;
+}
+
+div.yachtino-charter-seasons-item {
+    border: 1px solid #d6d6d6;
+    margin-right: 5px;
+    margin-bottom: 5px;
+}
+
+div.yachtino-charter-seasons-item-part1 {
+    background-color: #d6d6d6;
+    text-align: center;
+    padding: 4px;
+}
+
+div.yachtino-charter-seasons-item-part2 {
+    text-align: center;
+    padding: 4px;
+    font-weight: 600;
+}
+
+div.yachtino-charter-extra .yachtino-tr {
+    border-bottom: 1px solid #d6d6d6;
+}
+
+@media screen and (max-width: 720px) {
+
+    div.yachtino-article-wrapper {
+        display: block;
+    }
+
+    div.yachtino-article-wrapper div.yachtino-image-wrapper {
+        display: block;
+        width: 100%;
+        margin-right: 0;
+        padding: 0;
+    }
+
+    div.yachtino-article-wrapper div.yachtino-detail-wrapper {
+        display: block;
+        width: 100%;
+        float: left !important;
+    }
+
+    div.yachtino-article-wrapper div.yachtino-detail-wrapper div.yachtino-detail-block {
+        display: block;
+        float: left;
+    }
+
+    div.yachtino-detail-row div.yachtino-detail-row-value small {
+        display: block;
+    }
+
+    div.yachtino-detail-row.highlight div.yachtino-detail-row-value {
+        white-space: normal !important;
+    }
+
+    div.yachtino-detail-row-value br {
+        display: none;
+    }
+
+    div.yachtino-request div.yachtino-request-flex {
+        display: block;
+    }
+
+    div.yachtino-request div.yachtino-request-flex div.yachtino-request-details,
+    div.yachtino-request div.yachtino-request-flex #yachtino-request-form-box {
+        width: 100%;
+        float: left;
+        flex: none;
+    }
+
+    div.yachtino-request div.yachtino-request-flex div.yachtino-request-details {
+        margin-bottom: 10px;
+    }
+
+    #yachtino-request-form-box div.yachtino-request-row:last-of-type {
+        margin-bottom: 15px;
+    }
+
+    div.yachtino-articles.flex div.yachtino-articles-list {
+        width: 100%;
+    }
+
+    div.yachtino-articles.flex {
+        display: block;
+    }
+}

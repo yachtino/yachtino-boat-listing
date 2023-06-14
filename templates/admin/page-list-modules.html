@@ -1,0 +1,128 @@
+<div class="yachtino-admin-wrapper">
+<h1><?php echo __('Yo_plugin_name', 'yachtino-boat-listing') . ' - ' . __('Modules', 'yachtino-boat-listing'); ?></h1>
+<?php
+include YACHTINO_DIR_PATH . '/templates/incl-error-messages.html';
+?>
+<div class="yachtino-admin-box">
+<?php
+if (!empty($tplData['textTop'])) : ?>
+    <div class="yachtino-msg-box"><?php
+    echo $tplData['textTop']; ?><br>
+    </div><br>
+<?php
+endif; ?>
+<a href="javascript:void(0);" id="yachtino-add-module">&raquo;&nbsp;<?php echo __('Add_module', 'yachtino-boat-listing'); ?></a><br><br>
+<?php
+if (!empty($allData)) : ?>
+    <div class="yachtino-table-data">
+        <div class="yachtino-tr">
+            <div class="yachtino-td"><b><?php echo __('Name', 'yachtino-boat-listing'); ?></b></div>
+            <div class="yachtino-td"><b><?php echo __('Offer', 'yachtino-boat-listing'); ?></b></div>
+            <div class="yachtino-td"><b><?php echo __('Page', 'yachtino-boat-listing'); ?></b></div>
+            <div class="yachtino-td"><b><?php echo __('Page_layout', 'yachtino-boat-listing'); ?></b></div>
+            <div class="yachtino-td"><b><?php echo __('Filters', 'yachtino-boat-listing'); ?></b></div>
+            <div class="yachtino-td"><b></b></div>
+            <div class="yachtino-td"><b></b></div>
+        </div>
+<?php
+    foreach ($allData as $row) : ?>
+        <div class="yachtino-tr">
+            <div class="yachtino-td"><?php echo $row['moduleName']; ?></div>
+            <div class="yachtino-td"><?php echo $row['itemType']; ?></div>
+            <div class="yachtino-td"><?php echo $row['pageType']; ?></div>
+            <div class="yachtino-td"><?php echo $row['pageLayout']; ?></div>
+            <div class="yachtino-td"><?php echo $row['filter']; ?></div>
+            <div class="yachtino-td"><a href="<?php echo esc_url($row['linkEdit']); ?>"><?php echo __('edit_verb', 'yachtino-boat-listing'); ?></a></div>
+            <div class="yachtino-td"><a href="javascript:void(0)" class="yachtino-js-delete-item" data-id="module-<?php
+            echo $row['moduleId']; ?>" data-name="<?php echo esc_attr($row['moduleName']); ?>"><?php echo __('delete_verb', 'yachtino-boat-listing'); ?></a></div>
+        </div>
+<?php
+    endforeach; ?>
+    </div>
+
+<?php
+else :
+    echo '<br>' . __('No_results_found', 'yachtino-boat-listing') . '<br><br>';
+endif; ?>
+</div>
+</div>
+<div id="yachtino-deleting-box" class="yachtino-hidden">
+<form action="<?php echo esc_url($tplData['formActionDelete']); ?>" method="post">
+    <input type="hidden" name="moduleid" id="moduleid" value="">
+    <b><?php echo __('Delete_verb', 'yachtino-boat-listing'); ?></b><br><br>
+    <?php echo __('You_want_delete_module', 'yachtino-boat-listing'); ?><br>
+    <div id="yachtino-placeholder-name"></div><br>
+    <div class="yachtino-two-buttons">
+        <a href="javascript:void(0)" class="yachtino-js-closeLbox1"><?php echo __('Cancel_verb', 'yachtino-boat-listing'); ?></a>
+        &nbsp;
+        <input type="submit" name="isSent" class="yachtino-button-common" value="<?php
+    echo esc_attr(__('Delete_verb', 'yachtino-boat-listing')); ?>">
+    </div>
+</form>
+</div>
+<div id="yachtino-adding-box" class="yachtino-hidden">
+<form action="<?php echo esc_url($tplData['formActionAdd']); ?>" method="post">
+    <input type="hidden" name="firstStep" value="1">
+    <b><?php echo __('Add_module', 'yachtino-boat-listing'); ?></b><br><br>
+    <div class="yachtino-table-data">
+        <div class="yachtino-tr">
+            <div class="yachtino-td"><label for="yachtino-itemtype"<?php
+    if (!empty($tplData['errors']['errField']['itemtype'])) :
+        echo ' class="yachtino-label-err"';
+    endif; ?>><b><?php echo __('Offer', 'yachtino-boat-listing'); ?>*</b></label></div>
+            <div class="yachtino-td"><select type="text" name="itemtype" id="yachtino-itemtype" class="yachtino-field-edit-big<?php
+    if (!empty($tplData['errors']['errField']['itemtype'])) :
+        echo ' yachtino-field-err';
+    endif; ?>" required>
+            <option value="">---------------</option>
+<?php
+    foreach ($addOptions->itemTypes as $row) : ?>
+            <option value="<?php echo esc_attr($row['id']); ?>"<?php
+        if (!empty($data['itemtype']) && $data['itemtype'] == $row['id']) :
+            echo ' selected';
+        endif; ?>><?php echo esc_html($row['name']); ?></option>
+<?php
+    endforeach; ?>
+            </select></div>
+        </div>
+        <div class="yachtino-tr">
+            <div class="yachtino-td"><label for="yachtino-pagetype"<?php
+    if (!empty($tplData['errors']['errField']['pagetype'])) :
+        echo ' class="yachtino-label-err"';
+    endif; ?>><b><?php echo __('Page', 'yachtino-boat-listing'); ?>*</b></label></div>
+            <div class="yachtino-td"><select type="text" name="pagetype" id="yachtino-pagetype" class="yachtino-field-edit-big<?php
+    if (!empty($tplData['errors']['errField']['pagetype'])) :
+        echo ' yachtino-field-err';
+    endif; ?>" required>
+            <option value="">---------------</option>
+<?php
+    foreach ($addOptions->pageTypes as $row) : ?>
+            <option value="<?php echo $row['id']; ?>"<?php
+        if (!empty($data['pagetype']) && $data['pagetype'] == $row['id']) :
+            echo ' selected';
+        endif; ?>><?php echo $row['name']; ?></option>
+<?php
+    endforeach; ?>
+            </select></div>
+        </div>
+    </div>
+    <div class="yachtino-two-buttons">
+        <a href="javascript:void(0)" class="yachtino-js-closeLbox1"><?php echo __('Cancel_verb', 'yachtino-boat-listing'); ?></a>
+        &nbsp;
+        <input type="submit" name="sent" class="yachtino-button-common" value="<?php
+    echo esc_attr(__('Go_to_next_step', 'yachtino-boat-listing')); ?>">
+    </div>
+</form>
+</div>
+<?php
+include YACHTINO_DIR_PATH . '/templates/incl-lightbox.html';
+
+if (!empty($tplData['openAddForm'])) : ?>
+<script type="text/javascript">
+window.onload = function()
+{
+    openAddModule();
+}
+</script>
+<?php
+endif; ?>

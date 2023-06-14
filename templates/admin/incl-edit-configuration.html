@@ -1,0 +1,59 @@
+<div class="yachtino-tr">
+    <div class="yachtino-td"><label for="apikey" id="l_apikey"<?php
+    if (!empty($tplData['errors']['errField']['apikey'])) :
+        echo ' class="yachtino-label-err"';
+    endif; ?>>API Key</label></div>
+    <div class="yachtino-td"><input type="text" name="apikey" id="apikey" value="<?php
+if (!empty($data['apikey'])) :
+    echo esc_attr($data['apikey']);
+endif; ?>" class="yachtino-field-edit-big<?php
+    if (!empty($tplData['errors']['errField']['apikey'])) :
+        echo ' yachtino-field-err';
+    endif; ?>"></div>
+</div>
+<div class="yachtino-tr">
+    <div class="yachtino-td"><label for="apisiteid" id="l_apisiteid"<?php
+    if (!empty($tplData['errors']['errField']['apisiteid'])) :
+        echo ' class="yachtino-label-err"';
+    endif; ?>>Site ID</label></div>
+    <div class="yachtino-td"><input type="text" name="apisiteid" id="apisiteid" value="<?php
+if (!empty($data['apisiteid'])) :
+    echo esc_attr($data['apisiteid']);
+endif; ?>" class="yachtino-field-edit-big<?php
+    if (!empty($tplData['errors']['errField']['apisiteid'])) :
+        echo ' yachtino-field-err';
+    endif; ?>"></div>
+</div>
+<div class="yachtino-tr">
+    <div class="yachtino-td"><label for="lgs"<?php
+    if (!empty($tplData['errors']['errField']['lgs'])) :
+        echo ' class="yachtino-label-err"';
+    endif; ?>><?php echo __('Website_is_in_languages', 'yachtino-boat-listing'); ?></label></div>
+    <div class="yachtino-td"><div class="yachtino-lgs-box"><div><?php
+$nrAll = count($languages);
+$part = ceil($nrAll / 3);
+$counterAll = 0;
+$counter = 0;
+foreach ($languages as $row) :
+    $counterAll++;
+    $counter++; ?>
+<input type="checkbox" value="1" name="lgs[<?php echo esc_attr($row->id); ?>]" id="lgs_<?php
+    echo esc_attr($row->id); ?>" class="yachtino-checkbox-lgs"<?php
+    if (!empty($data['lgs'][$row->id])) :
+        echo ' checked';
+    endif; ?>><label for="lgs_<?php
+    echo esc_attr($row->id); ?>" id="l_lgs_<?php echo esc_attr($row->id); ?>" class="yachtino-checkbox-lgs"><?php
+    echo $row->name; ?></label><br>
+<?php
+    if ($counter == $part) :
+        echo '</div>';
+        $counter = 0;
+        if ($counterAll != $nrAll) :
+            echo '<div>';
+        endif;
+    endif;
+endforeach;
+if ($counter) :
+    echo '</div>';
+endif; ?></div></div>
+</div>

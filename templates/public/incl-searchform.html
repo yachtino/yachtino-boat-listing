@@ -1,0 +1,114 @@
+<?php
+require_once 'yachtino-template-helper.php';
+$classHelper = Yachtino_Template_Helper::getInstance();
+$classHelper->setData($allData);
+
+$countBoxes = 0;
+?>
+<div id="yachtino-searchform-<?php echo $allData->searchPlace; ?>">
+    <form id="yachtino-searchform" action="javascript:void(0);">
+    <input type="hidden" name="lg" id="yachtino-srchform-lg" value="<?php echo esc_attr($moduleData['language']); ?>">
+    <input type="hidden" name="itemtype" id="yachtino-srchform-itemtype" value="<?php echo esc_attr($allData->itemType); ?>">
+    <input type="hidden" name="scode" id="yachtino-srchform-scode" value="<?php
+if (!$route) :
+    echo '1'; // shortcode
+else :
+    echo '0';
+endif; ?>">
+    <div class="yachtino-filters">
+    <div class="yachtino-filters-headbox">
+    <h2><?php echo $allData->search->translation['searchHead']; ?></h2>
+<?php
+if ($allData->searchPlace == 'top') : ?>
+    <div class="yachtino-searchform-reset"><a href="javascript:void(0);" class="yachtino-searchform-reset-link">&raquo;&nbsp;<?php echo $allData->search->translation['reset']; ?></a></div>
+<?php
+endif; ?>
+    </div>
+    <div class="yachtino-searchbox">
+<?php
+if (!empty($allData->search->fields['q'])) :
+    $countBoxes++; ?>
+        <div class="yachtino-filters-field"><?php
+    if ($allData->searchPlace == 'top') : ?>
+            <label for="q" class="yachtino-searchlabel<?php
+        if (!empty($allData->criteria['q'])) :
+            echo ' search-chosen';
+        endif; ?>"><?php echo $allData->search->fields['q']['label']; ?></label><?php
+    endif; ?>
+            <input type="text" name="q" id="yachtino-srchform-q" placeholder="<?php echo esc_attr($allData->search->fields['q']['default']); ?>" value="<?php
+    if (!empty($allData->criteria['q'])) :
+        echo esc_attr($allData->criteria['q']);
+    endif; ?>" class="yachtino-searchfield<?php
+    if (!empty($allData->criteria['q'])) :
+        echo ' search-chosen';
+    endif; ?>"><?php
+    if ($allData->searchPlace == 'left') : ?><br>
+            <input type="submit" id="yachtino-searchform-submit" value="<?php echo esc_attr($allData->search->translation['searchButton']); ?>">
+<?php
+    endif; ?>
+        </div>
+<?php
+elseif (!empty($moduleData['filter']['q']) && $route) : ?>
+    <input type="hidden" name="q" id="yachtino-srchform-q" value="<?php echo esc_attr($moduleData['filter']['q']); ?>">
+<?php
+endif;
+
+// in this ordering
+$fields = ['btcid', 'btid', 'bcid', 'newused', 'oclass', 'ct', 'provid', 'rgww', 'tn',
+    'manfb', 'manfe', 'manft', 'etype', 'fuel', 'hmid', 'trmid',
+    'lng', 'yb', 'cab', 'pow', 'sprc', 'wkprc', 'daprc', 'hrprc',
+    'orderby'];
+
+foreach ($fields as $fieldName) :
+
+    // IMPORTANT!!! isset (not empty) because the port for charter can be empty, will be filled when country is known
+    if (!isset($allData->search->fields[$fieldName])
+    || ($fieldName == 'provid' && empty($allData->search->fields[$fieldName]['options']))
+    ) :
+        if (isset($moduleData['filter'][$fieldName]) && $route) : ?>
+    <input type="hidden" name="<?php echo esc_attr($fieldName); ?>" id="yachtino-srchform-<?php
+            echo esc_attr($fieldName); ?>" value="<?php echo esc_attr($moduleData['filter'][$fieldName]); ?>">
+<?php
+        endif;
+        continue;
+    endif;
+    $countBoxes++;
+
+    if (!empty($allData->search->fields[$fieldName]['double'])) :
+        $settings = [
+            'from' => $allData->search->fields[$fieldName]['from'],
+            'to'   => $allData->search->fields[$fieldName]['to'],
+        ];
+        echo $classHelper->createSearchSelectDouble(
+            $fieldName, $allData->search->fields[$fieldName]['label'],
+            $allData->search->fields[$fieldName]['options'], $settings);
+    else :
+        echo $classHelper->createSearchSelect(
+            $fieldName, $allData->search->fields[$fieldName]['label'],
+            $allData->search->fields[$fieldName]['options']);
+    endif;
+endforeach;
+if (!empty($allData->search->fields['fly'])) :
+    $countBoxes++; ?>
+        <div class="yachtino-searchform-checkbox">
+        <input type="checkbox" value="1" name="fly" id="yachtino-srchform-fly"<?php
+    if (!empty($allData->criteria['fly'])) :
+        echo ' checked';
+    endif; ?>><label for="fly"><?php echo $allData->search->fields['fly']['label']; ?></label></div>
+<?php
+elseif (!empty($moduleData['filter']['fly']) && $route) : ?>
+    <input type="hidden" name="fly" id="yachtino-srchform-fly" value="<?php echo esc_attr($moduleData['filter']['fly']); ?>">
+<?php
+endif;
+
+if ($allData->searchPlace == 'left') : ?>
+        <div class="yachtino-searchform-actions">
+            <div class="yachtino-searchform-reset"><a href="javascript:void(0);" class="yachtino-searchform-reset-link"><?php echo $allData->search->translation['reset']; ?></a></div>
+            <div class="yachtino-searchform-alert" style="display: none;"><a href="javascript:void(0);">» Suchauftrag</a></div>
+        </div>
+<?php
+endif; ?>
+    </div>
+    </div>
+    </form>
+</div>

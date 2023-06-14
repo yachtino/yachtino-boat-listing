@@ -1,0 +1,38 @@
+<?php
+if ($itemData->singleItemUrl) :
+    $aUrlBegin = '<a href="' . $itemData->singleItemUrl . '">';
+    $aUrlEnd   = '</a>';
+else :
+    $aUrlBegin = '';
+    $aUrlEnd   = '';
+endif; ?>
+<div class="yachtino-list-item">
+    <div class="yachtino-list-item-image"><?php
+echo $aUrlBegin; ?><img src="<?php echo esc_url($itemData->pics[0]['url']); ?>" decoding="async" loading="lazy" alt=""><?php echo $aUrlEnd; ?></div>
+    <div class="yachtino-list-item-data">
+        <h3 class="yachtino-list-item-title"><?php echo $aUrlBegin . $itemData->model . $aUrlEnd; ?></h3>
+<?php
+foreach ($itemData->singleLines as $line) : ?>
+        <div class="yachtino-list-item-line"><?php echo $line; ?></div>
+<?php
+endforeach;
+
+if ($allData->itemType != 'cboat') : ?>
+        <div class="yachtino-list-item-price"><?php echo $itemData->translation['Price']; ?>:<?php
+    if (!empty($itemData->priceOld)) : ?>
+        <span class="yachtino-list-price-old yachtino-nowrap"><?php echo $itemData->priceOld; ?></span><?php
+    endif;
+    if (!empty($itemData->price)) : ?>
+        <span class="yachtino-list-price-value yachtino-nowrap"><?php echo $itemData->price; ?></span><?php
+    endif;
+    if (!empty($itemData->priceEuro)) : ?>
+        <span class="yachtino-list-price-value yachtino-nowrap">(≈ <?php echo $itemData->priceEuro; ?>)</span><?php
+    endif;
+    if (!empty($itemData->vatPaid)) :
+        echo ', ' . $itemData->vatPaid;
+    endif; ?>
+        </div>
+<?php
+endif; ?>
+    </div>
+</div>

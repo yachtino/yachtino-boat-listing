@@ -1,0 +1,596 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Yachtino CS\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-06-08 21:47+0200\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Yachtino GmbH <webinfo@yachtino.com>\n"
+"Language-Team: \n"
+"Language: cs_CZ\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: translate;gettext\n"
+"X-Poedit-Basepath: E:/_htdocs/wordpress\n"
+"X-Generator: Poedit 3.3.1\n"
+"X-Poedit-SearchPath-0: test-install/wp-content/plugins/yachtino-boat-listing/includes\n"
+"X-Poedit-SearchPath-1: test-install/wp-content/plugins/yachtino-boat-listing/templates\n"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "unit_m"
+msgstr "m"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "unit_hp"
+msgstr "hp"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "from_price"
+msgstr "od"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "to_price"
+msgstr "do"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Length"
+msgstr "Délka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Beam"
+msgstr "Šířka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Model"
+msgstr "Model"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Boat_name"
+msgstr "Jméno lodi"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Boat_type"
+msgstr "Typ lodi"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Year_built"
+msgstr "Rok výroby"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Flybridge"
+msgstr "Flybridge"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Cabins"
+msgstr "Kabiny"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Country"
+msgstr "Země"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Port"
+msgstr "Přístav"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Hull_material"
+msgstr "Materiál trupu"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "engine"
+msgstr "motor"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Sale_price"
+msgstr "Prodejní cena"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Engine_power"
+msgstr "Výkon motoru"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Manufacturer"
+msgstr "Výrobce"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-edit-template.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
+msgid "Cancel_verb"
+msgstr "Storno"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
+msgid "edit_verb"
+msgstr "editovat"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Material"
+msgstr "Materiál"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Fuel"
+msgstr "Palivo"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Quick_search"
+msgstr "Rychlé vyhledávání"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Special_requests"
+msgstr "Speciální poptávky"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Insurance_request"
+msgstr "Poptávka po pojištění"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Transport_request"
+msgstr "Poptávka po přepravě"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Financing_request"
+msgstr "Poptávka po financování"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "err_field_required_XXX"
+msgstr "%1$s je povinné pole."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Msg_data_saved"
+msgstr "Vaše údaje byly uloženy."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "US_state"
+msgstr "Stát"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "OR"
+msgstr "NEBO"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "err_text_too_long"
+msgstr "je moc dlouhý. %1$s znaků je povoleno."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_de"
+msgstr "německá stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_en"
+msgstr "anglická stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_es"
+msgstr "španělská stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_cs"
+msgstr "česká stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_nl"
+msgstr "holandská stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_it"
+msgstr "italská stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_fr"
+msgstr "francouzská stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_ru"
+msgstr "ruská stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_pl"
+msgstr "polská stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "New_used"
+msgstr "Nový / použitý"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "trailer"
+msgstr "přívěs"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "mooring"
+msgstr "kotviště"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Charter_waterway"
+msgstr "Revír pronájmu"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "err_name_taken"
+msgstr "Jméno je už obsazeno. Prosím zvolte jiné jméno."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
+msgid "Delete_verb"
+msgstr "Smazat"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Brand"
+msgstr "Značka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
+msgid "delete_verb"
+msgstr "smazat"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Sort_by"
+msgstr "Seřadit dle"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Show_search_form"
+msgstr "Ukázat formulář vyhledávání"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
+msgid "Page"
+msgstr "Stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-edit-template.html
+msgid "Save_verb"
+msgstr "Uložit"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Price_boat_week"
+msgstr "Cena loď/týden"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Price_boat_day"
+msgstr "Cena loď/den"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Price_berth_week"
+msgstr "Cena za lůžko / týden"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_da"
+msgstr "dánská stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_tr"
+msgstr "turecká stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "boattype_1"
+msgstr "plachetnice"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "boattype_2"
+msgstr "motorová loď"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Ads_per_page"
+msgstr "Inzeráty na stránce"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Engine_type"
+msgstr "Typ motoru"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+msgid "Go_to_next_step"
+msgstr "Jdi k dalšímu kroku"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-page.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
+msgid "Internal_name"
+msgstr "Interní pojmenování"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+msgid "Name"
+msgstr "Jméno"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Type_of_berth"
+msgstr "Typ kotviště"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/basics/class-yachtino-prerequisites.php
+msgid "err_web_does_not_exist"
+msgstr "Tato webová stránka neexistuje."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "language"
+msgstr "jazyk"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_hr"
+msgstr "chorvatská stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_pt"
+msgstr "portugalská stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_sv"
+msgstr "švédská stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "gear"
+msgstr "drobná inzerce"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Category"
+msgstr "Kategorie"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "cboat"
+msgstr "loď na pronájem"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "sboat"
+msgstr "loď na prodej"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
+msgid "No_results_found"
+msgstr "Nebyly nalezeny žádné výsledky."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Contact_form"
+msgstr "Kontaktní formulář"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
+msgid "Offer"
+msgstr "Nabídka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_hu"
+msgstr "maďarská stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_fi"
+msgstr "finská stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_no"
+msgstr "norská stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "lg_website_el"
+msgstr "řecká stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Price_boat_hour"
+msgstr "Cena loď/hodinu"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/basics/class-yachtino-router.php
+msgid "Yachtino Router Placeholder Page"
+msgstr "Yachtino Router Placeholder Page"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/basics/class-yachtino-prerequisites.php
+msgid "%1$s requires WordPress %2$s or higher and PHP %3$s or higher."
+msgstr "%1$s requires WordPress %2$s or higher and PHP %3$s or higher."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+msgid "Modules"
+msgstr "Moduly"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
+msgid "Pages"
+msgstr "Stránky"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/basics/class-yachtino-prerequisites.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
+msgid "Yo_plugin_name"
+msgstr "Yachtino boat listing"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-configuration.html
+msgid "Website_is_in_languages"
+msgstr "Webová stránka je v následujících jazycích:"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "page_list"
+msgstr "seznam lodí/nabídek"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "page_detail"
+msgstr "jedna loď/nabídka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "add_page"
+msgstr "vytvořit stránku"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "add_module"
+msgstr "vytvořit modul"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
+msgid "Add_page"
+msgstr "Vytvořit stránku"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+msgid "Add_module"
+msgstr "Vytvořit modul"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-page.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
+msgid "Module"
+msgstr "Modul"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "edit_page"
+msgstr "editovat stránku"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "edit_module"
+msgstr "editovat modul"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Msg_first_settings"
+msgstr "Nejprve prosím upravte nastavení pluginu."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Msg_first_module"
+msgstr "Nejprve prosím vytvořte aspoň jeden modul."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Module_explain"
+msgstr ""
+"Modul může obsahovat seznam lodí nebo stránku s podrobnostmi o lodi. Tento modul pak můžete vložit jako shortcode kamkoli na svůj web nebo můžete vytvořit "
+"kompletní stránku s tímto modulem (viz \"Stránky\")."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-page.html
+msgid "Path_slug"
+msgstr "Cesta/slug"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "houseboat"
+msgstr "hausbót"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "catamaran"
+msgstr "katamarán"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "err_wp_page_lg"
+msgstr "Zadejte prosím alespoň jednu stránku - cestu ke konkrétní podstránce."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "err_wp_module_not_exists"
+msgstr "Modul neexistuje."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "err_wp_path_already_in_db"
+msgstr "Cesta (webová adresa) je již obsazena pro jinou stránku."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "You call an inactive plugin."
+msgstr "You call an inactive plugin."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
+msgid "You_want_delete_page"
+msgstr "Chcete odstranit násladující stránku:"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Yo_settings_explain"
+msgstr ""
+"Pro přístup k vašim lodím z Yachtino potřebujete API Key a Site ID.<br>Můžete si je vygenerovat sami v Boatadmin:<br>%1$s (vyžaduje přihlášení)<br>Nebo\n"
+"nám napište e-mail na %2$s."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+msgid "You_want_delete_module"
+msgstr "Chcete odstranit násladující modul:"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Wp_embedding_shortcode"
+msgstr "Modul lze integrovat jako shortcode:"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "One_boat_offer"
+msgstr "Jedna loď/nabídka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "List_of_boats_offers"
+msgstr "Seznam lodí/nabídek"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Module_name"
+msgstr "Jméno modulu"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Choose_fields_for_search"
+msgstr "Vyberte, která pole se mají zobrazit ve vyhledávacím formuláři."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Linked_detail_view"
+msgstr "Odkaz na detailní náhled"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Filter_fields_explain"
+msgstr ""
+"Zde můžete omezit výběr lodí k zobrazení. Můžete například zobrazit pouze plachetnice. Toto omezení platí vždy – bez ohledu na to, jaká vyhledávací kritéria "
+"jsou vybrána ve vyhledávacím formuláři."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+msgid "Filters"
+msgstr "Filtry"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Page_numbers"
+msgstr "Čísla stránek"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Page_numbers_explain"
+msgstr "Pod/nad seznamem: Číslice, na které lze kliknout, chcete-li přepínat mezi jednotlivými stránkami s výsledky."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino.php
+msgid "Display your boats and yachts for sale from yachtall.com or yacht charter offers from happycharter.com in your own website."
+msgstr "Zobrazte své lodě a jachty na prodej z yachtall.com nebo nabídky pronájmu jachet z happycharter.com na své vlastní webové stránce."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "err_not_both_fields"
+msgstr "Pouze jedno z obou polí může být vyplněno."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Wp_path_language"
+msgstr "Pokud máte <b>vícejazyčné</b> webové stránky, zadejte sem cesty/adresy URL <b>se zkratkou jazyka</b> jako u jiných stránek, např. /en/boats."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino.php
+msgid "You need to have an account on yachtall.com or happycharter.com to use this plugin. Then you can integrate your boats into your website with a few clicks."
+msgstr "Chcete-li používat tento plugin, musíte mít účet na yachtall.com nebo happycharter.com. Poté můžete své lodě integrovat na svůj web několika kliknutími."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "err_wp_module_delete_not_possible_page"
+msgstr "Modul nelze smazat, protože alespoň jedna stránka stále používá tento modul."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "err_wp_page_delete_not_possible_module"
+msgstr "Stránku nelze smazat, protože existuje alespoň jeden modul, který na tuto stránku odkazuje jako na podrobný náhled."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
+msgid "Page_layout"
+msgstr "Layout stránky"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "page_layout_list"
+msgstr "lodě pod sebou (řádky)"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "page_layout_tiles"
+msgstr "lodě vedle sebe (tabulka)"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Custom"
+msgstr "Vlastní"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "no_search_form"
+msgstr "žádný formulář pro vyhledávání"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "search_form_at_top"
+msgstr "formulář pro vyhledávání nad loděmi"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "search_form_at_left"
+msgstr "formulář pro vyhledávání nalevo od lodí"

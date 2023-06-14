@@ -1,0 +1,221 @@
+/**
+ * Yachtino boat listing - WordPress plugin.
+ * @author      Yachtino
+ * @package     yachtino
+ */
+
+.yachtino-nowrap {
+    white-space: nowrap !important;
+}
+
+.yachtino-hidden {
+    display: none !important;
+}
+
+.yachtino-bold {
+    font-weight: 600;
+}
+
+.yachtino-button {
+    /* background-color: #ebeef7; */
+    background-color: #e2e6ee;
+    color: #555566;
+    cursor: pointer;
+    padding: 9px 10px;
+    /* border: 1px solid #999; */
+    border-radius: 6px;
+}
+
+.yachtino-button, .yachtino-button a, #yachtino-req-button-detail {
+    text-decoration: none !important;
+    color: #555566;
+    font-weight: 400;
+    font-size: 1em;
+}
+
+.yachtino-button:hover, .yachtino-button a:hover, #yachtino-req-button-detail:hover {
+    background-color: #c9ccd5;
+    color: #555566;
+    font-weight: 400;
+    font-size: 1em;
+    transform: none;
+}
+
+div.yachtino-msgbox {
+    line-height: 1.5em;
+    padding: 0.5em !important;
+    width: calc(100% - 1em);
+    color: black;
+    /* border: 1px solid #999999; */
+    border-radius: 6px;
+}
+div.yachtino-msgbox-ok {
+    background-color: #B9F9B9; /* green */
+}
+
+div.yachtino-msgbox-warn {
+    background-color: #FEF39A; /* yellow */
+}
+
+div.yachtino-msgbox-err {
+    background-color: #FFB7B7; /* red */
+}
+
+label.yachtino-label-warn {
+    background-color: yellow;
+}
+
+label.yachtino-label-err {
+    background-color: #900;
+    color: white;
+}
+
+.yachtino-field-warn {
+  background-color: #FEF39A !important;
+}
+
+.yachtino-field-err {
+  background-color: #FFB7B7 !important;
+}
+
+div.yachtino-admin-wrapper div.yachtino-msgbox,
+div.yachtino-request-wrapper div.yachtino-msgbox {
+    line-height: 1.5em;
+    max-width: 600px;
+    margin-bottom: 1em;
+}
+
+div.yachtino-table-data {
+    display: table;
+    border-collapse: collapse;
+}
+div.yachtino-tr {
+    display: table-row;
+}
+div.yachtino-td, div.yachtino-td1, div.yachtino-td2 {
+    display: table-cell;
+}
+
+div.yachtino-td, div.yachtino-td1 {
+    vertical-align: top;
+}
+
+div.yachtino-td2 {
+    vertical-align: bottom;
+}
+
+div.yachtino-table-data div.yachtino-td,
+div.yachtino-table-data div.yachtino-td1,
+div.yachtino-table-data div.yachtino-td2 {
+    padding: 4px 10px 4px 0;
+    line-height: 1.5em;
+}
+
+div.yachtino-table-data div.yachtino-td2 {
+    min-width: 50%;
+}
+
+div.yachtino-box-for-two {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+}
+
+div.yachtino-box-for-two > div {
+    width: 50%;
+    vertical-align: top;
+}
+
+/* ################## lightbox ################################################ */
+
+/* dark page for light box or waiting box */
+#yachtino-overlay1 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: black;
+    /* filter: alpha(opacity=70); IE5-7 */
+    opacity: 0.85;
+    z-index: 999;
+}
+#yachtino-overlay-wait {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: black;
+    /* filter: alpha(opacity=85); IE5-7 */
+    opacity: 0.85;
+    z-index: 4999;
+}
+
+/* lightbox must be a class and not ID
+it is necessary to be able to overwrite the styles for this box (eg. lightbox-high) */
+.yachtino-lightbox1 {
+    position: absolute;
+    top: 30%;
+    left: 30%;
+    background-color: white;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+    max-width: 100%;
+}
+.yachtino-lightbox1 {
+    z-index: 2000;
+}
+
+#yachtino-lightbox-cont1 {
+    padding: 0.4em 0.9em 0.9em 0.9em;
+}
+#yachtino-lightbox-head1 {
+    text-align: right;
+    font-weight: bold;
+    margin-top: 0.2em;
+}
+#yachtino-lightbox-closex1 {
+    cursor: pointer;
+    font-size: 1.3em;
+    padding-left: 0.2em;
+    padding-right: 0.7em;
+}
+#yachtino-lightOkButton1 {
+    width: 4em;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 0.8em;
+}
+
+#yachtino-loader-list {
+    display: none;
+    position: fixed;
+    top: 40%;
+    left: 46%;
+    z-index: 3000;
+    background-image: url(../images/loading-wheel.gif);
+    width: 100px;
+    height: 100px;
+}
+#yachtino-waitbox {
+    position: fixed;
+    top: 40%;
+    left: calc(50% - 50px);
+    background-image: url(../images/loading-wheel.gif);
+    width: 100px;
+    height: 100px;
+    z-index: 5000;
+}
+
+@media screen and (max-width: 720px) {
+
+    div.yachtino-box-for-two {
+        display: block;
+    }
+    div.yachtino-box-for-two > div {
+        width: 100%;
+        margin-top: 1em;
+    }
+}
+

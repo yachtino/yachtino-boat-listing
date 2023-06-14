@@ -1,0 +1,18 @@
+<?php
+if (!empty($tplData['errors']['errMsg'])) : ?>
+<div class="yachtino-msgbox yachtino-msgbox-err">
+<?php
+    foreach ($tplData['errors']['errMsg'] as $errMsg) :
+        echo $errMsg . '<br>';
+    endforeach; ?>
+</div><br />
+<?php
+elseif (!empty($tplData['errors']['okMsg'])) : ?>
+<div class="yachtino-msgbox yachtino-msgbox-ok">
+<?php
+    foreach ($tplData['errors']['okMsg'] as $okMsg) :
+        echo $okMsg . '<br>';
+    endforeach; ?>
+</div><br />
+<?php
+endif; ?>

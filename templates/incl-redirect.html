@@ -1,0 +1,6 @@
+<br><br>Please wait, you will be redirected.<br><br>
+If not, click <a href="<?php echo esc_url($redirectUrl); ?>">here</a>.
+<script>
+    // window.location.href = "<?php echo str_replace('&', '&amp;', $redirectUrl); ?>";
+    window.location.replace("<?php echo $redirectUrl; ?>");
+</script>

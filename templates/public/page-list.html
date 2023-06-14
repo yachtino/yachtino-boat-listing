@@ -1,0 +1,20 @@
+<?php
+include YACHTINO_DIR_PATH . '/templates/incl-error-messages.html';
+?><div class="yachtino-articles<?php
+if (!empty($allData->search) && $allData->searchPlace == 'left') :
+    echo ' adv-filtering';
+endif; ?>">
+<?php
+if ($allData->searchPlace == 'top' && !empty($this->routingData->routeMeta['h1'])) :
+    echo '<h1>' . $this->routingData->routeMeta['h1'] . '</h1>';
+endif;
+if (!empty($allData->search)) :
+    include 'incl-searchform.html';
+endif;
+
+if ($allData->pageLayout == 'tiles') :
+    include 'incl-tiles.html';
+else :
+    include 'incl-list.html';
+endif; ?>
+</div>

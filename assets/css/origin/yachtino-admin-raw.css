@@ -1,0 +1,150 @@
+/**
+ * Yachtino boat listing - WordPress plugin.
+ * @author      Yachtino
+ * @package     yachtino
+ */
+
+div.yachtino-admin-wrapper {
+    margin-right: 20px !important;
+}
+
+div.yachtino-admin-wrapper, div.yachtino-admin-wrapper div {
+    margin: 0;
+    padding: 0;
+}
+
+div.yachtino-admin-wrapper div.yachtino-admin-box {
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+input.yachtino-field-edit-big {
+    width: 280px;
+}
+
+select.yachtino-field-edit-big {
+    width: 280px;
+}
+
+select.yachtino-field-edit-half {
+    width: 137px;
+}
+
+input.yachtino-field-edit-standard,
+select.yachtino-field-edit-standard {
+    width: 160px;
+}
+
+div.yachtino-admin-wrapper input::placeholder {
+    color: #aaa;
+}
+
+button.yachtino-admin-button,
+input.yachtino-admin-button {
+    min-height: 30px;
+    padding: 0 15px;
+    background-color: #2271b1;
+    color: #fff;
+    border: 1px solid #2271b1;
+    border-radius: 6px;
+    cursor: pointer;
+}
+a.yachtino-abort-link {
+    display: inline-block;
+    margin: 7px 15px;
+}
+
+input.yachtino-checkbox-lgs {
+    vertical-align: text-bottom;
+}
+
+label.yachtino-checkbox-lgs {
+    display: inline-block;
+    white-space: nowrap;
+    min-width: 75px;
+}
+div.yachtino-lgs-box {
+    display: flex;
+    line-height: 1.8em;
+}
+div.yachtino-lgs-box > div {
+    width: 125px;
+}
+
+div.yachtino-admin-wrapper div.yachtino-placeholder-box {
+    display: block;
+    float: left;
+    margin-left: 5px;
+}
+
+div.yachtino-admin-wrapper div.yachtino-placeholders {
+    display: block;
+    border: 1px solid #aaa;
+    padding: 6px;
+    border-radius: 4px;
+    margin-top: 10px;
+}
+
+div.yachtino-admin-wrapper div.yachtino-placeholders div.yachtino-tr {
+    border-bottom: 1px solid #ccc;
+}
+
+div.yachtino-admin-wrapper div.yachtino-placeholders div.yachtino-tr:last-child {
+    border-bottom: none;
+}
+
+div.yachtino-close-header {
+    width: 100%;
+}
+
+div.yachtino-close-header:after {
+    clear: both;
+}
+
+div.yachtino-close-x {
+    text-align: left;
+    cursor: pointer;
+    width: 16px;
+    float: right;
+    font-weight: 600;
+}
+
+.yachtino-button-common {
+    border-radius: 6px;
+    border: 1px solid #999999;
+    text-decoration: none;
+    padding: 0 0.2em 0 0.2em;
+    line-height: 1.5em;
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    padding: 0.4em 1.5em 0.4em 1.5em;
+    background-color: #1A468F;
+    border: 1px solid #1A468F;
+    text-decoration: none;
+}
+.yachtino-two-buttons {
+    text-align: center;
+    width: 100%
+}
+
+div.yachtino-admin-wrapper .yachtino-explain-text {
+    max-width: 350px;
+    font-size: 0.9em;
+}
+div.yachtino-admin-wrapper .yachtino-searchfield-box {
+    margin-top: 7px;
+    padding: 5px;
+    width: 100%;
+    border: 1px solid #aaa;
+    border-radius: 6px;
+}
+
+
+
+
+
+
+
+

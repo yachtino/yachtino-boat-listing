@@ -1,0 +1,147 @@
+<?php
+$thumbsPerSlide = 5;
+$numberPics = count($itemData->pics);
+$numberBars = ceil($numberPics / $thumbsPerSlide);
+
+$galleryId = (string)$itemData->itemId;
+$addGalleryNumber = '0';
+
+// main gallery
+if ($numberPics == 1) :
+    $isLast = 'true';
+else :
+    $isLast = 'false';
+endif;
+?>
+<div id="yachtino-thumbs-per-slide" class="yachtino-hidden"><?php echo $thumbsPerSlide; ?></div>
+<div class="yachtino-images">
+
+<div id="yoglry-<?php echo $galleryId . '-' . $addGalleryNumber; ?>" class="yoglry-container" data-start="0" data-last="<?php
+echo $isLast; ?>" data-number="<?php echo $numberPics; ?>">
+
+    <div class="yoglry-slider"><?php
+$imgCounter = 0;
+foreach ($itemData->pics as $picture) :
+    $leftPosition = $imgCounter * 100;
+    if ($imgCounter == 0) :
+        $classActive = ' yoglry-active';
+    else :
+        $classActive = '';
+    endif; ?>
+            <div class="yoglry-box<?php echo $classActive; ?>" id="yoglry-<?php
+    echo $galleryId . '-' . $addGalleryNumber . '-' . $imgCounter; ?>" style="left: <?php
+    echo $leftPosition . '%'; ?>"><img <?php
+        if ($imgCounter > 1) :
+            echo 'src="' . $this->imagePaths['placeholderImg'] . '" data-src="' . $picture['url'] . '"';
+        else :
+            echo 'src="' . $picture['url'] . '" data-src=""';
+        endif; ?> alt=""></div>
+<?php
+    $imgCounter ++;
+endforeach; ?>
+    </div>
+    <div class="yoglry-counter">1 / <?php echo $numberPics; ?></div>
+    <div class="yoglry-arrow yoglry-arrow-prev yachtino-hidden">&#9664;</div>
+    <div class="yoglry-arrow yoglry-arrow-next<?php
+    if ($numberPics == 1) :
+        echo ' yachtino-hidden';
+    endif; ?>">&#9654;</div>
+</div>
+<?php
+
+// thumbnails
+if (!empty($itemData->picsThumb)) :
+    if ($numberPics <= $thumbsPerSlide) :
+        $isLast = 'true';
+    else :
+        $isLast = 'false';
+    endif;
+    $maxLoad = ($thumbsPerSlide * 2) - 1; ?>
+
+<div id="yothumbglry-<?php echo $galleryId . '-' . $addGalleryNumber; ?>" class="yothumbglry-container" data-start="0" data-last="<?php
+    echo $isLast; ?>">
+
+    <div class="yothumbglry-slider"><?php
+    $imgCounter = 0;
+    foreach ($itemData->picsThumb as $picture) :
+        $leftPosition = $imgCounter * (100 / $thumbsPerSlide);
+        if ($imgCounter == 0) :
+            $classActive = ' yothumbglry-active';
+        else :
+            $classActive = '';
+        endif; ?>
+            <div class="yothumbglry-box<?php echo $classActive; ?>" id="yothumbglry-<?php
+        echo $galleryId . '-' . $addGalleryNumber . '-' . $imgCounter; ?>" style="left: <?php
+        echo $leftPosition . '%'; ?>"><img <?php
+        if ($imgCounter > $maxLoad) :
+            echo 'src="' . $this->imagePaths['placeholderImg'] . '" data-src="' . $picture['url'] . '"';
+        else :
+            echo 'src="' . $picture['url'] . '" data-src=""';
+        endif; ?> alt=""></div>
+<?php
+        $imgCounter ++;
+    endforeach; ?>
+    </div>
+    <div class="yothumbglry-arrow yothumbglry-arrow-prev yachtino-hidden">&#9664;</div>
+    <div class="yothumbglry-arrow yothumbglry-arrow-next<?php
+    if ($imgCounter <= $thumbsPerSlide) :
+        echo ' yachtino-hidden';
+    endif; ?>">&#9654;</div>
+</div>
+<?php
+endif; ?>
+<?php
+
+// large image slider
+if (!empty($itemData->picsMax)) :
+    if ($numberPics == 1) :
+        $isLast = 'true';
+    else :
+        $isLast = 'false';
+    endif; ?>
+
+<div class="yomaxglry-large yachtino-hidden">
+    <div id="yomaxglry-<?php echo $galleryId . '-' . $addGalleryNumber; ?>" class="yomaxglry-container" data-start="0" data-last="<?php
+    echo $isLast; ?>">
+
+        <div class="yomaxglry-slider"><?php
+    $imgCounter = 0;
+    foreach ($itemData->picsMax as $picture) :
+        $leftPosition = $imgCounter * 100;
+        if ($imgCounter == 0) :
+            $classActive = ' yomaxglry-active';
+        else :
+            $classActive = '';
+        endif;
+        if (!empty($picture['link'])) :
+            $aBegin = '<a href="' . $picture['link'] . '" target="_blank">';
+            $aEnd = '</a>';
+        else :
+            $aBegin = '';
+            $aEnd = '';
+        endif; ?>
+            <div class="yomaxglry-box<?php echo $classActive; ?>" id="yomaxglry-<?php
+        echo $galleryId . '-' . $addGalleryNumber . '-' . $imgCounter; ?>" style="left: <?php
+        echo $leftPosition . '%'; ?>"><?php echo $aBegin; ?><img <?php
+        if ($imgCounter > 0) :
+            echo 'src="' . $this->imagePaths['placeholderImg'] . '" data-src="' . $picture['url'] . '"';
+        else :
+            echo 'src="' . $picture['url'] . '" data-src=""';
+        endif; ?> alt=""><?php echo $aEnd; ?></div>
+<?php
+        $imgCounter ++;
+    endforeach; ?>
+        </div>
+        <div class="yomaxglry-counter">1 / <?php echo $numberPics; ?></div>
+        <div class="yomaxglry-close">x</div>
+        <div class="yomaxglry-arrow yomaxglry-arrow-prev yachtino-hidden">&#9664;</div>
+        <div class="yomaxglry-arrow yomaxglry-arrow-next<?php
+    if ($imgCounter <= $thumbsPerSlide) :
+        echo ' yachtino-hidden';
+    endif; ?>">&#9654;</div>
+    </div>
+</div>
+<?php
+endif; ?>
+
+</div>

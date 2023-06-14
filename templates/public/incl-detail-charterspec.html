@@ -1,0 +1,87 @@
+<div class="yachtino-charter">
+    <h2><?php echo $itemData->translation['Prices']; ?></h2>
+<?php
+if ($itemData->possibilities) : ?>
+    <div class="yachtino-charter-possibilities">
+        <b><?php echo $itemData->translation['Possibilities']; ?>: </b> <?php echo $itemData->possibilities; ?>
+    </div>
+<?php
+endif; ?>
+    <div class="yachtino-box-for-two">
+        <div class="yachtino-table-data"><?php
+foreach ($itemData->priceTable as $row) : ?>
+            <div class="yachtino-tr">
+                <div class="yachtino-td"><?php echo $row['name']; ?>:</div>
+                <div class="yachtino-td"><?php echo $row['value']; ?></div>
+            </div>
+<?php
+endforeach;?>
+        </div>
+        <div class="yachtino-table-data">
+            <div class="yachtino-tr">
+                <div class="yachtino-td"><?php echo $itemData->translation['Ports']; ?>:</div>
+                <div class="yachtino-td"><?php echo $itemData->ports; ?></div>
+            </div>
+            <div class="yachtino-tr">
+                <div class="yachtino-td"><?php echo $itemData->translation['Waterways']; ?>:</div>
+                <div class="yachtino-td"><?php echo $itemData->waterways; ?></div>
+            </div>
+            <div class="yachtino-tr">
+                <div class="yachtino-td"><?php echo $itemData->translation['Countries']; ?>:</div>
+                <div class="yachtino-td"><?php echo $itemData->countries; ?></div>
+            </div>
+        </div>
+    </div>
+<?php
+if ($itemData->seasonalPrices) : ?>
+    <div class="yachtino-charter-seasons-wrapper">
+        <h3><?php echo $itemData->translation['SeasonalPrices']; ?></h3>
+<?php
+    foreach ($itemData->seasonalPrices as $priceType => $priceData) : ?>
+        <div class="yachtino-charter-seasons-title"><?php echo $priceData['name']; ?></div>
+        <div class="yachtino-charter-seasons-boxes">
+<?php
+        foreach ($priceData['prices'] as $price) : ?>
+        <div class="yachtino-charter-seasons-item">
+            <div class="yachtino-charter-seasons-item-part1">
+        <?php echo $price['from']; ?><br>
+        <?php echo $itemData->translation['toPrice']; ?><br>
+        <?php echo $price['to']; ?>
+            </div>
+            <div class="yachtino-charter-seasons-item-part2"><?php echo $price['amount']; ?></div>
+        </div>
+<?php
+        endforeach; ?></div>
+<?php
+    endforeach; ?>
+    </div>
+<?php
+endif; ?>
+    <div class="yachtino-box-for-two">
+        <div>
+ <?php
+ if ($itemData->extraCharged) : ?>
+            <h3><?php echo $itemData->translation['ExtraCharged']; ?></h3>
+            <div class="yachtino-table-data yachtino-charter-extra">
+<?php
+    foreach ($itemData->extraCharged as $row) : ?>
+            <div class="yachtino-tr">
+                <div class="yachtino-td1"><?php echo $row['name']; ?>:</div>
+                <div class="yachtino-td2"><?php echo $row['value']; ?></div>
+            </div>
+<?php
+    endforeach; ?>
+            </div>
+<?php
+endif; ?>
+        </div>
+        <div>
+<?php
+if ($itemData->additional) : ?>
+            <h3><?php echo $itemData->translation['Additional']; ?>:</h3>
+    <?php echo $itemData->additional; ?>
+<?php
+endif; ?>
+        </div>
+    </div>
+</div>

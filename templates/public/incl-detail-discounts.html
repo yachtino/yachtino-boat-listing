@@ -1,0 +1,12 @@
+<div class="yachtino-discounts-wrapper">
+<h2><?php echo $itemData->translation['DiscountsOffers']; ?></h2>
+<div class="yachtino-discounts-constraint">(<?php echo $itemData->translation['discountsConstraint']; ?>)</div>
+<?php
+foreach ($itemData->discounts as $priceType => $discData) : ?>
+<h3><?php echo $discData['name']; ?></h3>
+<?php
+    foreach ($discData['discs'] as $disc) :
+        echo $disc . '<br>';
+    endforeach;
+endforeach; ?>
+</div>

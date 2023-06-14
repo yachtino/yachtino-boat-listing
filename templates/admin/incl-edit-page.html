@@ -1,0 +1,119 @@
+<div class="yachtino-tr">
+    <div class="yachtino-td"><label for="name" id="l-name"<?php
+if (!empty($tplData['errors']['errField']['name'])) :
+    echo ' class="yachtino-label-err"';
+endif; ?>><b><?php echo __('Internal_name', 'yachtino-boat-listing'); ?>*</b></label></div>
+    <div class="yachtino-td"><input type="text" name="name" id="name" value="<?php
+if (!empty($data['name'])) :
+    echo esc_attr($data['name']);
+endif; ?>" class="yachtino-field-edit-big<?php
+if (!empty($tplData['errors']['errField']['name'])) :
+    echo ' yachtino-field-err';
+endif; ?>" required maxlength="150"></div>
+</div>
+<div class="yachtino-tr">
+    <div class="yachtino-td"><label for="moduleid" id="l-moduleid"<?php
+if (!empty($tplData['errors']['errField']['moduleid'])) :
+    echo ' class="yachtino-label-err"';
+endif; ?>><b><?php echo __('Module', 'yachtino-boat-listing'); ?>*</b></label></div>
+    <div class="yachtino-td"><select type="text" name="moduleid" id="yachtino-moduleid" class="yachtino-field-edit-big<?php
+if (!empty($tplData['errors']['errField']['moduleid'])) :
+    echo ' yachtino-field-err';
+endif; ?>">
+    <option value="">---------------</option>
+<?php
+$thisItemType = '';
+foreach ($editOptions->modules as $row) : ?>
+    <option value="<?php echo esc_attr($row['id']); ?>"<?php
+    if (!empty($data['moduleid']) && $data['moduleid'] == $row['id']) :
+        echo ' selected';
+        $thisItemType = $row['itemType'];
+    endif; ?> data-addpath="<?php echo esc_attr($row['addToPath']); ?>" data-pholder="<?php
+    echo esc_attr($row['placeholder']); ?>" data-itemtype="<?php echo esc_attr($row['itemType']); ?>"><?php echo esc_html($row['name']); ?></option>
+<?php
+endforeach; ?>
+    </select></div>
+</div>
+<div class="yachtino-tr">
+    <div class="yachtino-td">&nbsp;</div>
+    <div class="yachtino-td"></div>
+</div>
+<?php
+
+foreach ($editOptions->langs as $lgRow) :
+    $lgRow['id'] = esc_attr($lgRow['id']); ?>
+<div class="yachtino-tr">
+    <div class="yachtino-td"><b><u><?php echo esc_html($lgRow['name']); ?></u></b></div>
+    <div class="yachtino-td"></div>
+</div>
+<div class="yachtino-tr">
+    <div class="yachtino-td"><label for="langs-<?php echo $lgRow['id']; ?>-path" id="l-langs-<?php echo $lgRow['id']; ?>-path"<?php
+    if (!empty($tplData['errors']['errField']['langs'][$lgRow['id']]['path'])) :
+        echo ' class="yachtino-label-err"';
+    endif; ?>><?php echo __('Path_slug', 'yachtino-boat-listing'); ?></label></div>
+    <div class="yachtino-td"><?php echo esc_html($siteUrl); ?>/<input type="text" name="langs[<?php
+    echo $lgRow['id']; ?>][path]" id="langs-<?php echo $lgRow['id']; ?>-path" value="<?php
+    if (!empty($data['langs'][$lgRow['id']]['path'])) :
+        echo esc_attr($data['langs'][$lgRow['id']]['path']);
+    endif; ?>" class="yachtino-field-edit-standard<?php
+    if (!empty($tplData['errors']['errField']['langs'][$lgRow['id']]['path'])) :
+        echo ' yachtino-field-err';
+    endif; ?>" placeholder="your-name-for-page"><span class="yachtino-js-add-to-path"></span></div>
+</div>
+<?php
+    $fields = [
+        'title' => 'Meta Title',
+        'h1'    => 'H1 Tag',
+        'descr' => 'Meta Description',
+    ];
+    foreach ($fields as $fieldKey => $fieldName) :
+        $fieldKey = esc_attr($fieldKey);
+?>
+<div class="yachtino-tr">
+    <div class="yachtino-td1"><label for="langs-<?php echo $lgRow['id']; ?>-<?php echo $fieldKey; ?>" id="l-langs-<?php echo $lgRow['id']; ?>-<?php echo $fieldKey; ?>"<?php
+        if (!empty($tplData['errors']['errField']['langs'][$lgRow['id']][$fieldKey])) :
+            echo ' class="yachtino-label-err"';
+        endif; ?>><?php echo $fieldName; ?></label></div>
+    <div class="yachtino-td1"><div style="display: block; float: left"><input type="text" name="langs[<?php echo $lgRow['id']; ?>][<?php
+        echo $fieldKey; ?>]" id="langs-<?php echo $lgRow['id']; ?>-<?php echo $fieldKey; ?>" value="<?php
+        if (!empty($data['langs'][$lgRow['id']][$fieldKey])) :
+            echo esc_attr($data['langs'][$lgRow['id']][$fieldKey]);
+        endif; ?>" placeholder="" class="yachtino-field-edit-big yachtino-js-placeholder<?php
+        if (!empty($tplData['errors']['errField']['langs'][$lgRow['id']][$fieldKey])) :
+            echo ' yachtino-field-err';
+        endif; ?>"></div>
+        <div class="yachtino-placeholder-box">
+            <a href="javascript:void(0);" class="yo-js-show-placeholder" id="yo-phholder-<?php
+        echo $lgRow['id']; ?>-<?php echo $fieldKey; ?>">Insert placeholder</a>
+            <div id="yachtino-placeholders-<?php echo $lgRow['id']; ?>-<?php echo $fieldKey; ?>" class="yachtino-placeholders yachtino-hidden">
+                <div class="yachtino-close-header"> &nbsp;
+                <div class="yachtino-close-x yo-js-close-placeholders" id="yachtino-pholder-<?php
+                echo $lgRow['id']; ?>-<?php echo $fieldKey; ?>">X</div></div>
+                <div class="yachtino-table-data">
+        <?php
+            foreach ($editOptions->placeholders as $pKey => $subData) :
+                $pKey = esc_attr($pKey);
+                $classHide = '';
+                if (!$thisItemType && !in_array($thisItemType, $subData['itypes'])) :
+                    $classHide = ' yachtino-hidden';
+                endif; ?>
+                    <div class="yachtino-tr yachtino-js-one-pholder-<?php echo $pKey; ?><?php echo $classHide; ?>">
+                        <div class="yachtino-td"><a href="javascript:void(0);" class="yachtino-js-pholder" data-id="<?php
+                echo $lgRow['id'] . '-' . $fieldKey . '-' . $pKey; ?>"><?php echo $pKey; ?></a></div>
+                        <div class="yachtino-td"><?php echo $subData['name']; ?></div>
+                    </div>
+        <?php
+            endforeach; ?>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<?php
+    endforeach; ?>
+<div class="yachtino-tr">
+    <div class="yachtino-td">&nbsp;</div>
+    <div class="yachtino-td"></div>
+</div>
+<?php
+endforeach; ?>

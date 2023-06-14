@@ -1,0 +1,195 @@
+<?php
+// for javascript - define item type
+?>
+<div class="yachtino-hidden" id="yachtino-itemtype"><?php echo $itemData->itemType; ?></div>
+<div class="yachtino-article-wrapper">
+<?php
+if (!empty($itemData->discounts)) :
+    include 'incl-detail-discounts.html';
+endif; ?>
+    <div class="yachtino-image-wrapper"><?php
+include 'incl-gallery-basic.html'; ?>
+        <div class="yachtino-images-sale-info"><?php
+if (!empty($itemData->textsDetail['part2'])) :
+    echo $itemData->textsDetail['part1'] . '<span class="yachtino-hidden" id="yachtino-moretext-box">'
+        . $itemData->textsDetail['part2'] . '</span><a href="javascript:void(0)" id="yachtino-moretext-head1">... &raquo;&nbsp;'
+        . $itemData->translation['wholeText'] . '</a> <a href="javascript:void(0)" class="yachtino-hidden" id="yachtino-moretext-head2">&raquo;&nbsp;'
+        . $itemData->translation['lessText'] . '</a>';
+
+elseif (!empty($itemData->textsDetail['part1'])) :
+    echo $itemData->textsDetail['part1'];
+endif; ?></div>
+<?php
+
+// show buttons for special requests
+if (!empty($specRequests['insurance']) || !empty($specRequests['financing'])
+|| !empty($specRequests['transport']) || !empty($requestData)) : ?>
+<div style="text-align: center"><br>
+<?php
+    if (!empty($requestData)) : ?>
+<div class="yachtino-spec-request-one yachtino-button"><a href="#yo-request" id="yachtino-req-button-detail"><?php echo $requestData->translation['sendRequest']; ?></a></div><br>
+<?php
+    endif;
+    if (!empty($specRequests['insurance'])) : ?>
+<div class="yachtino-spec-request-one yachtino-button js-yachtino-specrequest" data-type="insurance" data-id="<?php
+        echo esc_attr($itemData->itemId); ?>" data-lg="<?php echo esc_attr($moduleData['language']); ?>"><?php
+        echo $specRequests['insurance']; ?></div><br>
+<?php
+    endif;
+    if (!empty($specRequests['financing'])) : ?>
+<div class="yachtino-spec-request-one yachtino-button js-yachtino-specrequest" data-type="financing" data-id="<?php
+        echo esc_attr($itemData->itemId); ?>" data-lg="<?php echo esc_attr($moduleData['language']); ?>"><?php
+        echo $specRequests['financing']; ?></div><br>
+<?php
+    endif;
+    if (!empty($specRequests['transport'])) : ?>
+<div class="yachtino-spec-request-one yachtino-button js-yachtino-specrequest" data-type="transport" data-id="<?php
+        echo esc_attr($itemData->itemId); ?>" data-lg="<?php echo esc_attr($moduleData['language']); ?>"><?php
+        echo $specRequests['transport']; ?></div><br><br>
+<?php
+    endif; ?>
+</div>
+<?php
+endif;
+?>
+    </div>
+    <div class="yachtino-detail-wrapper">
+        <h2><?php echo $itemData->model; ?></h2>
+        <div id="general_data" class="yachtino-detail-block">
+<?php
+// sale price
+if ($itemData->itemType != 'cboat') : ?>
+            <div class="yachtino-detail-row highlight bold">
+                <div class="yachtino-detail-row-name"><?php echo $itemData->translation['Price']; ?></div>
+                <div class="yachtino-detail-row-value"><?php
+    if ($itemData->priceOld) : ?>
+                    <span class="yachtino-old-price yachtino-nowrap"><?php echo $itemData->priceOld; ?></span>
+<?php
+        echo ' ';
+    endif; ?>
+    <span class="yachtino-nowrap"><?php echo $itemData->price; ?></span><?php
+    if ($itemData->priceEuro) :
+        if ($itemData->priceOld) :
+            echo '<br>';
+        endif; ?>
+    <span class="yachtino-nowrap">(≈ <?php echo $itemData->priceEuro; ?>)</span>
+<?php
+    endif;
+    if (!empty($itemData->addToPrice)) : ?>
+    <br><span class="yachtino-add-to-price"><?php echo $itemData->addToPrice; ?></span>
+<?php
+    endif; ?>
+                </div>
+            </div>
+<?php
+endif;
+
+foreach ($itemData->firstBlock as $oneFeature) : ?>
+            <div class="yachtino-detail-row">
+                <div class="yachtino-detail-row-name"><?php echo $oneFeature['name']; ?></div>
+                <div class="yachtino-detail-row-value"><?php echo $oneFeature['value']; ?></div>
+            </div>
+<?php
+endforeach; ?>
+        </div>
+<?php
+
+// boats for sale and charter boats have a block with technical data; other adverts not
+if (!empty($itemData->secondBlock)) : ?>
+        <h2><?php echo $itemData->translation['TechnicalData']; ?></h2>
+        <div id="technical_data" class="yachtino-detail-block">
+<?php
+    foreach ($itemData->secondBlock as $oneFeature) : ?>
+            <div class="yachtino-detail-row">
+                <div class="yachtino-detail-row-name"><?php echo $oneFeature['name']; ?></div>
+                <div class="yachtino-detail-row-value"><?php echo $oneFeature['value']; ?></div>
+            </div>
+<?php
+    endforeach; ?>
+        </div>
+<?php
+endif;
+
+// boats for sale and charter boats have a block with boat engine data; other adverts not
+if (!empty($itemData->engines)) : ?>
+        <h2><?php echo $itemData->translation['Engine']; ?></h2>
+        <div id="engine" class="yachtino-detail-block">
+<?php
+    $counter = 0;
+    foreach ($itemData->engines as $engineData) :
+        $counter++;
+        if ($counter != 1) : ?>
+            <div class="yachtino-detail-row">
+                <div class="yachtino-detail-row-value">&nbsp;</div>
+                <div class="yachtino-detail-row-value"></div>
+            </div>
+<?php
+        endif; ?>
+            <div class="yachtino-detail-row">
+                <div class="yachtino-detail-row-name"><b><?php echo $itemData->translation['Engine'] . ' ' . $counter; ?></b></div>
+                <div class="yachtino-detail-row-value"></div>
+            </div>
+<?php
+        foreach ($engineData as $oneFeature) : ?>
+            <div class="yachtino-detail-row">
+                <div class="yachtino-detail-row-name"><?php echo $oneFeature['name']; ?></div>
+                <div class="yachtino-detail-row-value"><?php echo $oneFeature['value']; ?></div>
+            </div>
+<?php
+        endforeach;
+    endforeach; ?>
+        </div>
+<?php
+endif; ?>
+    </div>
+    <br clear="all">
+</div>
+<?php
+
+// possible for boats for sale and charter boats
+if (!empty($itemData->equipment) || !empty($itemData->textEquip)) : ?>
+<div class="yachtino-equipment-wrapper">
+    <div class="yachtino-equipment ajax-toggler">
+        <div class="eqhead"><?php echo $itemData->translation['Equipment']; ?> <span data-open="[ + ]" data-close="[ - ]">[ + ]</span></div>
+<?php
+    if (!empty($itemData->equipment)) :
+        foreach ($itemData->equipment as $equip) : ?>
+        <div class="yachtino-equipment-item-wrapper">
+            <h3><?php echo $equip['name']; ?></h3>
+            <div class="yachtino-equipment-item-text"><?php echo $equip['value']; ?></div>
+        </div>
+<?php
+        endforeach;
+    endif;
+    if (!empty($itemData->textEquip)) : ?>
+        <div class="yachtino-equipment-item-wrapper">
+            <h3><?php echo $itemData->translation['OtherInformation']; ?></h3>
+            <div class="yachtino-equipment-item-text"><?php echo $itemData->textEquip; ?></div>
+        </div>
+<?php
+    endif;?>
+    </div>
+</div>
+<?php
+
+// trailer equipment
+elseif (!empty($itemData->trailerEquipment)) : ?>
+<div class="yachtino-equipment-trailer">
+<b><?php echo $itemData->translation['Equipment']; ?></b><br>
+<?php echo $itemData->trailerEquipment; ?><br>
+</div>
+<?php
+endif;
+
+// specific fields for charter boats
+if ($itemData->itemType == 'cboat') :
+    include 'incl-detail-charterspec.html';
+endif;
+
+// include template with contact data and request form - only if selected in settings of this module
+if (!empty($requestData)) :
+    include 'incl-request.html';
+endif;
+
+include_once YACHTINO_DIR_PATH . '/templates/incl-lightbox.html';
+?>

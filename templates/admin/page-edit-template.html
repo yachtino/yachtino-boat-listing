@@ -1,0 +1,38 @@
+<div class="yachtino-admin-wrapper">
+<h1><?php echo $tplData['h1']; ?></h1>
+<form method="post" action="<?php echo esc_url($tplData['formAction']); ?>">
+<input type="hidden" name="isSent" value="1">
+<?php
+include YACHTINO_DIR_PATH . '/templates/incl-error-messages.html'; ?>
+<div class="yachtino-admin-box">
+<?php
+if (!empty($tplData['textTop'])) : ?>
+    <div class="yachtino-msg-box"><?php
+    echo $tplData['textTop']; ?><br>
+    </div><br>
+<?php
+endif; ?>
+    <div class="yachtino-table-data">
+
+<?php
+include $templateCoreName;
+?>
+        <div class="yachtino-tr">
+            <div class="yachtino-td">&nbsp;</div>
+            <div class="yachtino-td">
+                <div class="yachtino-box-for-two">
+<?php
+if (!empty($tplData['linkAbort'])) : ?>
+                    <div><a href="<?php echo esc_url($tplData['linkAbort']); ?>" class="yachtino-abort-link"><?php
+                    echo __('Cancel_verb', 'yachtino-boat-listing'); ?></a></div>
+<?php
+endif; ?>
+                    <div><input type="submit" class="yachtino-admin-button" name="sent" value="<?php
+                    echo esc_attr(__('Save_verb', 'yachtino-boat-listing')); ?>"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</form>
+</div>

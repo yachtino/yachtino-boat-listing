@@ -1,0 +1,132 @@
+<?php
+require_once 'yachtino-template-helper.php';
+$classHelper = Yachtino_Template_Helper::getInstance();
+$classHelper->setData($requestData);
+?><div id="yachtino-specrequest-box">
+    <h1><?php echo $requestData->translation['h1']; ?></h1>
+    <div class="yachtino-msgbox yachtino-msgbox-err yachtino-hidden" id="yachtino-specrequest-msgbox-err"><?php
+    echo $requestData->translation['fieldsRequired']; ?></div>
+    <div class="yachtino-msgbox yachtino-msgbox-ok yachtino-hidden" id="yachtino-specrequest-msgbox-ok"><?php
+    echo $requestData->translation['emailSent']; ?></div>
+    <form id="yachtino-specrequest-form">
+    <input type="hidden" id="yachtino-specreqfield-itid" value="<?php echo esc_attr($requestData->itemId); ?>">
+    <input type="hidden" id="yachtino-specreqfield-itemtype" value="<?php echo esc_attr($requestData->itemType); ?>">
+    <input type="hidden" id="yachtino-specreqfield-kind" value="<?php echo esc_attr($requestData->requestType); ?>">
+    <input type="hidden" id="yachtino-specreqfield-lg" value="<?php echo esc_attr($requestData->language); ?>">
+    <div class="yachtino-specrequest-error">
+        <?php echo $requestData->translation['fieldsRequired']; ?>
+    </div>
+    <div class="yachtino-specreq-mainbox">
+        <div class="yachtino-specreq-table">
+            <div class="yachtino-specreq-row">
+                <div class="yachtino-specreq-row-name"><h2><?php echo $requestData->translation['Boat']; ?></h2></div>
+                <div class="yachtino-specreq-row-value yachtino-nophone"></div>
+            </div>
+<?php
+// ########### info about boat #################################################
+
+echo $classHelper->specRequestSelect('btid', $requestData->translation['btid'], true, $requestData->editOptions['btid']);
+echo $classHelper->specRequestInput('model', $requestData->translation['model'], true);
+if ($requestData->requestType == 'financing') :
+    echo $classHelper->specRequestInput('manuf', $requestData->translation['manuf'], true);
+endif;
+echo $classHelper->specRequestInput('yb', $requestData->translation['yb'], true);
+echo $classHelper->specRequestInput('loa', $requestData->translation['loa'], true);
+
+if ($requestData->requestType == 'insurance') :
+    echo $classHelper->specRequestSelect('material', $requestData->translation['material'], false, $requestData->editOptions['material']);
+    echo $classHelper->specRequestInput('power', $requestData->translation['power'], false);
+    echo $classHelper->specRequestInput('mooring', $requestData->translation['mooring'], true);
+
+    $opts = [
+        'addAttrField' => ' placeholder="' . esc_attr($requestData->translation['areaPlaceholder']) . '"',
+    ];
+    echo $classHelper->specRequestInput('area', $requestData->translation['area'], true, $opts);
+    echo $classHelper->specRequestInput('price', $requestData->translation['price'], true);
+    echo $classHelper->specRequestSelect('use', $requestData->translation['use'], true, $requestData->editOptions['use']);
+
+elseif ($requestData->requestType == 'financing') :
+    echo $classHelper->specRequestInput('price', $requestData->translation['price'], true);
+    echo $classHelper->specRequestSelect('use', $requestData->translation['use'], true, $requestData->editOptions['use']);
+    echo $classHelper->specRequestSelect('financ', $requestData->translation['financ'], true, $requestData->editOptions['financ']);
+    echo $classHelper->specRequestSelect('dur', $requestData->translation['dur'], true, $requestData->editOptions['dur']);
+?>
+        <div class="yachtino-specreq-row">
+            <div class="yachtino-specreq-row-name"><label id="l-yachtino-specreqfield-advPay1" for="yachtino-specreqfield-advPay1" class="yachtino-bold"><?php
+        echo $requestData->translation['advPay']; ?>*</label></div>
+            <div class="yachtino-specreq-row-value"><input type="text" name="yachtino-specreqfield-advPay1" id="yachtino-specreqfield-advPay1" value="<?php
+    if (!empty($requestData->data['advPay1'])):
+        echo esc_attr($requestData->data['advPay1']);
+    endif; ?>" />&nbsp;€<br><?php
+    echo $requestData->translation['OR']; ?><br><input type="text" name="yachtino-specreqfield-advPay2" id="yachtino-specreqfield-advPay2" value="<?php
+    if (!empty($requestData->data['advPay2'])):
+        echo esc_attr($requestData->data['advPay2']);
+    endif; ?>">&nbsp;%
+            </div>
+        </div>
+<?php
+elseif ($requestData->requestType == 'transport') :
+    echo $classHelper->specRequestInput('beam', $requestData->translation['beam'], true);
+    echo $classHelper->specRequestInput('height', $requestData->translation['height'], false);
+    echo $classHelper->specRequestInput('weight', $requestData->translation['weight'], true);
+    echo $classHelper->specRequestSelect('material', $requestData->translation['material'], false, $requestData->editOptions['material']);
+    echo $classHelper->specRequestInput('price', $requestData->translation['price'], true);
+
+    $opts = [
+        'addAttrField' => ' placeholder="' . esc_attr($requestData->translation['toPlaceEg']) . '"',
+    ];
+    echo $classHelper->specRequestInput('fromPlace', $requestData->translation['fromPlace'], true, $opts);
+    echo $classHelper->specRequestSelect('fromCt', '', true, $requestData->editOptions['fromCt']);
+
+    $opts = [
+        'addAttrField' => ' placeholder="' . esc_attr($requestData->translation['toPlaceEg']) . '"',
+    ];
+    echo $classHelper->specRequestInput('toPlace', $requestData->translation['toPlace'], true, $opts);
+    echo $classHelper->specRequestSelect('toCt', '', true, $requestData->editOptions['fromCt']);
+    echo $classHelper->specRequestInput('prefDateFrom', $requestData->translation['prefDateFrom'], true);
+endif;
+?>
+<?php
+// ########### info about user #################################################
+?>
+        </div>
+        <div class="yachtino-specreq-table">
+            <div class="yachtino-specreq-row">
+                <div class="yachtino-specreq-row-name"><h2><?php echo $requestData->translation['YourData']; ?></h2></div>
+                <div class="yachtino-specreq-row-value yachtino-nophone"></div>
+            </div>
+
+<?php
+echo $classHelper->specRequestInput('cname', $requestData->translation['cname'], true);
+echo $classHelper->specRequestInput('cemail', $requestData->translation['cemail'], true);
+echo $classHelper->specRequestInput('cphone', $requestData->translation['cphone'], true);
+echo $classHelper->specRequestInput('caddress', $requestData->translation['caddress'], false);
+?>
+            <div class="yachtino-specreq-row">
+                <div class="yachtino-specreq-row-name"><label for="yachtino-specreqfield-ccity" id="l-yachtino-specreqfield-ccity"><?php
+                echo $requestData->translation['cpostcode']; ?> / <?php echo $requestData->translation['ccity']; ?></label></div>
+                <div class="yachtino-specreq-row-value">
+                    <input type="text" class="yachtino-specreq-field-postcode" id="yachtino-specreqfield-cpostcode">
+                    <input type="text" class="yachtino-specreq-field-city" id="yachtino-specreqfield-ccity">
+                </div>
+            </div>
+<?php
+echo $classHelper->specRequestSelect('ccountry', $requestData->translation['ccountry'], true, $requestData->editOptions['ccountry']);
+?>
+            <div class="yachtino-specreq-row required">
+                <div class="yachtino-specreq-row-name"><label for="yachtino-reqfield-ctext" id="l-yachtino-specreqfield-ctext"><b><?php
+                echo $requestData->translation['ctext']; ?>*</b></label></div>
+                <div class="yachtino-specreq-row-value">
+                    <textarea id="yachtino-specreqfield-ctext" required></textarea>
+                </div>
+            </div>
+            <div class="yachtino-specreq-row">
+                <div class="yachtino-specreq-row-name"></div>
+                <div class="yachtino-specreq-row-value">
+                    <input type="submit" id="yachtino-specrequest-submit" value="<?php echo esc_attr($requestData->translation['sendRequest']); ?>">
+                </div>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>

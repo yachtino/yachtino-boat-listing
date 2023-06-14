@@ -1,0 +1,26 @@
+<?php
+// for javascript - define item type
+?>
+<div class="yachtino-hidden" id="yachtino-itemtype"><?php echo $allData->itemType; ?></div>
+<div class="yachtino-articles-list">
+<?php
+if ($allData->searchPlace != 'top' && !empty($this->routingData->routeMeta['h1'])) :
+    echo '<h1>' . $this->routingData->routeMeta['h1'] . '</h1>';
+endif;
+if (!empty($allData->paging)) :
+    echo $allData->paging;
+endif;
+if ($allData->items) :
+    foreach ($allData->items as $itemData) :
+        include 'incl-list-item.html';
+    endforeach;
+else :
+    echo '<br>' . $allData->translation['NoSearchResult'] . '<br><br><br>';
+endif;
+if (!empty($allData->paging)) :
+    echo $allData->paging;
+endif; ?>
+</div>
+<?php
+include_once YACHTINO_DIR_PATH . '/templates/incl-lightbox.html';
+?>

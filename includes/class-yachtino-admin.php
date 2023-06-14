@@ -1,0 +1,1936 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * Yachtino boat listing
+ * @author   Yachtino GmbH
+ * @package  yachtino
+ * @since    1.0.0
+ */
+
+if (!defined('ABSPATH')) {
+    exit(); // Don't access directly
+};
+
+class Yachtino_Admin
+{
+    private object $wpdb;
+
+    private string $placeholderItemId = '([a-z0-9]+)';
+    private string $trailingSlash = '';
+    private string $adminLg = '';
+    private array $sentData;
+    private array $oldData;
+    private array $articleTypes;
+
+    /**
+     * singleton pattern
+     */
+    private static ?self $instance = null;
+
+    private function __construct() {}
+    private function __clone() {}
+
+    public static function get_instance(): self
+    {
+        global $wpdb;
+
+        if (is_null(self::$instance)) {
+            self::$instance = new self();
+            self::$instance->wpdb = $wpdb;
+
+            $permalink = get_option('permalink_structure');
+            if (mb_substr($permalink, -1, 1) == '/') {
+                self::$instance->trailingSlash = '/';
+            } else {
+                self::$instance->trailingSlash = '';
+            }
+
+            $locale = determine_locale();
+            self::$instance->adminLg = substr($locale, 0, 2);
+            $allowedLgs = Yachtino_Api::allowed_languages();
+            if (!isset($allowedLgs[self::$instance->adminLg])) {
+                self::$instance->adminLg = 'en';
+            }
+
+            self::$instance->articleTypes = Yachtino::article_types();
+        }
+        return self::$instance;
+    }
+
+    // when init WP -> check whether user has rights for calling pages
+    public function check_access(): void
+    {
+        global $wpdb;
+
+        // require_once YACHTINO_DIR_PATH . '/includes/basics/class-yachtino-activator.php';
+        // Yachtino_Activator::update_assets();
+
+        $requestUri = filter_input(INPUT_SERVER, 'REQUEST_URI');
+
+        // if editing pages or modules -> basic configuration must be done
+        if (strpos($requestUri, 'admin.php?page=yachtino-edit-module') !== false
+        || strpos($requestUri, 'admin.php?page=yachtino-edit-page') !== false) {
+
+            $settings = Yachtino::get_plugin_settings();
+            if (!$settings->apiKey) {
+                $targetUrl = self::create_url('yachtino-admin', 'first_settings');
+                header('Location: ' . $targetUrl, true, 301);
+                exit();
+            }
+        }
+
+        // if editing a page -> at least one module must be already created
+        if (strpos($requestUri, 'admin.php?page=yachtino-edit-page') !== false) {
+
+            $sql = 'SELECT `module_id` FROM ' . $this->wpdb->prefix . 'yachtino_modules';
+            $results = $this->wpdb->get_results($sql);
+            if (!$results) {
+                $targetUrl = self::create_url('yachtino-edit-module', 'first_module');
+                header('Location: ' . $targetUrl, true, 301);
+                exit();
+            }
+        }
+    }
+
+    /**
+     * Register the stylesheets for the admin side of the site.
+     *
+     * @since    1.0.0
+     */
+    public function enqueue_styles(): void
+    {
+        wp_enqueue_style(
+            'yachtino-admin',
+            plugins_url('/assets/css/yachtino-admin.css', YACHTINO_DIR_PATH . '/yachtino-boat-listing.php'),
+            [],
+            YACHTINO_VERSION,
+            'all',
+        );
+    }
+
+    /**
+     * Register the JavaScript for the admin side of the site.
+     *
+     * @since    1.0.0
+     */
+    public function enqueue_scripts(): void
+    {
+        wp_enqueue_script(
+            'yachtino-admin',
+            plugins_url('/assets/js/yachtino-admin.js', YACHTINO_DIR_PATH . '/yachtino-boat-listing.php'),
+            ['jquery'],
+            YACHTINO_VERSION,
+            false,
+        );
+       wp_localize_script('yachtino-admin', 'yachtino_admin', ['ajax_url' => admin_url('admin-ajax.php')]);
+    }
+
+    public function adminmenu(): void
+    {
+        add_menu_page(
+            __('Yo_plugin_name', 'yachtino-boat-listing'),
+            'Yachtino',
+            'manage_options',
+            'yachtino-admin',
+            [$this, 'page_configuration'],
+            'dashicons-superhero-alt',
+        );
+
+        add_submenu_page(
+            'yachtino-admin',
+            __('Yo_plugin_name', 'yachtino-boat-listing') . ' - ' . __('Modules', 'yachtino-boat-listing'),
+            __('Modules', 'yachtino-boat-listing'),
+            'manage_options',
+            'yachtino-admin-modules',
+            [$this, 'page_modules'],
+        );
+
+        // this submenu point will not be displayed
+        add_submenu_page(
+            '',
+            __('Yo_plugin_name', 'yachtino-boat-listing') . ' - ' . __('add_module', 'yachtino-boat-listing'),
+            __('Add_module', 'yachtino-boat-listing'),
+            'manage_options',
+            'yachtino-edit-module',
+            [$this, 'page_edit_module'],
+        );
+
+        // it is not possible to add variables to the admin URL, so we have to pack the function into another function
+        add_submenu_page(
+            'yachtino-admin',
+            __('Yo_plugin_name', 'yachtino-boat-listing') . ' - ' . __('add_module', 'yachtino-boat-listing'),
+            __('Add_module', 'yachtino-boat-listing'),
+            'manage_options',
+            'yachtino-add-module',
+            [$this, 'page_add_module'],
+        );
+
+        add_submenu_page(
+            'yachtino-admin',
+            __('Yo_plugin_name', 'yachtino-boat-listing') . ' - ' . __('Pages', 'yachtino-boat-listing'),
+            __('Pages', 'yachtino-boat-listing'),
+            'manage_options',
+            'yachtino-admin-pages',
+            [$this, 'page_pages'],
+        );
+
+        add_submenu_page(
+            'yachtino-admin',
+            __('Yo_plugin_name', 'yachtino-boat-listing') . ' - ' . __('add_page', 'yachtino-boat-listing'),
+            __('Add_page', 'yachtino-boat-listing'),
+            'manage_options',
+            'yachtino-edit-page',
+            [$this, 'page_edit_page'],
+        );
+    }
+
+// ############### editing main settings #######################################
+
+    /**
+     * Basic configuration of the plugin - API key, API site ID, languages...
+     */
+    public function page_configuration(): void
+    {
+        self::basic_checks();
+
+        $data = [];
+
+        // form sent -> update
+        $tplData = [
+            'errors' => [],
+        ];
+        if (filter_input(INPUT_POST, 'isSent')) {
+
+            $this->define_sent_data();
+
+            $apiKey = filter_input(INPUT_POST, 'apikey');
+            $apiSiteId = filter_input(INPUT_POST, 'apisiteid');
+
+            if ($apiKey && preg_match('/^[a-z0-9_]+$/', $apiKey)) {
+                $this->sentData['apikey'] = $apiKey;
+            }
+            if ($apiSiteId) {
+                $this->sentData['apisiteid'] = (int)$apiSiteId;
+            }
+
+            if (!empty($_POST['lgs']) && is_array($_POST['lgs'])) {
+                foreach ($_POST['lgs'] as $lg => $one) {
+                    if (preg_match('/^[a-z]{2}$/', $lg)) {
+                        $this->sentData['lgs'][$lg] = true;
+                    }
+                }
+            }
+
+            // check required fields and plausibility
+            $required = [
+                'apikey'    => 'API Key',
+                'apisiteid' => 'Site ID',
+                'lgs'       => __('Website_is_in_languages', 'yachtino-boat-listing'),
+            ];
+
+            foreach ($required as $fieldKey => $fieldName) {
+                if (empty($this->sentData[$fieldKey])) {
+                    $tplData['errors']['errMsg'][] = sprintf(
+                        __('err_field_required_XXX', 'yachtino-boat-listing'),
+                        '<b>"' . $fieldName . '"</b>'
+                    );
+                    $tplData['errors']['errField'][$fieldKey] = true;
+                }
+            }
+
+            // save sent data
+            if (!$tplData['errors']) {
+                $langs = [];
+                ksort($this->sentData['lgs']);
+                foreach ($this->sentData['lgs'] as $lg => $true) {
+                    $langs[] = $lg;
+                }
+
+                $yoSettings = [
+                    'apiKey'    => $this->sentData['apikey'],
+                    'apiSiteId' => (int)$this->sentData['apisiteid'],
+                    'languages' => $langs,
+                    'version'   => YACHTINO_VERSION,
+                ];
+                update_option('yachtino_settings', $yoSettings);
+
+                // at this place, redirecting by PHP is not possible, headers were already sent
+                // redirect by javascript in template
+                $redirectUrl = self::create_url('yachtino-admin', 'data_saved');
+                include YACHTINO_DIR_PATH . '/templates/incl-redirect.html';
+                exit();
+
+            // if errors -> show sent data in the page again
+            } else {
+                $data = $this->sentData;
+            }
+        }
+
+        // get saved data if no errors
+        if (!$data) {
+            $setts = get_option('yachtino_settings');
+            $data['apikey']    = $setts['apiKey'];
+            $data['apisiteid'] = $setts['apiSiteId'];
+            $data['lgs'] = [];
+            foreach ($setts['languages'] as $lg) {
+                $data['lgs'][$lg] = 1;
+            }
+        }
+
+        // get languages from API
+        $languages = $this->get_languages();
+
+        $tplData = self::add_tpl_data($tplData);
+
+        $link = 'https://www.boatadmin.com/' . $this->adminLg. '/data-export-user/credentials-api';
+        $tplData['textTop'] = sprintf(__('Yo_settings_explain', 'yachtino-boat-listing'),
+            '<a href="' . $link . '" target="_blank">' . $link . '</a>',
+            'feeds@yachtino.com',);
+
+        $tplData['h1'] = __('Yo_plugin_name', 'yachtino-boat-listing');
+        $templateCoreName = 'incl-edit-configuration.html';
+        include YACHTINO_DIR_PATH . '/templates/admin/page-edit-template.html';
+    }
+
+// ############### editing module ##############################################
+
+    public function page_modules(): void
+    {
+        self::basic_checks();
+
+        $sql = 'SELECT * FROM ' . $this->wpdb->prefix . 'yachtino_modules ORDER BY `name` ASC';
+        $results = $this->wpdb->get_results($sql);
+        $allData = [];
+
+        $basicLinkEdit = '/wp-admin/admin.php?page=yachtino-edit-module';
+        $counter = 0;
+        if ($results) {
+            foreach ($results as $result) {
+                $filter = '';
+                if ($result->filter) {
+                    $filters = json_decode($result->filter, true);
+                    foreach ($filters as $key => $val) {
+                        if (!is_array($val)) {
+                            $filter .= (string)$key . '=' . (string)$val . ', ';
+                            continue;
+                        }
+
+                        $counterKey = 0;
+                        foreach ($val as $key2 => $val2) {
+                            if ($counterKey == $key2) {
+                                $filter .= (string)$key . '[]=' . (string)$val2 . ', ';
+                            } else {
+                                $filter .= (string)$key . '[' . (string)$key2 . ']=' . (string)$val2 . ', ';
+                            }
+                            $counterKey++;
+                        }
+                    }
+                    if ($filter) {
+                        $filter = mb_substr($filter, 0, -2);
+                    }
+                }
+
+                $pageLayout = '';
+                if ($result->pageType == 'list' && $result->settings) {
+                    $settings = json_decode($result->settings, true);
+                    $pageLayout = __('page_layout_' . $settings['layout'], 'yachtino-boat-listing');
+                }
+
+                $allData[$counter] = [
+                    'moduleId'   => $result->module_id,
+                    'moduleName' => $result->name,
+                    'itemType'   => __($result->itemType, 'yachtino-boat-listing'),
+                    'pageType'   => __('page_' . $result->pageType, 'yachtino-boat-listing'),
+                    'pageLayout' => $pageLayout,
+                    'filter'     => $filter,
+                    'linkEdit'   => $basicLinkEdit . '&moduleid=' . $result->module_id,
+                    'linkRemove' => $basicLinkEdit . '&action=delete&moduleid=' . $result->module_id,
+                ];
+                $counter++;
+            }
+        }
+
+        $addOptions = $this->add_options_module();
+
+        $tplData = self::create_message([]);
+        $tplData['textTop'] = sprintf(__('Module_explain', 'yachtino-boat-listing'));
+        $tplData['textTop'] .= '<br><br>' . __('Wp_embedding_shortcode', 'yachtino-boat-listing')
+            . ' (lg = ' . __('language', 'yachtino-boat-listing');
+        if ($this->adminLg != 'en') {
+            $tplData['textTop'] .= ' / language';
+        }
+        $tplData['textTop'] .= ')<br><br>'
+            . __('List_of_boats_offers', 'yachtino-boat-listing') . ':<br>'
+            . '<b>[yachtino_module lg="' . $this->adminLg . '" name="your_module_name"]</b><br><br>'
+            . __('One_boat_offer', 'yachtino-boat-listing') . ':<br>'
+            . '<b>[yachtino_module lg="' . $this->adminLg . '" name="your_module_name" itemid="boat_id_or_trailer_id"]</b>';
+
+        $tplData['formActionDelete'] = self::create_url('yachtino-edit-module', '', ['action' => 'delete']);
+        $tplData['formActionAdd']    = self::create_url('yachtino-edit-module');
+
+        // coming from menu "Add module" -> open the editing form with javascript after the page is loaded
+        if (!empty($_GET['msg']) && $_GET['msg'] == 'first_step') {
+            $tplData['openAddForm'] = true;
+        }
+
+        include YACHTINO_DIR_PATH . '/templates/admin/page-list-modules.html';
+    }
+
+    // it is not possible to add variables to the admin menu URL,
+    // so we have to pack the function into another function
+    public function page_add_module(): void
+    {
+        $_GET['msg'] = 'first_step';
+        $this->page_modules();
+    }
+
+    public function page_edit_module(): void
+    {
+        self::basic_checks();
+
+        $data = [];
+        $tplData = [];
+
+        if (filter_input(INPUT_POST, 'moduleid')) {
+            $moduleId = (int)filter_input(INPUT_POST, 'moduleid');
+        } elseif (filter_input(INPUT_GET, 'moduleid')) {
+            $moduleId = (int)filter_input(INPUT_GET, 'moduleid');
+        } else {
+            $moduleId = null;
+        }
+
+        // get saved data
+        if ($moduleId) {
+
+            $sql = 'SELECT * FROM ' . $this->wpdb->prefix . 'yachtino_modules WHERE `module_id` = ' . $moduleId;
+            $results = $this->wpdb->get_results($sql);
+
+            // check whether this master ID exists
+            if (!$results) {
+                wp_die('This page does not exist.');
+            }
+
+            $this->oldData = [
+                'moduleId'    => $results[0]->module_id,
+                'name'        => $results[0]->name,
+                'itemtype'    => $results[0]->itemType,
+                'pagetype'    => $results[0]->pageType,
+                'filter'      => $results[0]->filter,
+                'searchForm'  => $results[0]->searchForm,
+                'linkedm'     => $results[0]->linkedDetailMaster,
+                'linkedu'     => $results[0]->linkedDetailUrl,
+                'settings'    => $results[0]->settings,
+            ];
+            if ($results[0]->settings) {
+                $settings = json_decode($results[0]->settings, true);
+                if ($results[0]->pageType == 'list') {
+                    if (!isset($settings['layout'])) {
+                        $settings['layout'] = 'list';
+                    }
+                    $this->oldData['bnr']    = $settings['hitsPerPage'];
+                    $this->oldData['paging'] = $settings['showPaging'];
+                    $this->oldData['layout'] = $settings['layout'];
+                    $this->oldData['sform']  = $settings['searchPlace'];
+
+                } else {
+                    $this->oldData['contact'] = $settings['showContactForm'];
+                    if (!empty($settings['insuranceRequest'])) {
+                        $this->oldData['insurance'] = $settings['insuranceRequest'];
+                    }
+                    if (!empty($settings['financingRequest'])) {
+                        $this->oldData['financing'] = $settings['financingRequest'];
+                    }
+                    if (!empty($settings['transportRequest'])) {
+                        $this->oldData['transport'] = $settings['transportRequest'];
+                    }
+                }
+            }
+            if ($results[0]->pageType == 'list') {
+                $search = json_decode($results[0]->searchForm, true);
+                foreach ($search as $fieldName) {
+                    $this->oldData['sf_' . $fieldName] = 1;
+                }
+
+                $moduleFilters = json_decode($results[0]->filter, true);
+                $possibleFilters = self::get_filters($results[0]->itemType);
+                foreach ($moduleFilters as $key => $value) {
+                    if (!is_array($value) && in_array($key, $possibleFilters)) {
+                        $this->oldData['fi_' . $key] = $value;
+                        $this->oldData['fltr'] = 1;
+                        unset($moduleFilters[$key]);
+                    }
+                }
+
+                // custom filters
+                $others = [];
+                foreach ($moduleFilters as $key => $val) {
+                    if (!is_array($val)) {
+                        $others[] = $key . '=' . $val;
+                        continue;
+                    }
+
+                    $counterKey = 0;
+                    foreach ($val as $key2 => $val2) {
+                        if ($counterKey == $key2) {
+                            $others[] = (string)$key . '[]=' . (string)$val2;
+                        } else {
+                            $others[] = (string)$key . '[' . (string)$key2 . ']=' . (string)$val2;
+                        }
+                        $counterKey++;
+                    }
+                }
+                if ($others) {
+                    $this->oldData['fi_custom'] = implode('&', $others);
+                    $this->oldData['fltr'] = 1;
+                }
+            }
+
+        } else {
+            $this->oldData = [];
+
+            $itemTypeRaw = filter_input(INPUT_POST, 'itemtype');
+            $pageTypeRaw = filter_input(INPUT_POST, 'pagetype');
+
+            if ($itemTypeRaw && in_array($itemTypeRaw, $this->articleTypes)) {
+                $itemType = $itemTypeRaw;
+            }
+            if ($pageTypeRaw && ($pageTypeRaw == 'detail' || $pageTypeRaw == 'list')) {
+                $pageType = $pageTypeRaw;
+            }
+
+            // for adding a module item type and page type must be given (javascript form sent)
+            if (empty($itemType) || empty($pageType)) {
+                // at this place, redirecting by PHP is not possible, headers were already sent
+                // redirect by javascript in template
+
+                // coming from menu
+                if (filter_input(INPUT_POST, 'firstStep')) {
+                    $redirectUrl = self::create_url('yachtino-admin-modules', 'first_step');
+                } else {
+                    $redirectUrl = self::create_url('yachtino-admin-modules', 'add_module_wrong');
+                }
+                include YACHTINO_DIR_PATH . '/templates/incl-redirect.html';
+                exit();
+            }
+        }
+
+        // delete
+        $act = filter_input(INPUT_GET, 'action');
+        if ($act && $act == 'delete') {
+            if (!$moduleId) {
+                wp_die('This page does not exist.');
+            }
+
+            // check whether the module can be deleted
+            $sql = 'SELECT `master_id`, `name` FROM ' . $this->wpdb->prefix . 'yachtino_route_master '
+                . 'WHERE `fk_module_id` = ' . $moduleId;
+            $results = $this->wpdb->get_results($sql);
+            if ($results) {
+                $pages = '';
+                foreach ($results as $result) {
+                    $pages .= $result->name . ', ';
+                }
+                $tplData['errors']['errMsg'][] = __('err_wp_module_delete_not_possible_page', 'yachtino-boat-listing')
+                    . '<br>(' . __('Page', 'yachtino-boat-listing') . ': ' . mb_substr($pages, 0, -2) . ')';
+            }
+
+            // delete really
+            if (empty($tplData['errors'])) {
+                $where = [
+                    'module_id' => $moduleId,
+                ];
+                $this->wpdb->delete($this->wpdb->prefix . 'yachtino_modules', $where);
+
+                // at this place, redirecting by PHP is not possible, headers were already sent
+                // redirect by javascript in template
+                $redirectUrl = self::create_url('yachtino-admin-modules', 'data_saved');
+                include YACHTINO_DIR_PATH . '/templates/incl-redirect.html';
+                exit();
+            }
+
+        // form sent -> check and save data
+        } elseif (filter_input(INPUT_POST, 'isSent')) {
+
+            // check data
+            $tplData['errors'] = $this->check_form_module($moduleId);
+
+            // save sent data
+            if (!$tplData['errors']) {
+                $moduleId = $this->save_form_module($moduleId);
+
+                // at this place, redirecting by PHP is not possible, headers were already sent
+                // redirect by javascript in template
+                $redirectUrl = self::create_url('yachtino-admin-modules', 'data_saved');
+                include YACHTINO_DIR_PATH . '/templates/incl-redirect.html';
+                exit();
+
+            } else {
+                $data = $this->sentData;
+            }
+        }
+
+        if (!$data) {
+            $data = $this->oldData;
+        }
+
+        if (empty($data['itemtype'])) {
+            $data['itemtype'] = $itemType;
+        }
+        if (empty($data['pagetype'])) {
+            $data['pagetype'] = $pageType;
+        }
+        $data['itemTypeWord'] = __($data['itemtype'], 'yachtino-boat-listing');
+        $data['pageTypeWord'] = __('page_' . $data['pagetype'], 'yachtino-boat-listing');
+
+        // get possible options for selectboxes
+        $editOptions = $this->edit_options_module($data['pagetype'], $data['itemtype']);
+
+        $tplData = self::add_tpl_data($tplData);
+        $tplData['textTop'] = sprintf(__('Module_explain', 'yachtino-boat-listing'));
+
+        $tplData['linkAbort'] = self::create_url('yachtino-admin-modules', '');
+
+        $tplData['h1'] = __('Yo_plugin_name', 'yachtino-boat-listing') . ' - ';
+        if ($this->oldData) {
+            $tplData['h1'] .= __('edit_module', 'yachtino-boat-listing');
+        } else {
+            $tplData['h1'] .= __('add_module', 'yachtino-boat-listing');
+        }
+        $templateCoreName = 'incl-edit-module.html';
+        include YACHTINO_DIR_PATH . '/templates/admin/page-edit-template.html';
+    }
+
+    private function check_form_module(?int $moduleId): array
+    {
+        $errors = [];
+
+        $this->define_sent_data();
+
+        if (!empty($this->sentData['bnr'])) {
+            $this->sentData['bnr'] = (int)$this->sentData['bnr'];
+        }
+        if (!empty($this->sentData['linkedm'])) {
+            $this->sentData['linkedm'] = (int)$this->sentData['linkedm'];
+        }
+        if (!empty($this->sentData['itemtype']) && in_array($this->sentData['itemtype'], $this->articleTypes)) {
+            $this->sentData['itemtype'] = $this->sentData['itemtype'];
+        } else {
+            $this->sentData['itemtype'] = '';
+        }
+        if (!empty($this->sentData['pagetype'])
+        && ($this->sentData['pagetype'] == 'detail' || $this->sentData['pagetype'] == 'list')) {
+            $this->sentData['pagetype'] = $this->sentData['pagetype'];
+        } else {
+            $this->sentData['pagetype'] = '';
+        }
+
+        if (!$this->sentData['itemtype'] || !$this->sentData['pagetype']) {
+            wp_die('This page does not exist.');
+        }
+
+        if ($this->sentData['pagetype'] == 'list') {
+            if (empty($this->sentData['sform'])
+            || ($this->sentData['sform'] != 'top' && $this->sentData['sform'] != 'left')) {
+                $this->sentData['sform'] = '';
+            }
+            if (empty($this->sentData['linkedm'])) {
+                $this->sentData['linkedm'] = null;
+            }
+            if (empty($this->sentData['linkedu'])) {
+                $this->sentData['linkedu'] = '';
+            }
+            if (!empty($this->sentData['layout'])
+            && ($this->sentData['layout'] == 'list' || $this->sentData['layout'] == 'tiles')) {
+                $this->sentData['layout'] = $this->sentData['layout'];
+            } else {
+                $this->sentData['layout'] = '';
+            }
+
+            // for first versions this feature is not necessary, so commented out in HTML
+            if (!empty($this->sentData['linkedu'])) {
+                $pathData = $this->adjust_path_detail($this->sentData['linkedu'], 'detail');
+                $this->sentData['linkeduDb'] = $pathData['pathDb'];
+            } else {
+                $this->sentData['linkeduDb'] = '';
+            }
+
+            // search form should not be shown
+            if (!$this->sentData['sform']) {
+                foreach ($this->sentData as $key => $value) {
+                    if (strpos($key, 'sf_') === 0) {
+                        unset($this->sentData[$key]);
+                    }
+                }
+
+            // search form selected but no field for search selected
+            } else {
+                $hasSearch = false;
+                foreach ($this->sentData as $key => $value) {
+                    if (strpos($key, 'sf_') === 0) {
+                        $hasSearch = true;
+                        break;
+                    }
+                }
+                if (!$hasSearch) {
+                    $this->sentData['sform'] = '';
+                }
+            }
+            if (empty($this->sentData['fltr'])) {
+                foreach ($this->sentData as $key => $value) {
+                    if (strpos($key, 'fi_') === 0) {
+                        unset($this->sentData[$key]);
+                    }
+                }
+            }
+        }
+
+        // check required fields and plausibility
+        $required = [
+            'name' => __('Module_name', 'yachtino-boat-listing'),
+        ];
+        if ($this->sentData['pagetype'] == 'list') {
+            $required['bnr'] = __('Ads_per_page', 'yachtino-boat-listing');
+        }
+
+        foreach ($required as $fieldKey => $fieldName) {
+            if (empty($this->sentData[$fieldKey])) {
+                $errors['errMsg'][] = sprintf(
+                    __('err_field_required_XXX', 'yachtino-boat-listing'),
+                    '<b>"' . $fieldName . '"</b>'
+                );
+                $errors['errField'][$fieldKey] = true;
+            }
+        }
+
+        if ($this->sentData['pagetype'] == 'list') {
+            if (empty($this->sentData['layout'])) {
+                $errors['errMsg'][] = sprintf(
+                    __('err_field_required_XXX', 'yachtino-boat-listing'),
+                    '<b>"' . __('Page_layout', 'yachtino-boat-listing') . '"</b>'
+                );
+                $errors['errField']['layout'] = true;
+                $errors['errField']['layout_list'] = true;
+                $errors['errField']['layout_tiles'] = true;
+            }
+
+            if (empty($this->sentData['linkedm']) && empty($this->sentData['linkedu'])) {
+                $errors['errMsg'][] = sprintf(
+                    __('err_field_required_XXX', 'yachtino-boat-listing'),
+                    '<b>"' . __('Linked_detail_view', 'yachtino-boat-listing') . '"</b>'
+                );
+                $errors['errField']['linkedm'] = true;
+
+            // both is filled -> wrong
+            } elseif (!empty($this->sentData['linkedm']) && !empty($this->sentData['linkedu'])) {
+                $errors['errMsg'][] = '<b>"' . __('Linked_detail_view', 'yachtino-boat-listing') . '"</b> - '
+                    . __('err_not_both_fields', 'yachtino-boat-listing');
+                $errors['errField']['linkedm'] = true;
+                $errors['errField']['linkedu'] = true;
+            }
+        }
+
+        // name must be unique
+        if (empty($errors['errField']['name'])) {
+            if (!preg_match('/^[a-z0-9_]+$/ui', $this->sentData['name'])) {
+                if ($this->adminLg == 'de') {
+                    $msg = 'Das Feld <b>"Name"</b> kann nur Ziffern (0-9), lateinische Buchstaben (ohne Sonderzeichen) '
+                        . 'und Unterstrich (_) enthalten.';
+                } else {
+                    $msg = 'The <b>"Name"</b> field can only contain digits (0-9), Latin letters (without special characters) '
+                        . 'and underscore (_).';
+                }
+                $errors['errMsg'][] = $msg;
+                $errors['errField']['name'] = true;
+
+            } else {
+                $sql = 'SELECT `module_id` FROM ' . $this->wpdb->prefix . 'yachtino_modules WHERE `name` = %s';
+                if ($moduleId) {
+                    $sql .= ' AND `module_id` != ' . $moduleId;
+                }
+                $sql = $this->wpdb->prepare($sql, [$this->sentData['name']]);
+                $results = $this->wpdb->get_results($sql);
+                if ($results) {
+                    $errors['errMsg'][] = __('err_name_taken', 'yachtino-boat-listing');
+                    $errors['errField']['name'] = true;
+                }
+            }
+        }
+
+        // field "name" can be max. 100 characters
+        if (empty($errors['errField']['name']) && mb_strlen($this->sentData['name']) > 100) {
+            $errors['errMsg'][] = '<b>' . __('Module_name', 'yachtino-boat-listing') . '</b> '
+                . sprintf(__('err_text_too_long', 'yachtino-boat-listing'), '100');
+            $errors['errField']['name'] = true;
+        }
+
+        // filters for boat list
+        if ($this->sentData['pagetype'] == 'list') {
+            if (!empty($this->sentData['fi_custom'])) {
+                $wrong = false;
+                $p = explode('&', $this->sentData['fi_custom']);
+                foreach ($p as $part) {
+                    $p2 = explode('=', $part);
+                    if (empty($p2[1])) {
+                        $wrong = true;
+                        break;
+                    }
+
+                    // if it is an array (not associative)
+                    $p2[0] = str_replace('[]', '', $p2[0]);
+
+                    if (preg_match('/[^-a-z0-9_]/i', $p2[0]) || preg_match('/[^-a-z0-9\%,\._]/i', $p2[1])) {
+                        $wrong = true;
+                    }
+                }
+
+                if ($wrong) {
+                    if ($this->adminLg == 'de') {
+                        $msg = 'Benutzerdefinierter Filter muss eine Zuordnung key - value sein. '
+                            . 'Mehrere Parameter müssen mit "&" getrennt sein. '
+                            . 'Der ganze Filter muss als URL formattiert sein, '
+                            . 'also keine Leerzeichen oder Sonderzeichen.';
+                    } else {
+                        $msg = 'Custom filter must be a key - value mapping. Multiple parameters must be separated with '
+                            . '"&". The whole filter must be formatted as a URL, i.e. no spaces or special characters.';
+                    }
+                    $errors['errMsg'][] = $msg;
+                    $errors['errField']['fi_custom'] = true;
+                }
+            }
+        }
+
+        return $errors;
+    }
+
+    private function save_form_module(?int $moduleId): int
+    {
+        $time = date('Y-m-d H:i:s');
+
+        // save main table (yachtino_route_master)
+        $dataDb = [];
+        if (!$this->oldData || $this->oldData['name'] != $this->sentData['name']) {
+            $dataDb['name'] = $this->sentData['name'];
+        }
+        if (!$this->oldData || $this->oldData['itemtype'] != $this->sentData['itemtype']) {
+            $dataDb['itemType'] = $this->sentData['itemtype'];
+        }
+        if (!$this->oldData || $this->oldData['pagetype'] != $this->sentData['pagetype']) {
+            $dataDb['pageType'] = $this->sentData['pagetype'];
+        }
+
+        if ($this->sentData['pagetype'] == 'list') {
+
+            // tiles in boat list are 4 item in one row, so the number of boats per page must be divisible by four
+            if ($this->sentData['layout'] == 'tiles' && $this->sentData['layout'] != 'left') {
+                $nr = $this->sentData['bnr'] / 4;
+                $nrRound = round($nr);
+                if ($nrRound != $nr) {
+                    $this->sentData['bnr'] = ceil($nr) * 4;
+                }
+            }
+
+            $settings = [
+                'hitsPerPage' => $this->sentData['bnr'],
+                'layout'      => 'list',
+                'showPaging'  => 0,
+                'searchPlace' => '',
+            ];
+            if (!empty($this->sentData['layout'])) {
+                $settings['layout'] = $this->sentData['layout'];
+            }
+            if (!empty($this->sentData['paging'])) {
+                $settings['showPaging'] = 1;
+            }
+            if (!empty($this->sentData['sform'])) {
+                $settings['searchPlace'] = $this->sentData['sform'];
+            }
+
+        } else {
+            $settings = [
+                'showContactForm'  => 0,
+                'insuranceRequest' => 0,
+                'financingRequest' => 0,
+                'transportRequest' => 0,
+            ];
+            if (!empty($this->sentData['contact'])) {
+                $settings['showContactForm'] = 1;
+            }
+
+            if ($this->sentData['itemtype'] == 'sboat') {
+                if (!empty($this->sentData['insurance'])) {
+                    $settings['insuranceRequest'] = 1;
+                }
+                if (!empty($this->sentData['financing'])) {
+                    $settings['financingRequest'] = 1;
+                }
+                if (!empty($this->sentData['transport'])) {
+                    $settings['transportRequest'] = 1;
+                }
+            }
+        }
+        $setts = json_encode($settings);
+        if (!$this->oldData || $this->oldData['settings'] != $setts) {
+            $dataDb['settings'] = $setts;
+        }
+
+        if ($this->sentData['pagetype'] == 'list') {
+            $filters = [];
+            $searchForm = [];
+            foreach ($this->sentData as $key => $value) {
+
+                // cabins can be 0
+                if ($value === '') {
+                    continue;
+                }
+
+                if ($key == 'fi_custom') {
+                    $p = explode('&', $value);
+                    foreach ($p as $part) {
+                        $part = trim($part);
+                        $p2 = explode('=', $part);
+                        if (!isset($p2[1])) {
+                            continue;
+                        }
+                        $p2[0] = trim($p2[0]);
+                        $p2[1] = trim($p2[1]);
+                        if ($p2[1] === '') {
+                            continue;
+                        }
+
+                        if (strpos($p2[0], '[]') !== false) {
+                            $keyNew = str_replace('[]', '', $p2[0]);
+                            $filters[$keyNew][] = $p2[1];
+                        } else {
+                            $filters[$p2[0]] = $p2[1];
+                        }
+                    }
+                    continue;
+                }
+
+                $begin = substr($key, 0, 3);
+                if ($begin == 'fi_') {
+                    $name = substr($key, 3);
+                    $filters[$name] = $value;
+
+                } elseif ($begin == 'sf_') {
+                    $searchForm[] = substr($key, 3);
+                }
+            }
+
+            $filter = json_encode($filters);
+            $sForm  = json_encode($searchForm);
+
+            if (!$this->oldData || $this->oldData['linkedm'] != $this->sentData['linkedm']) {
+                $dataDb['linkedDetailMaster'] = $this->sentData['linkedm'];
+            }
+            if (!$this->oldData || $this->oldData['linkedu'] != $this->sentData['linkeduDb']) {
+                $dataDb['linkedDetailUrl'] = $this->sentData['linkeduDb'];
+            }
+
+        } else {
+            $filter = json_encode([]);
+            $sForm = json_encode([]);
+        }
+        if (!$this->oldData || $this->oldData['filter'] != $filter) {
+            $dataDb['filter'] = $filter;
+        }
+        if (!$this->oldData || $this->oldData['searchForm'] != $sForm) {
+            $dataDb['searchForm'] = $sForm;
+        }
+
+        if ($dataDb) {
+            if ($moduleId) {
+                $dataDb['updated'] = $time;
+                $where = [
+                    'module_id' => $moduleId,
+                ];
+                $this->wpdb->update($this->wpdb->prefix . 'yachtino_modules', $dataDb, $where);
+
+            } else {
+                $dataDb['added']   = $time;
+                $dataDb['updated'] = $time;
+                $this->wpdb->insert($this->wpdb->prefix . 'yachtino_modules', $dataDb);
+                $moduleId = $this->wpdb->insert_id;
+            }
+        }
+
+        return $moduleId;
+    }
+
+    private function add_options_module(): \StdClass
+    {
+        $addOptions = new StdClass();
+        $addOptions->itemTypes = [];
+        foreach ($this->articleTypes as $itemType) {
+            $addOptions->itemTypes[] = [
+                'id'   => $itemType,
+                'name' => __($itemType, 'yachtino-boat-listing'),
+            ];
+        }
+
+        // if no modules given -> show only detail page, that must be created first
+        $showAll = true;
+        $sql = 'SELECT `module_id` FROM ' . $this->wpdb->prefix . 'yachtino_modules '
+            . 'WHERE pageType = "detail" LIMIT 1';
+        $results = $this->wpdb->get_results($sql);
+        if (!$results) {
+            $showAll = false;
+        }
+
+        $addOptions->pageTypes = [];
+        $addOptions->pageTypes[] = [
+            'id'   => 'detail',
+            'name' => __('page_detail', 'yachtino-boat-listing'),
+        ];
+
+        if ($showAll) {
+            $addOptions->pageTypes[] = [
+                'id'   => 'list',
+                'name' => __('page_list', 'yachtino-boat-listing'),
+            ];
+        }
+
+        return $addOptions;
+    }
+
+    private function edit_options_module(string $pageType, string $itemType): \StdClass
+    {
+        $editOptions = new StdClass();
+
+        if ($pageType == 'list') {
+            $editOptions->searchForm = self::get_search_form($itemType);
+
+            // which detail page should be linked to from list
+            $editOptions->detailPages = [];
+            $sql = 'SELECT `ms`.`master_id`, `ms`.`name` FROM ' . $this->wpdb->prefix . 'yachtino_route_master AS ms '
+                . 'INNER JOIN ' . $this->wpdb->prefix . 'yachtino_modules AS md ON `ms`.`fk_module_id` = `md`.`module_id`'
+                . 'WHERE `md`.`pageType` = "detail" AND `md`.`itemType` = "' . $itemType . '"';
+            $results = $this->wpdb->get_results($sql);
+            if ($results) {
+                foreach ($results as $result) {
+                    $editOptions->detailPages[] = [
+                        'id'   => $result->master_id,
+                        'name' => $result->name,
+                    ];
+                }
+            }
+
+            // get filters from API
+            $fields = '';
+            $filters = self::get_filters($itemType);
+            foreach ($filters as $filter) {
+                $fields .= $filter . ',';
+            }
+            $fields = mb_substr($fields, 0, -1);
+
+            $urlParts = [
+                'language' => $this->adminLg,
+                'part1'    => 'article-data',
+                'part2'    => 'search-form',
+            ];
+            $additionalVars = [
+                'itemtype' => $itemType,
+            ];
+            $additionalVars['fields'] = $fields;
+
+            $classApi = Yachtino_Api::get_instance();
+            $apiResponse = $classApi->send_request_to_api($urlParts, $additionalVars);
+            $editOptions->filters = $apiResponse->selects;
+
+            // search form at the top or on the side
+            $editOptions->searchPlace = [
+                0 => [
+                    'id'   => '',
+                    'name' => __('no_search_form', 'yachtino-boat-listing'),
+                ],
+                1 => [
+                    'id'   => 'top',
+                    'name' => __('search_form_at_top', 'yachtino-boat-listing'),
+                ],
+                2 => [
+                    'id'   => 'left',
+                    'name' => __('search_form_at_left', 'yachtino-boat-listing'),
+                ],
+            ];
+        }
+
+        return $editOptions;
+    }
+
+// ############### editing page ################################################
+
+    /*
+     * Shows generated pages
+     */
+    public function page_pages(): void
+    {
+        self::basic_checks();
+
+        $sql = 'SELECT rm.master_id, rm.name AS routeName, md.module_id, md.name AS moduleName, md.itemType, md.pageType '
+            . 'FROM ' . $this->wpdb->prefix . 'yachtino_route_master AS rm '
+            . 'INNER JOIN ' . $this->wpdb->prefix . 'yachtino_modules AS md ON rm.fk_module_id = md.module_id';
+        $results = $this->wpdb->get_results($sql);
+        $allData = [];
+
+        $basicLinkEdit = '/wp-admin/admin.php?page=yachtino-edit-page';
+        $counter = 0;
+        if ($results) {
+            foreach ($results as $result) {
+                $allData[$counter] = [
+                    'masterId'   => $result->master_id,
+                    'moduleId'   => $result->module_id,
+                    'routeName'  => $result->routeName,
+                    'moduleName' => $result->moduleName,
+                    'itemType'   => __($result->itemType, 'yachtino-boat-listing'),
+                    'pageType'   => __('page_' . $result->pageType, 'yachtino-boat-listing'),
+                    'linkEdit'   => $basicLinkEdit . '&masterid=' . $result->master_id,
+                    'linkRemove' => $basicLinkEdit . '&action=delete&masterid=' . $result->master_id,
+                    'paths'      => '',
+                ];
+
+                // get URLs
+                $sql = 'SELECT path, language FROM ' . $this->wpdb->prefix . 'yachtino_routes '
+                    . 'WHERE fk_master_id = ' . $result->master_id;
+                $resultsPath = $this->wpdb->get_results($sql);
+                $paths = [];
+                if ($resultsPath) {
+                    foreach ($resultsPath as $resultPath) {
+                        $path = stripslashes($resultPath->path);
+
+                        $link = $path;
+
+                        $path = mb_substr($path, 1);
+                        if (mb_substr($path, -1, 1) == '/') {
+                            $path = mb_substr($path, 0, -1);
+                        }
+                        if ($result->pageType == 'list') {
+                            $paths[] = '<a href="' . $link . '" target="_blank">' . $path . ' (' . $resultPath->language . ')</a>';
+                        } else {
+                            $paths[] = $path . ' (' . $resultPath->language . ')';
+                        }
+                    }
+                    if ($paths) {
+                        $allData[$counter]['paths'] = implode(', ', $paths);
+                    }
+                }
+                $counter++;
+            }
+        }
+
+        $tplData = self::create_message([]);
+        $tplData['formActionDelete'] = str_replace(
+            'page=yachtino-admin-pages', 'page=yachtino-edit-page&action=delete', filter_input(INPUT_SERVER, 'REQUEST_URI'));
+
+        include YACHTINO_DIR_PATH . '/templates/admin/page-list-pages.html';
+    }
+
+    public function page_edit_page(): void
+    {
+        self::basic_checks();
+
+        $data = [];
+        $tplData = [];
+
+        if (filter_input(INPUT_POST, 'masterid')) {
+            $masterId = (int)filter_input(INPUT_POST, 'masterid');
+        } elseif (filter_input(INPUT_GET, 'masterid')) {
+            $masterId = (int)filter_input(INPUT_GET, 'masterid');
+        } else {
+            $masterId = null;
+        }
+
+        // get saved data
+        if ($masterId) {
+
+            $sql = 'SELECT * FROM ' . $this->wpdb->prefix . 'yachtino_route_master WHERE `master_id` = ' . $masterId;
+            $results = $this->wpdb->get_results($sql);
+
+            // check whether this master ID exists
+            if (!$results) {
+                wp_die('This page does not exist.');
+            }
+
+            $this->oldData = [
+                'name'     => $results[0]->name,
+                'moduleid' => $results[0]->fk_module_id,
+                'langs'    => [],
+            ];
+
+            // get pages
+            $sql = 'SELECT `route_id`, `path`, `language`, `title`, `h1`, `description` '
+                . 'FROM ' . $this->wpdb->prefix . 'yachtino_routes WHERE `fk_master_id` = ' . $masterId;
+            $results = $this->wpdb->get_results($sql);
+            if ($results) {
+                foreach ($results as $route) {
+
+                    $path = stripslashes($route->path);
+
+                    // detail view
+                    if (strpos($path, $this->placeholderItemId) !== false) {
+                        $path = preg_replace('/\/?' . preg_quote($this->placeholderItemId, '/') . '\/?/', '', $path);
+                        $path = mb_substr($path, 1);
+
+                    // list
+                    } else {
+                        $path = mb_substr($path, 1, -1);
+                    }
+                    $this->oldData['langs'][$route->language] = [
+                        'route_id' => $route->route_id,
+                        'pathOrig' => $route->path,
+                        'path'  => $path,
+                        'title' => $route->title,
+                        'h1'    => $route->h1,
+                        'descr' => $route->description,
+                    ];
+                }
+            }
+
+        } else {
+            $this->oldData = [];
+        }
+
+        // delete
+        if (!empty($_GET['action']) && $_GET['action'] == 'delete') {
+            if (!$masterId) {
+                wp_die('This page does not exist.');
+            }
+
+            // check whether the page can be deleted
+            // detail view cannot be deleted if there is a module with boat list relying on it
+            $sql = 'SELECT `module_id`, `name` FROM ' . $this->wpdb->prefix . 'yachtino_modules '
+                . 'WHERE `linkedDetailMaster` = ' . $masterId;
+            $results = $this->wpdb->get_results($sql);
+            if ($results) {
+                $pages = '';
+                foreach ($results as $result) {
+                    $pages .= $result->name . ', ';
+                }
+                $tplData['errors']['errMsg'][] = __('err_wp_page_delete_not_possible_module', 'yachtino-boat-listing')
+                    . '<br>(' . __('Module', 'yachtino-boat-listing') . ': ' . mb_substr($pages, 0, -2) . ')';
+            }
+
+            if (empty($tplData['errors'])) {
+                // single routes
+                if (!empty($this->oldData['langs'])) {
+                    foreach ($this->oldData['langs'] as $lg => $subData) {
+                        $where = [
+                            'route_id' => $subData['route_id'],
+                        ];
+                        $this->wpdb->delete($this->wpdb->prefix . 'yachtino_routes', $where);
+                    }
+                }
+
+                $where = [
+                    'master_id' => $masterId,
+                ];
+                $this->wpdb->delete($this->wpdb->prefix . 'yachtino_route_master', $where);
+
+                // at this place, redirecting by PHP is not possible, headers were already sent
+                // redirect by javascript in template
+                $redirectUrl = self::create_url('yachtino-admin-pages', 'data_saved');
+                include YACHTINO_DIR_PATH . '/templates/incl-redirect.html';
+                exit();
+            }
+
+        // form sent -> check and save data
+        } elseif (filter_input(INPUT_POST, 'isSent')) {
+
+            // check data
+            $tplData['errors'] = $this->check_form_page($masterId);
+
+            // save sent data
+            if (!$tplData['errors']) {
+                $masterId = $this->save_form_page($masterId);
+
+                // at this place, redirecting by PHP is not possible, headers were already sent
+                // redirect by javascript in template
+                $redirectUrl = self::create_url('yachtino-admin-pages', 'data_saved');
+                include YACHTINO_DIR_PATH . '/templates/incl-redirect.html';
+                exit();
+
+            } else {
+                $data = $this->sentData;
+            }
+        }
+
+        // get data (if no errors and it is not adding new page)
+        if (!$data && $masterId) {
+            $data = $this->oldData;
+        }
+
+        // get possible options for selectboxes
+        $editOptions = $this->edit_options_page();
+
+        $siteUrl = get_option('siteurl');
+        $siteUrl = preg_replace('/https?:\/\/(www\.|)/', '', $siteUrl);
+
+        $tplData = self::add_tpl_data($tplData);
+
+        // show text for multi language pages - the path to the page must contain the language (eg. /cs/lode for Czech)
+        if (count($editOptions->langs) > 1) {
+            $tplData['textTop'] = '<span style="color:#900">' . __('Wp_path_language', 'yachtino-boat-listing') . '</span>';
+        }
+
+        $tplData['linkAbort'] = self::create_url('yachtino-admin-pages', '');
+
+        $tplData['h1'] = __('Yo_plugin_name', 'yachtino-boat-listing') . ' - ' . __('edit_page', 'yachtino-boat-listing');
+        $templateCoreName = 'incl-edit-page.html';
+        include YACHTINO_DIR_PATH . '/templates/admin/page-edit-template.html';
+    }
+
+    private function check_form_page(?int $masterId): array
+    {
+        $errors = [];
+
+        $this->define_sent_data();
+
+        if (!empty($this->sentData['moduleid'])) {
+            $this->sentData['moduleid'] = (int)$this->sentData['moduleid'];
+        }
+        foreach ($this->sentData['langs'] as $lg => $subData) {
+            if (!preg_match('/^[a-z]{2}$/', $lg)) {
+                unset($this->sentData['langs'][$lg]);
+            }
+            if (empty($subData['path'])) {
+                $this->sentData['langs'][$lg]['path'] = '';
+            }
+            if (empty($subData['title'])) {
+                $this->sentData['langs'][$lg]['title'] = '';
+            }
+            if (empty($subData['h1'])) {
+                $this->sentData['langs'][$lg]['h1'] = '';
+            }
+            if (empty($subData['desc'])) {
+                $this->sentData['langs'][$lg]['desc'] = '';
+            }
+        }
+
+        // check required fields and plausibility
+        $required = [
+            'name'     => __('Internal_name', 'yachtino-boat-listing'),
+            'moduleid' => __('Module', 'yachtino-boat-listing'),
+        ];
+
+        foreach ($required as $fieldKey => $fieldName) {
+            if (empty($this->sentData[$fieldKey])) {
+                $errors['errMsg'][] = sprintf(
+                    __('err_field_required_XXX', 'yachtino-boat-listing'),
+                    '<b>"' . $fieldName . '"</b>'
+                );
+                $errors['errField'][$fieldKey] = true;
+            }
+        }
+
+        // name must contain only allowed characters and cannot be twice in the db
+        if (empty($errors['errField']['name'])) {
+            if (!preg_match('/^[a-z0-9_]+$/ui', $this->sentData['name'])) {
+                if ($this->adminLg == 'de') {
+                    $msg = 'Das Feld <b>"Name"</b> kann nur Ziffern (0-9), lateinische Buchstaben (ohne Sonderzeichen) '
+                        . 'und Unterstrich (_) enthalten.';
+                } else {
+                    $msg = 'The <b>"Name"</b> field can only contain digits (0-9), Latin letters (without special characters) '
+                        . 'and underscore (_).';
+                }
+                $errors['errMsg'][] = $msg;
+                $errors['errField']['name'] = true;
+
+            } else {
+                $sql = 'SELECT `master_id` FROM ' . $this->wpdb->prefix . 'yachtino_route_master WHERE `name` = %s';
+                if ($masterId) {
+                    $sql .= ' AND `master_id` != ' . $masterId;
+                }
+                $sql = $this->wpdb->prepare($sql, [$this->sentData['name']]);
+                $results = $this->wpdb->get_results($sql);
+
+                if ($results) {
+                    $errors['errMsg'][] = __('err_name_taken', 'yachtino-boat-listing');
+                    $errors['errField']['name'] = true;
+                }
+            }
+        }
+
+        // field "name" can be max. 100 characters
+        if (empty($errors['errField']['name']) && mb_strlen($this->sentData['name']) > 100) {
+            $errors['errMsg'][] = '<b>' . __('Internal_name', 'yachtino-boat-listing') . '</b> '
+                . sprintf(__('err_text_too_long', 'yachtino-boat-listing'), '100');
+            $errors['errField']['name'] = true;
+        }
+
+        // at least one language is required
+        // remove languages that are not filled
+        foreach ($this->sentData['langs'] as $lg => $subData) {
+
+            if (!$subData['path'] && !$subData['title'] && !$subData['h1'] && !$subData['descr']) {
+                unset($this->sentData['langs'][$lg]);
+
+            // check filled fields
+            } elseif (empty($subData['path'])) {
+                $errors['errMsg'][] = sprintf(
+                    __('err_field_required_XXX', 'yachtino-boat-listing'),
+                    '<b>"' . __('Path_slug', 'yachtino-boat-listing') . '"</b>'
+                );
+                $errors['errField']['langs'][$lg]['path'] = true;
+            }
+        }
+
+        if (empty($this->sentData['langs'])) {
+            $errors['errMsg'][] = __('err_wp_page_lg', 'yachtino-boat-listing');
+            foreach ($_POST['langs'] as $lg => $subData) {
+                if (preg_match('/^[a-z]{2}$/', $lg)) {
+                    $errors['errField']['langs'][$lg]['path'] = true;
+                }
+            }
+        }
+
+        // get data from module
+        $moduleData = null;
+        if ($this->sentData['moduleid']) {
+            $sql = 'SELECT itemType, pageType FROM ' . $this->wpdb->prefix . 'yachtino_modules WHERE module_id = ' . $this->sentData['moduleid'];
+            $results = $this->wpdb->get_results($sql);
+            if ($results) {
+                $moduleData = $results[0];
+
+            } else {
+                $errors['errMsg'][] = __('err_wp_module_not_exists', 'yachtino-boat-listing');
+                $errors['errField']['moduleid'] = true;
+            }
+        }
+
+        // format path for inserting into db
+        if ($moduleData) {
+
+            // check whether path already in db
+            foreach ($this->sentData['langs'] as $lg => $subData) {
+                $pathData = $this->adjust_path_detail($subData['path'], $moduleData->pageType);
+
+                // check whether path already in db
+                $sql = 'SELECT `route_id` FROM ' . $this->wpdb->prefix . 'yachtino_routes AS `md` '
+                    . 'WHERE path = "' . addslashes($pathData['pathDb']) . '"';
+                if ($this->oldData && !empty($this->oldData['langs'][$lg]['route_id'])) {
+                    $sql .= ' AND route_id != ' . $this->oldData['langs'][$lg]['route_id'];
+                }
+
+                $results = $this->wpdb->get_results($sql);
+                if ($results) {
+                    $errors['errMsg'][] = '<b>"' . $this->sentData['langs'][$lg]['path'] . '"</b> - '
+                        . __('err_wp_path_already_in_db', 'yachtino-boat-listing');
+                    $errors['errField']['langs'][$lg]['path'] = true;
+
+                } else {
+                    $this->sentData['langs'][$lg]['pathDb'] = $pathData['pathDb'];
+                }
+            }
+        }
+
+        return $errors;
+    }
+
+    private function save_form_page(?int $masterId): int
+    {
+        $time = date('Y-m-d H:i:s');
+
+        // save main table (yachtino_route_master)
+        $dataDb = [];
+        if (!$this->oldData || $this->oldData['name'] != $this->sentData['name']) {
+            $dataDb['name'] = $this->sentData['name'];
+        }
+        if (!$this->oldData || $this->oldData['moduleid'] != $this->sentData['moduleid']) {
+            $dataDb['fk_module_id'] = $this->sentData['moduleid'];
+        }
+
+        if ($dataDb) {
+            if ($masterId) {
+                $dataDb['updated'] = $time;
+                $where = [
+                    'master_id' => $masterId,
+                ];
+                $this->wpdb->update($this->wpdb->prefix . 'yachtino_route_master', $dataDb, $where);
+
+            } else {
+                $dataDb['added']   = $time;
+                $dataDb['updated'] = $time;
+                $this->wpdb->insert($this->wpdb->prefix . 'yachtino_route_master', $dataDb);
+                $masterId = $this->wpdb->insert_id;
+            }
+        }
+
+        // save each language
+        foreach ($this->sentData['langs'] as $lg => $subData) {
+            if (isset($this->oldData['langs'][$lg])) {
+                $oldSet = $this->oldData['langs'][$lg];
+                unset($this->oldData['langs'][$lg]); // remaining languages will be deleted later
+            } else {
+                $oldSet = [];
+            }
+
+            $dataDb = [];
+            if (!$oldSet || $oldSet['pathOrig'] != $subData['pathDb']) {
+                $dataDb['path'] = $subData['pathDb'];
+            }
+            if (!$oldSet || $oldSet['title'] != $subData['title']) {
+                $dataDb['title'] = $subData['title'];
+            }
+            if (!$oldSet || $oldSet['h1'] != $subData['h1']) {
+                $dataDb['h1'] = $subData['h1'];
+            }
+            if (!$oldSet || $oldSet['descr'] != $subData['descr']) {
+                $dataDb['description'] = $subData['descr'];
+            }
+
+            if ($dataDb) {
+                if ($oldSet) {
+                    $dataDb['updated'] = $time;
+                    $where = [
+                        'route_id' => $oldSet['route_id'],
+                    ];
+                    $this->wpdb->update($this->wpdb->prefix . 'yachtino_routes', $dataDb, $where);
+
+                } else {
+                    $dataDb['fk_master_id'] = $masterId;
+                    $dataDb['language']     = $lg;
+                    $dataDb['added']        = $time;
+                    $dataDb['updated']      = $time;
+                    $this->wpdb->insert($this->wpdb->prefix . 'yachtino_routes', $dataDb);
+                }
+            }
+        }
+
+        // if some old sets are remaining -> delete
+        if (!empty($this->oldData['langs'])) {
+            foreach ($this->oldData['langs'] as $lg => $subData) {
+                $where = [
+                    'route_id' => $subData['route_id'],
+                ];
+                $this->wpdb->delete($this->wpdb->prefix . 'yachtino_routes', $where);
+            }
+        }
+
+        return $masterId;
+    }
+
+    private function edit_options_page(): \StdClass
+    {
+        $editOptions = new StdClass();
+        $editOptions->modules = [];
+        $sql = 'SELECT `module_id`, `name`, `itemType`, `pageType` '
+            . 'FROM ' . $this->wpdb->prefix . 'yachtino_modules '
+            . 'ORDER BY name ASC';
+        $results = $this->wpdb->get_results($sql);
+        if ($results) {
+            foreach ($results as $module) {
+                if ($module->pageType == 'detail') {
+                    $addToPath = '/' . substr($module->itemType, 0, 1) . '1001' . $this->trailingSlash;
+                    if ($module->itemType == 'cboat') {
+                        $placeholder = '{model} for rent';
+                    } else {
+                        $placeholder = '{model} for sale';
+                    }
+                } else {
+                    $addToPath = '/';
+                    if ($module->itemType == 'cboat') {
+                        $placeholder = 'Boats for rent';
+                    } elseif ($module->itemType == 'trailer') {
+                        $placeholder = 'Boat trailers for sale';
+                    } elseif ($module->itemType == 'engine') {
+                        $placeholder = 'Boat engines for sale';
+                    } elseif ($module->itemType == 'mooring') {
+                        $placeholder = 'Boat moorings for sale';
+                    } elseif ($module->itemType == 'gear') {
+                        $placeholder = 'Marine gear for sale';
+                    } else {
+                        $placeholder = 'Boats for sale';
+                    }
+                }
+                $editOptions->modules[] = [
+                    'id'          => $module->module_id,
+                    'name'        => $module->name,
+                    'itemType'    => $module->itemType,
+                    'addToPath'   => $addToPath,
+                    'placeholder' => $placeholder,
+                ];
+            }
+        }
+
+        // possible languages
+        $editOptions->langs = [];
+        $settings = Yachtino::get_plugin_settings();
+        foreach ($settings->languages as $lg) {
+            $name = __('lg_website_' . $lg, 'yachtino-boat-listing');
+            $name = mb_strtoupper(mb_substr($name, 0, 1)) . mb_substr($name, 1);
+            $editOptions->langs[] = [
+                'id'   => $lg,
+                'name' => $name,
+            ];
+        }
+
+        // placeholders for meta tags
+        $editOptions->placeholders = self::get_placeholders();
+
+        return $editOptions;
+    }
+
+// ############### helping methods #############################################
+
+    private static function basic_checks(): void
+    {
+        if (!current_user_can('manage_options')) {
+            wp_die(__('You do not have sufficient permissions to access this page.'));
+        }
+
+        if (!is_plugin_active('yachtino-boat-listing/yachtino-boat-listing.php')) {
+            wp_die(__('You call an inactive plugin.'));
+        }
+    }
+
+    private static function add_tpl_data(array $tplData): array
+    {
+        // define URL for form action
+        $tplData['formAction'] = self::remove_msg_var();
+
+        // message sent in the URL
+        $tplData = self::create_message($tplData);
+        return $tplData;
+    }
+
+    /**
+     * If a message (variable msg) sent in the URL -> display this message as translated text
+     */
+    private static function create_message(array $tplData): array
+    {
+        if (empty($_GET['msg'])) {
+            return $tplData;
+        }
+
+        // if no settings edited yet, redirect from other edit pages to configuration
+        if ($_GET['msg'] == 'first_settings') {
+            $tplData['errors']['errMsg'] = [
+                0 => __('Msg_first_settings', 'yachtino-boat-listing'),
+            ];
+
+        // if no module edited yet, redirect from other edit pages to module editing
+        } elseif ($_GET['msg'] == 'first_module') {
+            $tplData['errors']['errMsg'] = [
+                0 => __('Msg_first_module', 'yachtino-boat-listing'),
+            ];
+
+        } elseif ($_GET['msg'] == 'data_saved') {
+            $tplData['errors']['okMsg'] = [
+                0 => __('Msg_data_saved', 'yachtino-boat-listing'),
+            ];
+
+        // not all required fields filled for adding module
+        } elseif ($_GET['msg'] == 'add_module_wrong') {
+            $tplData['errors']['errMsg'] = [
+                0 => sprintf(__('err_field_required_XXX', 'yachtino-boat-listing'),
+                    '<b>"' . __('Offer') . '"</b>'),
+                1 => sprintf(__('err_field_required_XXX', 'yachtino-boat-listing'),
+                    '<b>"' . __('Page') . '"</b>'),
+            ];
+        }
+
+        return $tplData;
+    }
+
+    private static function remove_msg_var(): string
+    {
+        $targetUrl = filter_input(INPUT_SERVER, 'REQUEST_URI');
+        return preg_replace('/\&msg\=[a-z0-9_]+/', '', $targetUrl);
+    }
+
+    private static function create_url(string $newPage, string $message = '', array $otherVars = []): string
+    {
+        $thisUrl = admin_url() . 'admin.php?page=' . $newPage;
+        if ($otherVars) {
+            foreach ($otherVars as $key => $value) {
+                $thisUrl .= '&' . $key . '=' . $value;
+            }
+        }
+        if ($message) {
+            $thisUrl .= '&msg=' . $message;
+        }
+        return $thisUrl;
+    }
+
+    private function get_languages(): array
+    {
+        $urlParts = [
+            'language' => $this->adminLg,
+            'part1'    => 'article-special',
+            'part2'    => 'get-mixed',
+        ];
+        $additionalVars = [
+            'lgs' => 1,
+        ];
+        $classApi = Yachtino_Api::get_instance();
+        $json = $classApi->send_request_to_api($urlParts, $additionalVars);
+
+        if (!empty($json->languages)) {
+            return (array)$json->languages;
+
+        } else {
+            return [];
+        }
+    }
+
+    private static function get_placeholders(): array
+    {
+        return [
+            'model'       => [
+                'name'   => __('Model', 'yachtino-boat-listing'),
+                'itypes' => ['cboat', 'sboat', 'engine', 'trailer', 'mooring', 'gear'],
+            ],
+            'name'        => [
+                'name'   => __('Boat_name', 'yachtino-boat-listing'),
+                'itypes' => ['cboat', 'sboat',],
+            ],
+            'yearBuilt'    => [
+                'name'   => __('Year_built', 'yachtino-boat-listing'),
+                'itypes' => ['cboat', 'sboat', 'engine', 'trailer', 'gear'],
+            ],
+            'manufacturer' => [
+                'name'   => __('Manufacturer', 'yachtino-boat-listing'),
+                'itypes' => ['cboat', 'sboat', 'engine', 'trailer', ],
+            ],
+            'boatType'     => [
+                'name'   => __('Boat_type', 'yachtino-boat-listing') . ' (' . __('boattype_1', 'yachtino-boat-listing') . ', ' . __('boattype_2', 'yachtino-boat-listing') . '...)',
+                'itypes' => ['cboat', 'sboat',],
+            ],
+            'category'     => [
+                'name'   => __('Category', 'yachtino-boat-listing') . ' (' . __('houseboat', 'yachtino-boat-listing') . ', ' . __('catamaran', 'yachtino-boat-listing') . '...)',
+                'itypes' => ['cboat', 'sboat',],
+            ],
+            'newOrUsed'       => [
+                'name'   => __('New_used', 'yachtino-boat-listing'),
+                'itypes' => ['engine', 'trailer', 'gear'],
+            ],
+            'power'       => [
+                'name'   => __('Engine_power', 'yachtino-boat-listing'),
+                'itypes' => ['engine',],
+            ],
+            'length'       => [
+                'name'   => __('Length', 'yachtino-boat-listing'),
+                'itypes' => ['cboat', 'sboat', 'trailer', 'mooring', ],
+            ],
+            'beam'       => [
+                'name'   => __('Beam', 'yachtino-boat-listing'),
+                'itypes' => ['cboat', 'sboat',],
+            ],
+            'country'       => [
+                'name'   => __('Country', 'yachtino-boat-listing'),
+                'itypes' => ['cboat', 'sboat', 'engine', 'trailer', 'mooring', 'gear'],
+            ],
+        ];
+    }
+
+    private static function get_search_form(string $itemType): array
+    {
+        $search = [
+            'q' => __('Quick_search', 'yachtino-boat-listing'),
+        ];
+
+        // for boats
+        if ($itemType == 'cboat' || $itemType == 'sboat') {
+            $search['btid'] = __('Boat_type', 'yachtino-boat-listing');
+
+            if ($itemType == 'sboat') {
+                $search['newused'] = __('New_used', 'yachtino-boat-listing');
+            }
+            $search['manfb'] = __('Manufacturer', 'yachtino-boat-listing');
+            $search['lng']  = __('Length', 'yachtino-boat-listing');
+            $search['yb']   = __('Year_built', 'yachtino-boat-listing');
+            $search['cab']  = __('Cabins', 'yachtino-boat-listing');
+            $search['pow']  = __('Engine_power', 'yachtino-boat-listing');
+            if ($itemType == 'cboat') {
+                $search['wkprc'] = __('Price_boat_week', 'yachtino-boat-listing');
+                $search['daprc'] = __('Price_boat_day', 'yachtino-boat-listing');
+                $search['hrprc'] = __('Price_boat_hour', 'yachtino-boat-listing');
+                $search['beprc'] = __('Price_berth_week', 'yachtino-boat-listing');
+
+            } else {
+                $search['sprc']   = __('Sale_price', 'yachtino-boat-listing');
+            }
+
+            $search['fuel'] = __('Fuel', 'yachtino-boat-listing');
+            $search['hmid'] = __('Hull_material', 'yachtino-boat-listing');
+            $search['ct']   = __('Country', 'yachtino-boat-listing');
+
+            if ($itemType == 'cboat') {
+                $search['rgww']  = __('Charter_waterway', 'yachtino-boat-listing');
+                $search['tn']    = __('Port', 'yachtino-boat-listing');
+            } else {
+                $search['provid'] = __('US_state', 'yachtino-boat-listing');
+            }
+            $search['fly'] = __('Flybridge', 'yachtino-boat-listing');
+
+        } elseif ($itemType == 'engine') {
+            $search['oclass'] = __('New_used', 'yachtino-boat-listing');
+            $search['yb']     = __('Year_built', 'yachtino-boat-listing');
+            $search['pow']    = __('Engine_power', 'yachtino-boat-listing');
+            $search['sprc']   = __('Sale_price', 'yachtino-boat-listing');
+            $search['ct']     = __('Country', 'yachtino-boat-listing');
+            $search['provid'] = __('US_state', 'yachtino-boat-listing');
+            $search['manfe']  = __('Brand', 'yachtino-boat-listing');
+            $search['etype']  = __('Engine_type', 'yachtino-boat-listing');
+            $search['fuel']   = __('Fuel', 'yachtino-boat-listing');
+
+        } elseif ($itemType == 'trailer') {
+            $search['oclass'] = __('New_used', 'yachtino-boat-listing');
+            $search['manft']  = __('Brand', 'yachtino-boat-listing');
+            $search['trmid']  = __('Material', 'yachtino-boat-listing');
+            $search['ct']     = __('Country', 'yachtino-boat-listing');
+            $search['provid'] = __('US_state', 'yachtino-boat-listing');
+            $search['yb']     = __('Year_built', 'yachtino-boat-listing');
+            $search['lng']    = __('Length', 'yachtino-boat-listing');
+            $search['sprc']   = __('Sale_price', 'yachtino-boat-listing');
+
+        } elseif ($itemType == 'mooring') {
+            $search['mcid']   = __('Type_of_berth', 'yachtino-boat-listing');
+            $search['ct']     = __('Country', 'yachtino-boat-listing');
+            $search['provid'] = __('US_state', 'yachtino-boat-listing');
+            $search['lng']    = __('Length', 'yachtino-boat-listing');
+            $search['sprc']   = __('Sale_price', 'yachtino-boat-listing');
+        }
+        $search['orderby'] = __('Sort_by', 'yachtino-boat-listing');
+        return $search;
+    }
+
+    private static function get_filters(string $itemType): array
+    {
+        // for boats
+        if ($itemType == 'cboat' || $itemType == 'sboat') {
+            $filters = ['btid'];
+            if ($itemType == 'sboat') {
+                $filters[] = 'newused';
+            }
+            $filters[] = 'manfb';
+            $filters[] = 'lng';
+            $filters[] = 'yb';
+            $filters[] = 'cab';
+            $filters[] = 'pow';
+
+            if ($itemType == 'sboat') {
+                $filters[] = 'sprc';
+            } else {
+                $filters[] = 'wkprc';
+                $filters[] = 'daprc';
+                $filters[] = 'hrprc';
+                $filters[] = 'beprc';
+            }
+            $filters[] = 'fuel';
+            $filters[] = 'hmid';
+            $filters[] = 'ct';
+
+            if ($itemType == 'cboat') {
+                $filters[] = 'rgww';
+            }
+
+        } elseif ($itemType == 'engine') {
+            $filters = ['oclass', 'yb', 'pow', 'sprc', 'ct', 'manfe', 'etype', 'fuel'];
+
+        } elseif ($itemType == 'trailer') {
+            $filters = ['oclass', 'manft', 'trmid', 'ct', 'yb', 'lng', 'sprc'];
+
+        } elseif ($itemType == 'mooring') {
+            $filters = ['mcid', 'ct', 'lng', 'sprc'];
+        }
+
+        $filters[] = 'orderby';
+
+        return $filters;
+    }
+
+    private function define_sent_data(): void
+    {
+        $tmpData = [];
+        foreach ($_POST as $key => $value) {
+            if (!is_array($value)) {
+                $tmpData[$key] = filter_input(INPUT_POST, $key);
+                continue;
+            }
+
+            foreach ($value as $key2 => $value2) {
+                if (!is_array($value2)) {
+                    $tmpData[$key][$key2] = $value2;
+                    continue;
+                }
+
+                foreach ($value2 as $key3 => $value3) {
+                    $tmpData[$key][$key2][$key3] = $value3;
+                }
+            }
+        }
+
+        // adjust sent data - double "stripslashes": first for fu.. WP (magic_quotes compatibility) and second for real stripslashes
+        $this->sentData = Yachtino_Library::adjustArray($tmpData, ['stripslashes', 'stripslashes', 'strip_tags', 'trim',]);
+    }
+
+    private function adjust_path_detail(string $origPath, string $pageType): array
+    {
+        $output = [
+            'pathDb'   => '',
+            'addQuery' => '',
+        ];
+
+        $p0 = explode('?', $origPath);
+        $p = explode('/', $p0[0]);
+        foreach ($p as $part) {
+            if ($part) {
+                $part = urldecode($part);
+                $output['pathDb'] .= '/' . urlencode($part);
+            }
+        }
+        $output['pathDb'] = preg_quote($output['pathDb'], '/');
+
+        // item ID (boat ID, trailer ID...) as part of the URL for detail view
+        if ($pageType == 'detail') {
+            $output['pathDb'] .= '\/' . $this->placeholderItemId;
+        }
+
+        if ($this->trailingSlash) {
+            $output['pathDb'] .= '\/';
+        }
+
+        if (!empty($p0[1])) {
+            $output['addQuery'] = $p0[1];
+        } else {
+            $output['addQuery'] = '';
+        }
+
+        return $output;
+    }
+
+    // for automatic extracting strings for translations
+    public function poedit(): void
+    {
+        __('cboat');
+        __('sboat');
+        __('engine');
+        __('trailer');
+        __('mooring');
+        __('gear');
+        __('page_detail');
+        __('page_list');
+
+        __('lg_website_cs');
+        __('lg_website_da');
+        __('lg_website_de');
+        __('lg_website_el');
+        __('lg_website_en');
+        __('lg_website_es');
+        __('lg_website_fi');
+        __('lg_website_fr');
+        __('lg_website_hr');
+        __('lg_website_hu');
+        __('lg_website_it');
+        __('lg_website_nl');
+        __('lg_website_no');
+        __('lg_website_pl');
+        __('lg_website_pt');
+        __('lg_website_ru');
+        __('lg_website_sv');
+        __('lg_website_tr');
+    }
+
+}
