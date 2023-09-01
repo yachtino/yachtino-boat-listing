@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Yachtino PL\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-08 21:47+0200\n"
+"POT-Creation-Date: 2023-08-07 15:28+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Yachtino GmbH <webinfo@yachtino.com>\n"
 "Language-Team: \n"
@@ -10,11 +10,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: translate;gettext\n"
 "X-Poedit-Basepath: E:/_htdocs/wordpress\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Yachtino\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: test-install/wp-content/plugins/yachtino-boat-listing/includes\n"
 "X-Poedit-SearchPath-1: test-install/wp-content/plugins/yachtino-boat-listing/templates\n"
 
@@ -450,8 +450,9 @@ msgstr "Stwórz najpierw przynajmniej jeden moduł."
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Module_explain"
 msgstr ""
-"Moduł może zawierać listę z łodziami lub dokładną stronę z opisem łodzi. Możesz go później wstawiać w dowolnym miejscu na swojej stronie www jako shortcode lub "
-"za jego pomocą stworzyć nową stronę (patrz punkt \"Strony\")."
+"Moduł może zawierać listę z łodziami lub dokładną stronę z opisem łodzi. "
+"Możesz go później wstawiać w dowolnym miejscu na swojej stronie www jako "
+"shortcode lub za jego pomocą stworzyć nową stronę (patrz punkt \"Strony\")."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-page.html
@@ -489,8 +490,9 @@ msgstr "Chcesz usunąć następującą stronę:"
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Yo_settings_explain"
 msgstr ""
-"Jeśli chcesz pobrać swoje strony z Yachtino, niezbędny jest klucz API oraz ID strony.<br>Możesz je sam wygenerować w strefie Boatadmin:<br>%1$s (login jest "
-"niezbędny)<br>lub napisać do nas maila w tej sprawie: %2$s."
+"Jeśli chcesz pobrać swoje strony z Yachtino, niezbędny jest klucz API oraz "
+"ID strony.<br>Możesz je sam wygenerować w strefie Boatadmin:<br>%1$s (login "
+"jest niezbędny)<br>lub napisać do nas maila w tej sprawie: %2$s."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
 msgid "You_want_delete_module"
@@ -525,8 +527,9 @@ msgstr "Zalinkowany widok szczegółowy"
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Filter_fields_explain"
 msgstr ""
-"Tutaj możesz ograniczyć wybór łodzi do pokazywania. Możesz np. ustawić pokazywanie tylko łodzi żaglowych. Ograniczenie jest ważne zawsze, niezależnie od "
-"wybranych kryteriów wyszukiwania w formularzu wyszukiwania."
+"Tutaj możesz ograniczyć wybór łodzi do pokazywania. Możesz np. ustawić "
+"pokazywanie tylko łodzi żaglowych. Ograniczenie jest ważne zawsze, "
+"niezależnie od wybranych kryteriów wyszukiwania w formularzu wyszukiwania."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
@@ -539,11 +542,15 @@ msgstr "Numery stron"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Page_numbers_explain"
-msgstr "Powyżej/poniżej listy: numery do kliknięcia w celu zmiany poszczególnej strony z wynikami."
+msgstr ""
+"Powyżej/poniżej listy: numery do kliknięcia w celu zmiany poszczególnej "
+"strony z wynikami."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino.php
 msgid "Display your boats and yachts for sale from yachtall.com or yacht charter offers from happycharter.com in your own website."
-msgstr "Zintegruj swoje łodzie i jachty na sprzedaż z yachtall.com lub oferty czarteru z happycharter.com z własną stroną www."
+msgstr ""
+"Zintegruj swoje łodzie i jachty na sprzedaż z yachtall.com lub oferty "
+"czarteru z happycharter.com z własną stroną www."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_not_both_fields"
@@ -552,21 +559,28 @@ msgstr "Tylko jedno z obydwu pół może być wypełnione."
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Wp_path_language"
 msgstr ""
-"Jeśli Twoja strona www jest w <b>kilku językach</b>, wpisz ścieżki/URL tutaj ze <b>skrótem danego języka</b>, tak jak w przypadku innych stron, np. /en/boats."
+"Jeśli Twoja strona www jest w <b>kilku językach</b>, wpisz ścieżki/URL tutaj "
+"ze <b>skrótem danego języka</b>, tak jak w przypadku innych stron, np. /en/"
+"boats."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino.php
 msgid "You need to have an account on yachtall.com or happycharter.com to use this plugin. Then you can integrate your boats into your website with a few clicks."
 msgstr ""
-"Musisz mieć konto na yachtall.com lub happycharter.com, aby móc używać tej wtyczki. Możesz wówczas integrować swoje łodzie za pomocą kilku kliknięć ze swoją "
-"stroną www."
+"Musisz mieć konto na yachtall.com lub happycharter.com, aby móc używać tej "
+"wtyczki. Możesz wówczas integrować swoje łodzie za pomocą kilku kliknięć ze "
+"swoją stroną www."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_wp_module_delete_not_possible_page"
-msgstr "Brak możliwości usunięcia modułu, ponieważ istnieje jeszcze minimum jedna strona, która wykorzystuje ten moduł."
+msgstr ""
+"Brak możliwości usunięcia modułu, ponieważ istnieje jeszcze minimum jedna "
+"strona, która wykorzystuje ten moduł."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_wp_page_delete_not_possible_module"
-msgstr "Brak możliwości usunięcia strony, ponieważ istnieje jeszcze minimum jeden moduł, linkujący tę stronę w widoku szczegółowym."
+msgstr ""
+"Brak możliwości usunięcia strony, ponieważ istnieje jeszcze minimum jeden "
+"moduł, linkujący tę stronę w widoku szczegółowym."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
@@ -597,3 +611,4 @@ msgstr "formularz wyszukiwania nad łodziami"
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "search_form_at_left"
 msgstr "formularz wyszukiwania na lewo od łodzi"
+

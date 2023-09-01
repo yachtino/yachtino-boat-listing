@@ -3,7 +3,7 @@ Contributors: yachtino
 Tags: boats, yachts, yachting, yachtcharter, yachtall, happycharter, sale, brokerage, boating, charter, listing, yacht-charter
 Requires at least: 6.0
 Tested up to: 6.2
-Stable tag: 1.4.3
+Stable tag: 1.4.5
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -22,11 +22,17 @@ You need to have an account on yachtall.com or happycharter.com to use this plug
 * Go to WP-Admin "Yachtino" and enter your API-Key and Site-ID
 * Go to "Yachtino->Add module" and create your first module - very first for boat detail view.
 * Go to "Yachtino->Add page" and create your first page with the module for boat detail view.
-* Go to "Yachtino->Add module" and create your first module for boat list. For that you need a previous created page for detail view.
+* Go to "Yachtino->Add module" and create your first module for boat list. For that you need a previously created page for detail view.
 * Go to "Yachtino->Add page" and create your page for boat list. That URL you can put eg. into your site navigation.
 * That's it!
 
 == Changelog ==
+
+= 1.4.5 =
+Fixed: if $_SERVER['REMOTE_ADDR'] is not set
+
+= 1.4.4 =
+Fixed: if $_SERVER['REQUEST_URI'] is not set
 
 = 1.4.3 =
 Changed: the length of unique database field "name" changed from 255 to 100 (tables yachtino_modules and yachtino_route_master)

@@ -1198,9 +1198,12 @@ class Yachtino_Article
 
             // boat type + with skipper
             $lines = [];
-            $lines[] = $this->output->boatType;
+            $type = $this->output->boatType;
             if (!empty($this->output->category)) {
-                $line .= ' / ' . $this->output->category;
+                $type .= ' / ' . $this->output->category;
+            }
+            if ($type) {
+                $lines[] = $type;
             }
             if ($this->output->charterType) {
                 $lines[] = $this->output->charterType;

@@ -67,7 +67,10 @@ class Yachtino_Admin
         // require_once YACHTINO_DIR_PATH . '/includes/basics/class-yachtino-activator.php';
         // Yachtino_Activator::update_assets();
 
-        $requestUri = filter_input(INPUT_SERVER, 'REQUEST_URI');
+        $requestUri = YACHTINO_REQUEST_URI;
+        // if (!$requestUri && !empty($_SERVER['REQUEST_URI'])) {
+            // $requestUri = $_SERVER['REQUEST_URI'];
+        // }
 
         // if editing pages or modules -> basic configuration must be done
         if (strpos($requestUri, 'admin.php?page=yachtino-edit-module') !== false
@@ -1121,7 +1124,7 @@ class Yachtino_Admin
 
         $tplData = self::create_message([]);
         $tplData['formActionDelete'] = str_replace(
-            'page=yachtino-admin-pages', 'page=yachtino-edit-page&action=delete', filter_input(INPUT_SERVER, 'REQUEST_URI'));
+            'page=yachtino-admin-pages', 'page=yachtino-edit-page&action=delete', YACHTINO_REQUEST_URI);
 
         include YACHTINO_DIR_PATH . '/templates/admin/page-list-pages.html';
     }
@@ -1635,7 +1638,7 @@ class Yachtino_Admin
 
     private static function remove_msg_var(): string
     {
-        $targetUrl = filter_input(INPUT_SERVER, 'REQUEST_URI');
+        $targetUrl = YACHTINO_REQUEST_URI;
         return preg_replace('/\&msg\=[a-z0-9_]+/', '', $targetUrl);
     }
 

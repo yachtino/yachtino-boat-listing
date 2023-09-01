@@ -110,7 +110,20 @@ class Yachtino_Api
         }
 
         $ip = filter_input(INPUT_SERVER, 'REMOTE_ADDR');
+        if (!$ip && !empty($_SERVER['REMOTE_ADDR'])) {
+            $ip = $_SERVER['REMOTE_ADDR'];
+        }
+        if (!$ip) {
+            $ip = '';
+        }
+
         $userAgent = filter_input(INPUT_SERVER, 'HTTP_USER_AGENT');
+        if (!$userAgent && !empty($_SERVER['HTTP_USER_AGENT'])) {
+            $userAgent = $_SERVER['HTTP_USER_AGENT'];
+        }
+        if (!$userAgent) {
+            $userAgent = '';
+        }
 
         $url = $this->apiHost . '/' . $urlParts['language'] . '/' . $urlParts['part1'] . '/' . $urlParts['part2']
             . '?code=' . $apiKey
@@ -271,7 +284,7 @@ class Yachtino_Api
                 $page = 1;
             }
 
-            $requestUri = filter_input(INPUT_SERVER, 'REQUEST_URI');
+            $requestUri = YACHTINO_REQUEST_URI;
             $allData->paging = self::get_paging(
                 $apiResponse->info->hits, $moduleData['settings']['hitsPerPage'], $requestUri, $page);
         }
@@ -369,13 +382,7 @@ class Yachtino_Api
                 }
 
                 if ($results) {
-                    if (filter_input(INPUT_SERVER, 'HTTPS')) {
-                        $redirectUrl = 'https://';
-                    } else {
-                        $redirectUrl = 'http://';
-                    }
-                    $redirectUrl .= filter_input(INPUT_SERVER, 'HTTP_HOST')
-                        . stripslashes($results[0]->path) . '?msg=offer_not';
+                    $redirectUrl = home_url() . stripslashes($results[0]->path) . '?msg=offer_not';
                     wp_redirect($redirectUrl, 301);
                     exit();
                 }
@@ -385,13 +392,8 @@ class Yachtino_Api
         // after Big relaunch in October 2022, all boats got a new ID
         // if some link goes to old ID -> redirect to new ID
         } elseif ($itemId != $apiResponse->advert->managing->itemId) {
-            if (filter_input(INPUT_SERVER, 'HTTPS')) {
-                $redirectUrl = 'https://';
-            } else {
-                $redirectUrl = 'http://';
-            }
-            $redirectUrl .= filter_input(INPUT_SERVER, 'HTTP_HOST')
-                . str_replace('/' . $itemId, '/' . $apiResponse->advert->managing->itemId, filter_input(INPUT_SERVER, 'REQUEST_URI'));
+            $redirectUrl = home_url()
+                . str_replace('/' . $itemId, '/' . $apiResponse->advert->managing->itemId, YACHTINO_REQUEST_URI);
             wp_redirect($redirectUrl, 301);
         }
 
@@ -576,8 +578,7 @@ class Yachtino_Api
     public static function get_criteria_from_url(string $itemType): array
     {
         $criteria = [];
-        $currentUrl = (filter_input(INPUT_SERVER, 'HTTPS') ? 'https' : 'http') . '://'
-            . filter_input(INPUT_SERVER, 'HTTP_HOST') . filter_input(INPUT_SERVER, 'REQUEST_URI');
+        $currentUrl = home_url() . YACHTINO_REQUEST_URI;
         $urlComponents = parse_url($currentUrl);
         if (isset($urlComponents['query'])) {
             parse_str($urlComponents['query'], $criteriaTmp);

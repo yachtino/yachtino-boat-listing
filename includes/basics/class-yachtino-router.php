@@ -27,7 +27,7 @@ class Yachtino_Router
     private StdClass $routingData;
     private object $wpdb;
 
-    private string $thisUrl;
+    private ?string $thisUrl;
     private string $pageContent;
     private string $template = '';
 
@@ -54,12 +54,7 @@ class Yachtino_Router
         if (!$setts->version || version_compare($setts->version, YACHTINO_VERSION, '<')) {
             require_once YACHTINO_DIR_PATH . '/includes/basics/class-yachtino-activator.php';
             Yachtino_Activator::update_plugin_version();
-            if (filter_input(INPUT_SERVER, 'HTTPS')) {
-                $redirectUrl = 'https://';
-            } else {
-                $redirectUrl = 'https://';
-            }
-            $redirectUrl .= filter_input(INPUT_SERVER, 'HTTP_HOST') . filter_input(INPUT_SERVER, 'REQUEST_URI');
+            $redirectUrl = home_url() . YACHTINO_REQUEST_URI;
             require_once ABSPATH . 'wp-includes/pluggable.php';
             wp_redirect($redirectUrl);
         }
@@ -71,7 +66,16 @@ class Yachtino_Router
      */
     public function get_route(): void
     {
-        $this->thisUrl = filter_input(INPUT_SERVER, 'REQUEST_URI');
+        // $this->thisUrl = filter_input(INPUT_SERVER, 'REQUEST_URI');
+        // if (!$this->thisUrl && !empty($_SERVER['REQUEST_URI'])) {
+            // $this->thisUrl = $_SERVER['REQUEST_URI'];
+        // }
+        $this->thisUrl = YACHTINO_REQUEST_URI;
+
+        // called from command line or other reasons why this variable is not set
+        if ($this->thisUrl == '/') {
+            return;
+        }
         $uriParts = explode('?', $this->thisUrl);
         $requestUri = $uriParts[0];
 
@@ -236,7 +240,7 @@ class Yachtino_Router
 
                 // if the criteria are not in the correct ordering in the URL -> redirect to correct permalink
                 $rightUrl = $uriParts[0] . ($addToUrl ? '?' . $addToUrl : '');
-                if (filter_input(INPUT_SERVER, 'REQUEST_URI') != $rightUrl) {
+                if (YACHTINO_REQUEST_URI != $rightUrl) {
                     $redirectUrl = $rightUrl;
                     wp_redirect($redirectUrl, 301);
                     exit();
@@ -560,7 +564,7 @@ class Yachtino_Router
 
     public function set_canonical(string $canonical): string
     {
-        return filter_input(INPUT_SERVER, 'HTTP_HOST') . $this->thisUrl;
+        return home_url() . $this->thisUrl;
     }
 
     /**

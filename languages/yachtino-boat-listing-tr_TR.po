@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Yachtino TR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-08 21:47+0200\n"
+"POT-Creation-Date: 2023-08-07 15:28+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Yachtino GmbH <webinfo@yachtino.com>\n"
 "Language-Team: \n"
@@ -10,11 +10,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: translate;gettext\n"
 "X-Poedit-Basepath: E:/_htdocs/wordpress\n"
-"X-Generator: Poedit 3.3.1\n"
+"X-Generator: Yachtino\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SearchPath-0: test-install/wp-content/plugins/yachtino-boat-listing/includes\n"
 "X-Poedit-SearchPath-1: test-install/wp-content/plugins/yachtino-boat-listing/templates\n"
 
@@ -450,8 +450,10 @@ msgstr "Lütfen önce en az bir modül oluşturun."
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Module_explain"
 msgstr ""
-"Bir modül, liste halindeki tekneleri ya da sadece bir teknenin detaylı sayfasını içerebilir. Daha sonra bu modülü web sitenizin herhangi bir yerine shortcode "
-"olarak ekleyebilir ya da bu modülle tam bir sayfa oluşturabilirsiniz (bkz. \"Sayfalar\")."
+"Bir modül, liste halindeki tekneleri ya da sadece bir teknenin detaylı "
+"sayfasını içerebilir. Daha sonra bu modülü web sitenizin herhangi bir yerine "
+"shortcode olarak ekleyebilir ya da bu modülle tam bir sayfa "
+"oluşturabilirsiniz (bkz. \"Sayfalar\")."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-page.html
@@ -468,7 +470,8 @@ msgstr "katamaran"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_wp_page_lg"
-msgstr "Lütfen en az bir sayfa girin - belirlenen alt sayfaya doğru sayfa yolu."
+msgstr ""
+"Lütfen en az bir sayfa girin - belirlenen alt sayfaya doğru sayfa yolu."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_wp_module_not_exists"
@@ -489,8 +492,9 @@ msgstr "Aşağıdaki sayfayı silmek istiyorsunuz:"
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Yo_settings_explain"
 msgstr ""
-"Yachtino'daki teknelerinizi getirtebilmek için, bir API anahtarına bir de site ID'ye ihtiyacınız var.<br>Bunları Boatadmin'de kendiniz oluşturabilirsiniz:"
-"<br>%1$s (giriş gerekli)<br>ya da bize e posta atın %2$s."
+"Yachtino'daki teknelerinizi getirtebilmek için, bir API anahtarına bir de "
+"site ID'ye ihtiyacınız var.<br>Bunları Boatadmin'de kendiniz "
+"oluşturabilirsiniz:<br>%1$s (giriş gerekli)<br>ya da bize e posta atın %2$s."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
 msgid "You_want_delete_module"
@@ -525,8 +529,10 @@ msgstr "Detaylı görünümle bağlantılı"
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Filter_fields_explain"
 msgstr ""
-"Burada görüntülenecek teknelerin seçimini sınırlandırabilirsiniz. Örneğin, sadece yelkenli tekneleri görüntüleyebilirsiniz. Bu sınırlandırma, arama formunda "
-"hangi arama kriterinin seçildiğinden bağımsız olarak her zaman geçerlidir."
+"Burada görüntülenecek teknelerin seçimini sınırlandırabilirsiniz. Örneğin, "
+"sadece yelkenli tekneleri görüntüleyebilirsiniz. Bu sınırlandırma, arama "
+"formunda hangi arama kriterinin seçildiğinden bağımsız olarak her zaman "
+"geçerlidir."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
@@ -539,11 +545,15 @@ msgstr "Sayfa numaraları"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Page_numbers_explain"
-msgstr "Listenin altında/üstünde: Bağımsız sonuç sayfaları arasında geçiş yapmak için tıklanacak sayılar."
+msgstr ""
+"Listenin altında/üstünde: Bağımsız sonuç sayfaları arasında geçiş yapmak "
+"için tıklanacak sayılar."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino.php
 msgid "Display your boats and yachts for sale from yachtall.com or yacht charter offers from happycharter.com in your own website."
-msgstr "Yachtall.com'dan satılık teknelerinizi ve yatlarınızı veya happycharter.com'dan kiralık yat ilanlarınızı kendi web sitenizde görüntüleyin."
+msgstr ""
+"Yachtall.com'dan satılık teknelerinizi ve yatlarınızı veya happycharter."
+"com'dan kiralık yat ilanlarınızı kendi web sitenizde görüntüleyin."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_not_both_fields"
@@ -551,21 +561,28 @@ msgstr "İki alandan sadece biri doldurulabilir."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Wp_path_language"
-msgstr "Eğer <b>çok dilli</b> bir web siteniz varsa, dizin/URL'leri buraya girin <b>dil kısaltması ile</b>diğer websiteleri ile olduğu gibi, örneğin /fr/bateaux."
+msgstr ""
+"Eğer <b>çok dilli</b> bir web siteniz varsa, dizin/URL'leri buraya girin "
+"<b>dil kısaltması ile</b>diğer websiteleri ile olduğu gibi, örneğin /fr/"
+"bateaux."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino.php
 msgid "You need to have an account on yachtall.com or happycharter.com to use this plugin. Then you can integrate your boats into your website with a few clicks."
 msgstr ""
-"Bu eklentiyi kullanabilmek için yachtall.com ya da happycharter.com'da bir hesabınız olması gerekir. Ancak daha sonra teknelerinizi birkaç tıklama ile web "
-"sitenize entegre edebilirsiniz."
+"Bu eklentiyi kullanabilmek için yachtall.com ya da happycharter.com'da bir "
+"hesabınız olması gerekir. Ancak daha sonra teknelerinizi birkaç tıklama ile "
+"web sitenize entegre edebilirsiniz."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_wp_module_delete_not_possible_page"
-msgstr "Modül silinemez çünkü bu modülü hala kullanan en az bir tane sayfa mevcut."
+msgstr ""
+"Modül silinemez çünkü bu modülü hala kullanan en az bir tane sayfa mevcut."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_wp_page_delete_not_possible_module"
-msgstr "Sayfa silinemez çünkü bu sayfaya detaylı görünüm olarak bağlantılı en az bir tane modül vardır."
+msgstr ""
+"Sayfa silinemez çünkü bu sayfaya detaylı görünüm olarak bağlantılı en az bir "
+"tane modül vardır."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
@@ -587,12 +604,13 @@ msgstr "Özel"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "no_search_form"
-msgstr "no search form"
+msgstr "arama bölümü olmasın"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "search_form_at_top"
-msgstr "search form above boats"
+msgstr "arama bölümü teknelerin üstünde"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "search_form_at_left"
-msgstr "search form to the left of boats"
+msgstr "arama bölümü teknelerin solunda"
+
