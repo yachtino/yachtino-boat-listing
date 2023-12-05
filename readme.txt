@@ -2,8 +2,8 @@
 Contributors: yachtino
 Tags: boats, yachts, yachting, yachtcharter, yachtall, happycharter, sale, brokerage, boating, charter, listing, yacht-charter
 Requires at least: 6.0
-Tested up to: 6.3
-Stable tag: 1.4.6
+Tested up to: 6.4
+Stable tag: 1.5.1
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -27,6 +27,17 @@ You need to have an account on yachtall.com or happycharter.com to use this plug
 * That's it!
 
 == Changelog ==
+
+= 1.5.1 =
+05 December 2023
+New: possiblity to set H1 tag also for shortcode
+Change: set H1 tag in module, no longer in page
+
+= 1.5.0 =
+05 December 2023
+Fixed: possiblity to set an own page/URL for boat detail view, different URLs (one per language) possible
+New: function for calling meta data from API before calling shortcode (prepare head for page with shortcode)
+New: possibility to put own criteria to calling shortcode for boat list: [yachtino_module lg="en" name="your_module_name" criteria="btid=1"]
 
 = 1.4.6 =
 17 September 2023

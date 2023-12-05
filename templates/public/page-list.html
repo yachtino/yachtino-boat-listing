@@ -5,8 +5,10 @@ if (!empty($allData->search) && $allData->searchPlace == 'left') :
     echo ' adv-filtering';
 endif; ?>">
 <?php
-if ($allData->searchPlace == 'top' && !empty($this->routingData->routeMeta['h1'])) :
-    echo '<h1>' . $this->routingData->routeMeta['h1'] . '</h1>';
+if ($allData->searchPlace == 'top') :
+    if (!empty($moduleData['h1_text'])) :
+        echo '<h1>' . $moduleData['h1_text'] . '</h1>';
+    endif;
 endif;
 if (!empty($allData->search)) :
     include 'incl-searchform.html';

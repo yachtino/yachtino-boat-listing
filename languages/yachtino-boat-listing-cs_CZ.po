@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Yachtino CS\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-17 12:09+0200\n"
+"POT-Creation-Date: 2023-12-04 21:22+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Yachtino GmbH <webinfo@yachtino.com>\n"
 "Language-Team: \n"
@@ -14,7 +14,7 @@ msgstr ""
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: translate;gettext\n"
 "X-Poedit-Basepath: E:/_htdocs/wordpress\n"
-"X-Generator: Poedit 3.3.2\n"
+"X-Generator: Poedit 3.4.1\n"
 "X-Poedit-SearchPath-0: test-install/wp-content/plugins/yachtino-boat-listing/includes\n"
 "X-Poedit-SearchPath-1: test-install/wp-content/plugins/yachtino-boat-listing/templates\n"
 
@@ -33,6 +33,10 @@ msgstr "od"
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "to_price"
 msgstr "do"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "eg"
+msgstr "např."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Length"
@@ -137,6 +141,10 @@ msgstr "Poptávka po financování"
 msgid "err_field_required_XXX"
 msgstr "%1$s je povinné pole."
 
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Text"
+msgstr "Text"
+
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Msg_data_saved"
 msgstr "Vaše údaje byly uloženy."
@@ -144,10 +152,6 @@ msgstr "Vaše údaje byly uloženy."
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "US_state"
 msgstr "Stát"
-
-#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
-msgid "OR"
-msgstr "NEBO"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_text_too_long"
@@ -283,11 +287,19 @@ msgstr "Typ motoru"
 msgid "Go_to_next_step"
 msgstr "Jdi k dalšímu kroku"
 
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Headline"
+msgstr "Nadpis"
+
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-page.html
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
 msgid "Internal_name"
 msgstr "Interní pojmenování"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Link"
+msgstr "Odkaz"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
 msgid "Name"
@@ -408,14 +420,6 @@ msgid "page_detail"
 msgstr "jedna loď/nabídka"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
-msgid "add_page"
-msgstr "vytvořit stránku"
-
-#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
-msgid "add_module"
-msgstr "vytvořit modul"
-
-#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
 msgid "Add_page"
 msgstr "Vytvořit stránku"
@@ -432,12 +436,16 @@ msgid "Module"
 msgstr "Modul"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
-msgid "edit_page"
-msgstr "editovat stránku"
+msgid "You do not have sufficient permissions to access this page."
+msgstr "K přístupu na tuto stránku nemáte dostatečná oprávnění."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
-msgid "edit_module"
-msgstr "editovat modul"
+msgid "Edit_page"
+msgstr "Editovat stránku"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Edit_module"
+msgstr "Editovat modul"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Msg_first_settings"
@@ -450,7 +458,7 @@ msgstr "Nejprve prosím vytvořte aspoň jeden modul."
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Module_explain"
 msgstr ""
-"Modul může obsahovat seznam lodí nebo stránku s podrobnostmi o lodi. Tento modul pak můžete vložit jako shortcode kamkoli na svůj web nebo můžete vytvořit "
+"Modul může obsahovat seznam lodí nebo stránku s podrobnostmi o lodi.<br>Tento modul pak můžete vložit jako shortcode kamkoli na svůj web nebo můžete vytvořit "
 "kompletní stránku s tímto modulem (viz \"Stránky\")."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
@@ -480,7 +488,7 @@ msgstr "Cesta (webová adresa) je již obsazena pro jinou stránku."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "You call an inactive plugin."
-msgstr "You call an inactive plugin."
+msgstr "Vyvolali jste neaktivní plugin."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-pages.html
 msgid "You_want_delete_page"
@@ -539,15 +547,11 @@ msgstr "Čísla stránek"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Page_numbers_explain"
-msgstr "Pod/nad seznamem: Číslice, na které lze kliknout, chcete-li přepínat mezi jednotlivými stránkami s výsledky."
+msgstr "Pod/nad seznamem: Číslice, na které lze kliknout, chcete-li přepínat mezi jednotlivými stránkami s výsledky (jdi na stránku 2 nebo 3)."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino.php
 msgid "Display your boats and yachts for sale from yachtall.com or yacht charter offers from happycharter.com in your own website."
 msgstr "Zobrazte své lodě a jachty na prodej z yachtall.com nebo nabídky pronájmu jachet z happycharter.com na své vlastní webové stránce."
-
-#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
-msgid "err_not_both_fields"
-msgstr "Pouze jedno z obou polí může být vyplněno."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Wp_path_language"
@@ -597,7 +601,7 @@ msgstr "formulář pro vyhledávání nalevo od lodí"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Wp_explain_link_to_own"
-msgstr "Odkaz musí obsahovat zástupný symbol pro ID lodi: {itemId}"
+msgstr "Odkaz musí obsahovat zástupný symbol pro ID lodi: {itemId}, např. /cs/koupit/{itemId}/"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Wp_link_to_other_page"
@@ -610,3 +614,37 @@ msgstr "Odkaz musí obsahovat zástupný symbol pro ID lodi (nebo ID přívěsu)
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Number_boats_in_row"
 msgstr "Počet lodí v řadě"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Linked_detail_view_explain"
+msgstr ""
+"Máte 2 možnosti:<br>1. Odkážete na stránku vytvořenou pomocí pluginu Yachtino.<br>Tato stránka automaticky zobrazí správnou loď.<br>2. Odkážete na stránku, "
+"kterou jste sami vytvořili, do které integrujete detailní náhled lodě pomocí shortcodu. Zde musíte zajistit, aby ID lodi z adresy URL bylo předáno shortcodu."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "Wp_optional_attributes_list"
+msgstr "Atribut \"criteria\" není povinný, můžete jej použít k předání dalších kritérií vyhledávání."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Plugin_page"
+msgstr "Stránka z pluginu"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Self_created_page"
+msgstr "Vlastní vytvořená stránka"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "WP_headline_explain"
+msgstr "Zobrazit nadpis (H1), i když je vloženo pomocí shortcodu"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "General_information"
+msgstr "Základní informace"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Number_of_found_boats"
+msgstr "Počet nalezených lodí"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Number_of_found_boats_explain"
+msgstr "Zobrazit počet výsledků vyhledávání, např. „Nalezeno 25 lodí“."

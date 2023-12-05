@@ -76,7 +76,7 @@ class Yachtino_Activator
             ];
             add_option('yachtino_settings', $settings);
 
-        } elseif ($settings['version'] != YACHTINO_VERSION) {
+        } elseif (!isset($settings['version']) || $settings['version'] != YACHTINO_VERSION) {
             self::update_plugin_version();
         }
 
@@ -90,7 +90,7 @@ class Yachtino_Activator
                 `filter` TEXT NOT NULL COMMENT "for list page, eg. btid=1 if only sailboats should be shown (json array)",
                 `searchForm` VARCHAR(255) NOT NULL DEFAULT "" COMMENT "which fields are shown in search form (json array)",
                 `linkedDetailMaster` INT(10) UNSIGNED NULL DEFAULT NULL COMMENT "id of the detail page in yachtino_route_master",
-                `linkedDetailUrl` TEXT NOT NULL COMMENT "possible: not master ID but a foreign URL with placeholder {itemId}",
+                `linkedDetailUrl` TEXT NOT NULL COMMENT "possible: not master ID but foreign URLs per language with placeholder {itemId}",
                 `added` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
                 `updated` DATETIME NULL DEFAULT NULL,
                 PRIMARY KEY (`module_id`),
@@ -118,7 +118,6 @@ class Yachtino_Activator
                 `path` VARCHAR(50) NOT NULL DEFAULT "",
                 `language` VARCHAR(15) NULL DEFAULT NULL,
                 `title` VARCHAR(255) NOT NULL DEFAULT "" COMMENT "meta tag title for HTML",
-                `h1` VARCHAR(255) NOT NULL DEFAULT "" COMMENT "H1 tag in HTML",
                 `description` TEXT NOT NULL COMMENT "meta tag description for HTML",
                 `added` DATETIME NULL DEFAULT CURRENT_TIMESTAMP,
                 `updated` DATETIME NULL DEFAULT NULL,
@@ -232,6 +231,9 @@ class Yachtino_Activator
     public static function update_plugin_version(): void
     {
         $settings = get_option('yachtino_settings');
+        if (empty($settings['version'])) {
+            $settings['version'] = '1.0.0';
+        }
 
         // Do some special things when we update.
         global $wpdb;
@@ -309,7 +311,7 @@ class Yachtino_Activator
         // Possibility to set number of columns (grid) for boat list.
         if (version_compare($settings['version'], '1.4.6', '<')
         && version_compare(YACHTINO_VERSION, '1.4.6', '>=')) {
-            $sql = 'SELECT `module_id`, `settings`, `searchForm` FROM `' . $wpdb->prefix . 'yachtino_modules` '
+            $sql = 'SELECT `module_id`, `settings` FROM `' . $wpdb->prefix . 'yachtino_modules` '
                 . 'WHERE `pageType` = "list"';
             $results = $wpdb->get_results($sql);
             if ($results) {
@@ -338,6 +340,132 @@ class Yachtino_Activator
                         'module_id' => $result->module_id,
                     ];
                     $wpdb->update($wpdb->prefix . 'yachtino_modules', $dataDb, $where);
+                }
+            }
+        }
+
+        // Possibility to set other (own) URL for boat detail for each language.
+        // This means: db field linkedDetailUrl contains all URLs for activated languages (json) from now on.
+        // So, the field is an array json encoded.
+        if (version_compare($settings['version'], '1.5.0', '<')
+        && version_compare(YACHTINO_VERSION, '1.5.0', '>=')) {
+            $sql = 'SELECT `module_id`, `linkedDetailUrl` FROM `' . $wpdb->prefix . 'yachtino_modules` '
+                . 'WHERE `pageType` = "list" AND linkedDetailUrl != ""';
+            $results = $wpdb->get_results($sql);
+            if ($results) {
+                foreach ($results as $result) {
+                    $allUrls = [];
+                    $arrTmp = json_decode($result->linkedDetailUrl, true);
+
+                    // In the field is only one URL (string).
+                    if ($arrTmp === null) {
+                        foreach ($settings['languages'] as $lg) {
+                            $allUrls[$lg] = $result->linkedDetailUrl;
+                        }
+                    } elseif (is_array($arrTmp)) {
+                        $allUrls = $arrTmp;
+                    }
+                    if ($allUrls) {
+                        $dataDb = [
+                            'linkedDetailUrl' => json_encode($allUrls),
+                        ];
+                        $where = [
+                            'module_id' => $result->module_id,
+                        ];
+                        $wpdb->update($wpdb->prefix . 'yachtino_modules', $dataDb, $where);
+                    }
+                }
+            }
+
+            $sql = 'ALTER TABLE `' . $wpdb->prefix . 'yachtino_modules` CHANGE `linkedDetailUrl` `linkedDetailUrl` '
+                . 'TEXT NOT NULL COMMENT "possible: not master ID but foreign URLs per language with placeholder {itemId}"';
+            // dbDelta($sql); - does not work
+            $wpdb->get_results($sql);
+        }
+
+        // New field "h1" in settings, to decide whether h1 tag should be shown for given module IN SHORTCODE.
+        // H1 tag moved from page settings to module settings.
+        if (version_compare($settings['version'], '1.5.1', '<')
+        && version_compare(YACHTINO_VERSION, '1.5.1', '>=')) {
+
+            // Get pages and H1 for all languages.
+            $modules = [];
+            $sql = 'SELECT `yr`.*, `yrm`.`fk_module_id` FROM `' . $wpdb->prefix . 'yachtino_routes` AS `yr` '
+                . 'INNER JOIN `' . $wpdb->prefix . 'yachtino_route_master` AS `yrm` ON `yr`.`fk_master_id` = `yrm`.`master_id`';
+            $results = $wpdb->get_results($sql);
+            if ($results) {
+                foreach ($results as $result) {
+                    if (!empty($result->h1)) {
+                        $modules[$result->fk_module_id][$result->language] = $result->h1;
+                    }
+                }
+            }
+
+            $sql = 'SELECT `module_id`, `pageType`, `settings` FROM `' . $wpdb->prefix . 'yachtino_modules`';
+            $results = $wpdb->get_results($sql);
+            if ($results) {
+                foreach ($results as $result) {
+                    $setts = json_decode($result->settings, true);
+
+                    if ($result->pageType == 'list' && !isset($setts['showHits'])) {
+                        $setts['showHits'] = 0;
+                    }
+
+                    if (!isset($setts['showH1'])) {
+                        $setts['showH1'] = 0;
+                    }
+
+                    if (empty($setts['headline'])) {
+                        if (!empty($modules[$result->module_id])) {
+                            $setts['headline'] = $modules[$result->module_id];
+                        } else {
+                            $setts['headline'] = [];
+                        }
+
+                    } elseif (!empty($modules[$result->module_id])) {
+                        foreach ($modules[$result->module_id] as $lg => $text) {
+                            if (empty($setts['headline'][$lg])) {
+                                $setts['headline'][$lg] = $text;
+                            }
+                        }
+                    }
+                    if ($setts['headline']) {
+                        ksort($setts['headline']);
+                    }
+                    $dataDb = [
+                        'settings' => json_encode($setts),
+                    ];
+                    $where = [
+                        'module_id' => $result->module_id,
+                    ];
+                    $wpdb->update($wpdb->prefix . 'yachtino_modules', $dataDb, $where);
+                }
+            }
+
+            // Remove column h1 in table yachtino_routes.
+            $sql = 'SHOW COLUMNS FROM `' . $wpdb->prefix . 'yachtino_routes` LIKE "h1"';
+            $res = $wpdb->get_results($sql);
+            if (!empty($res[0])) {
+                $sql = 'ALTER TABLE `' . $wpdb->prefix . 'yachtino_routes` DROP `h1`';
+                $wpdb->get_results($sql);
+            }
+        }
+
+        // Always check language files. If the WP user uses a language we do not have, an additional file is created.
+        // If we update languages, this additional file would not be updated. Just delete this file, it will be crated for new.
+        if (version_compare($settings['version'], YACHTINO_VERSION, '<')) {
+            require_once YACHTINO_DIR_PATH . '/includes/api/class-yachtino-api.php';
+            $allowedLgs = Yachtino_Api::allowed_languages();
+            $pathLanguages = YACHTINO_DIR_PATH . '/languages';
+            $files = scandir($pathLanguages);
+            foreach ($files as $file) {
+                if ($file == '.' || $file == '..' || stripos($file, '.po') !== false) {
+                    continue;
+                }
+                $lg = str_replace('yachtino-boat-listing-', '', $file);
+                $lg = str_replace('.mo', '', $lg);
+                if (!in_array($lg, $allowedLgs)) {
+                    unlink($pathLanguages . '/yachtino-boat-listing-' . $lg . '.mo');
                 }
             }
         }

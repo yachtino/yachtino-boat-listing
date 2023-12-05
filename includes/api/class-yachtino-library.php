@@ -395,4 +395,82 @@ class Yachtino_Library
         }
     }
 
+    /**
+     * Makes an array from search string ("btid=1&manfb=25" => ['btid' => 1, 'manfb' => 25]).
+     */
+    public static function explodeSearchString(string $searchString): array
+    {
+        $searchArray = [];
+
+        if (mb_substr($searchString, 0, 1) === '?') {
+            $searchString = mb_substr($searchString, 1);
+        }
+
+        if (!$searchString) {
+            return $searchArray;
+        }
+
+        // Correct square brackets for array (may be url encoded).
+        $searchString = str_ireplace('%5b', '[', $searchString);
+        $searchString = str_ireplace('%5d', ']', $searchString);
+
+        $parts = explode('&', $searchString);
+        foreach ($parts as $p) {
+            if (!$p) {
+                continue;
+            }
+            $tmp = explode('=', $p);
+            if (!isset($tmp[1])) {
+                continue;
+            }
+
+            $key   = $tmp[0];
+            $value = $tmp[1];
+            if (is_numeric($value)) {
+                if ($key != 'md' && $key != 'q' && preg_match('/^[0-9]+$/', $value)) {
+                    $value = (int)$value;
+                }
+
+            } else {
+                $valueX = rawurldecode($value);
+                if ($valueX != $value) {
+                    $value = $valueX;
+                }
+            }
+
+            // it is double array (eg. key[foo][]=bar)
+            if (preg_match('/^([-a-z0-9_]+)\[([-a-z0-9_]*?)\]\[([-a-z0-9_]*?)\]$/ui', $key, $m)) {
+                if ($m[2]) {
+                    if ($m[3]) {
+                        $searchArray[$m[1]][$m[2]][$m[3]] = $value;
+                    } else {
+                        $searchArray[$m[1]][$m[2]][] = $value;
+                    }
+                } else {
+                    if ($m[3]) {
+                        $searchArray[$m[1]][] = [
+                            $m[3] => $value,
+                        ];
+                    } else {
+                        $searchArray[$m[1]][][] = $value;
+                    }
+                }
+
+            // it is array (eg. btid[]=1 or lastSearch[ct]=de)
+            } elseif (preg_match('/^([-a-z0-9_]+)\[([-a-z0-9_]*?)\]$/ui', $key, $m)) {
+                if ($m[2]) {
+                    $searchArray[$m[1]][$m[2]] = $value;
+                } else {
+                    $searchArray[$m[1]][] = $value;
+                }
+
+            // scalar search variable
+            } else {
+                $searchArray[$key] = $value;
+            }
+        }
+
+        return $searchArray;
+    }
+
 }

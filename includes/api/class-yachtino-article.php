@@ -52,10 +52,11 @@ class Yachtino_Article
      * Data for all boats/trailers/engines.
      *
      * @param $moduleData {
-     *          Control variables.
+     *      Control variables.
      *
      *      @type string $itemType Possible: cboat (charter), sboat (for sale), trailer, engine, mooring, gear.
      *      @type string $pageType Possible: list, detail.
+     * }
      * @param $apiTranslate Node from JSON response from Yachtino API with translated words.
      */
     public function set_basics(array $moduleData, string $pageType, object $apiTranslate): void
@@ -70,7 +71,11 @@ class Yachtino_Article
         $this->singleItemUrl = '';
         if ($pageType == 'list') {
             if ($moduleData['linkedDetailUrl']) {
-                $this->singleItemUrl = str_replace('{itemId}', '([a-z0-9]+)', $moduleData['linkedDetailUrl']);
+                if (!empty($moduleData['linkedDetailUrl'][$moduleData['language']])) {
+                    $this->singleItemUrl = str_replace('{itemId}', '([a-z0-9]+)', $moduleData['linkedDetailUrl'][$moduleData['language']]);
+                } else {
+                    $this->singleItemUrl = '';
+                }
 
             } else {
                 $sql = 'SELECT r.path FROM ' . $wpdb->prefix . 'yachtino_routes AS r '
@@ -105,6 +110,35 @@ class Yachtino_Article
                 $this->priceTypes = ['boatWeek', 'boatDay', 'berthWeek', 'boatWeekend', 'boatShortweek', 'cabinWeek', 'boatHour',];
             }
         }
+    }
+
+    public static function get_head_shortcode(string $pageType, object $apiResponse): array
+    {
+        $output = [
+            'title'       => '',
+            'description' => '',
+            'data'        => [],
+        ];
+
+        if (!empty($apiResponse->seo)) {
+            $output['title']       = $apiResponse->seo->title;
+            $output['description'] = $apiResponse->seo->description;
+        }
+
+        if ($pageType == 'detail') {
+            if (empty($apiResponse->advert)) {
+                return $output;
+            }
+            $itemType = $apiResponse->advert->managing->itemType;
+            $output['data'] = Yachtino_Api::create_placeholders_for_item($itemType, $apiResponse->advert);
+
+        } else {
+            if (!empty($apiResponse->seo)) {
+                $output['data'] = (array)$apiResponse->seo;
+            }
+        }
+
+        return $output;
     }
 
     /**

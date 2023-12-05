@@ -90,6 +90,8 @@ if (!empty($itemData->picsThumb)) :
 </div>
 <?php
 endif; ?>
+
+</div>
 <?php
 
 // large image slider
@@ -136,12 +138,10 @@ if (!empty($itemData->picsMax)) :
         <div class="yomaxglry-close">x</div>
         <div class="yomaxglry-arrow yomaxglry-arrow-prev yachtino-hidden">&#9664;</div>
         <div class="yomaxglry-arrow yomaxglry-arrow-next<?php
-    if ($imgCounter <= $thumbsPerSlide) :
+    if ($numberPics == 1) :
         echo ' yachtino-hidden';
     endif; ?>">&#9654;</div>
     </div>
 </div>
 <?php
 endif; ?>
-
-</div>

@@ -4,8 +4,13 @@
 <div class="yachtino-hidden" id="yachtino-itemtype"><?php echo $allData->itemType; ?></div>
 <div class="yachtino-articles-list">
 <?php
-if ($allData->searchPlace != 'top' && !empty($this->routingData->routeMeta['h1'])) :
-    echo '<h1>' . $this->routingData->routeMeta['h1'] . '</h1>';
+if ($allData->searchPlace != 'top') :
+    if (!empty($moduleData['h1_text'])) :
+        echo '<h1>' . $moduleData['h1_text'] . '</h1>';
+    endif;
+endif;
+if (!empty($allData->hitsFound)) :
+    echo '<b>' . $allData->hitsFound . '</b><br><br>';
 endif;
 if (!empty($allData->paging)) :
     echo $allData->paging;

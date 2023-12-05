@@ -18,6 +18,7 @@ class Yachtino_Api
     private StdClass $routingData;
 
     private array $imagePaths;
+    private array $receivedApis = [];
 
     private string $apiHost = 'https://api.boatadmin.com';
 
@@ -31,8 +32,6 @@ class Yachtino_Api
 
     public static function get_instance(): self
     {
-        global $wpdb;
-
         if (is_null(self::$instance)) {
             self::$instance = new self();
 
@@ -141,7 +140,7 @@ class Yachtino_Api
 
     /**
      * Send request to Yachtino API and returns json object
-     * 
+     *
      * @param $urlParts {
      *      Single parts for building URL: /en/controller/action.
      *      @type string $language
@@ -151,7 +150,7 @@ class Yachtino_Api
      * @param $additionalVars Additional params in the URL ($_GET).
      * @param $postVars Variables to be sent as $_POST variables.
      */
-    public function send_request_to_api(array $urlParts, array $additionalVars = [], array $postVars = []): object
+    public function send_request_to_api(array $urlParts, array $additionalVars = [], array $postVars = [], string $message = ''): object
     {
         $url = $this->create_api_url($urlParts, $additionalVars);
         // echo "\r\n" . $url . '<br />';
@@ -169,19 +168,37 @@ class Yachtino_Api
             $args['method'] = 'GET';
         }
 
+        // If the same API already has been called => do not call once more.
+        $toHash = $url;
+        if (!empty($args['body'])) {
+            $toHash .= $args['body'];
+        }
+        $hash = hash('sha256', $toHash);
+        if (!empty($this->receivedApis[$hash])) {
+            return $this->receivedApis[$hash];
+        }
+
+        // Call API.
         $response = wp_remote_request($url, $args);
 
         if ($response instanceof WP_Error) {
-            wp_die('Sorry, an unknown error occured.');
+            // WP messages show too much internal information - do not output them.
+            // $msg = $response->get_error_message();
+            // if ($msg) {
+            //     wp_die($msg);
+            // } else {
+                wp_die('Sorry, an unknown error occured.');
+            // }
         }
 
         // Success.
         if ($response['response']['code'] == 200) {
             if (isset($response['body'])) {
-                return json_decode($response['body'], false);
+                $this->receivedApis[$hash] = json_decode($response['body'], false);
             } else {
-                return new StdClass();
+                $this->receivedApis[$hash] = new StdClass();
             }
+            return $this->receivedApis[$hash];
 
         } elseif ($response['response']['code'] == 403) {
             wp_die('Forbidden', 403);
@@ -208,7 +225,17 @@ class Yachtino_Api
                 $post = json_encode($postVars);
                 $additionalNew['post'] = base64_encode($post);
             }
-            $this->send_request_to_api($urlPartsNew, $additionalNew);
+
+            // Get error message from API.
+            $message = '';
+            if ($response['body']) {
+                $arrTmp = json_decode($response['body'], true);
+                if (!empty($arrTmp['error'])) {
+                    $message = $arrTmp['error'];
+                }
+            }
+
+            $this->send_request_to_api($urlPartsNew, $additionalNew, [], $message);
 
         } else {
         // echo "\r\n" . '<pre>';
@@ -218,13 +245,19 @@ class Yachtino_Api
         // echo htmlentities($buffer, ENT_NOQUOTES, 'UTF-8');
         // echo '</pre>';
         }
-        wp_die('Sorry, an unknown error occured.');
+
+        // Show error message from API.
+        if ($message) {
+            wp_die($message);
+        } else {
+            wp_die('Sorry, an unknown error occured.');
+        }
     }
 
     /**
      * Gets data for a list of boats/trailers/engines... from API
      * Returns HTML code (filled template)
-     * 
+     *
      * @param $moduleData {
      *      Module data from yachtino module from wp database.
      *      @type string $itemType Types: cboat (charter), sboat (for sale), trailer, engine, mooring, gear.
@@ -235,35 +268,9 @@ class Yachtino_Api
      */
     public function get_article_list(array $moduleData, array $route): string
     {
-        $urlParts = [
-            'language' => $moduleData['language'],
-            'part1'    => 'article-data',
-            'part2'    => 'list',
-        ];
-        $additionalVars = [];
-        $additionalVars['itemtype'] = $moduleData['itemType'];
-        $additionalVars['trans'] = '1';
+        $apiResponse = $this->get_data_from_api('list', $moduleData);
 
-        if ($moduleData['settings'] && $moduleData['settings']['hitsPerPage']) {
-            $additionalVars['bnr'] = $moduleData['settings']['hitsPerPage'];
-        }
-
-        if ($moduleData['criteria']) {
-            $additionalVars = array_merge($additionalVars, $moduleData['criteria']);
-        }
-
-        // get options for selectboxes/dropdown for search form (eg. all countries)
-        $fields = '';
-        foreach ($moduleData['searchForm'] as $fieldName) {
-            $fields .= $fieldName . ',';
-        }
-        if ($fields) {
-            $additionalVars['fields'] = substr($fields, 0, -1);
-        }
-
-        $apiResponse = $this->send_request_to_api($urlParts, $additionalVars);
-
-        // define article data from API response
+        // Define article data from API response.
         require_once YACHTINO_DIR_PATH . '/includes/api/class-yachtino-article.php';
         $classArticle = Yachtino_Article::get_instance();
         $classArticle->set_basics($moduleData, 'list', $apiResponse->translation);
@@ -276,11 +283,21 @@ class Yachtino_Api
         $allData->searchPlace = $moduleData['settings']['searchPlace'];
         $allData->columns = $moduleData['settings']['columns'];
 
+        // Show number of found results, eg. "25 boats found", at the top.
+        if (!empty($moduleData['settings']['showHits'])) {
+            if (!empty($apiResponse->seo->hits)) {
+                $allData->hitsFound = $apiResponse->seo->hits;
+
+            } elseif (isset($apiResponse->info->hitsTranslated)) {
+                $allData->hitsFound = $apiResponse->info->hitsTranslated;
+            }
+        }
+
         foreach ($apiResponse->adverts as $advert) {
             $allData->items[] = $classArticle->get_data($advert);
         }
 
-        // no search results -> show "There are no hits." in template
+        // No search results -> show "There are no hits." in template.
         if (!$allData->items) {
             $allData->translation['NoSearchResult'] = $apiResponse->translation->words->NoSearchResult;
         }
@@ -326,13 +343,23 @@ class Yachtino_Api
         // Return whole page.
         if ($route) {
             $routeMeta = [
-                'h1'          => $route['h1'],
                 'title'       => $route['title'],
                 'description' => $route['description'],
             ];
 
             $this->routingData->routeMeta = $routeMeta;
         }
+
+        // H1 tag - if it is a whole page (route) OR shortcode with desired H1 tag
+        if ($route || !empty($moduleData['settings']['showH1'])) {
+            if (!empty($apiResponse->seo->h1)) {
+                $moduleData['h1_text'] = $apiResponse->seo->h1;
+
+            } elseif (!empty($moduleData['settings']['headline'][$moduleData['language']])) {
+                $moduleData['h1_text'] = $moduleData['settings']['headline'][$moduleData['language']];
+            }
+        }
+
         ob_start();
         include YACHTINO_DIR_PATH . $templateName;
         $templateContent = ob_get_clean();
@@ -343,7 +370,7 @@ class Yachtino_Api
     /**
      * Gets data for a single boat/trailer/engine... from API.
      * Returns - HTML code (filled template).
-     * 
+     *
      * @param $moduleData {
      *      Yachtino module from wp database.
      *      @type string $itemType Types: cboat (charter), sboat (for sale), trailer, engine, mooring, gear.
@@ -352,23 +379,7 @@ class Yachtino_Api
      */
     public function get_article_detail(array $moduleData, string $itemId, array $route): string
     {
-        $urlParts = [
-            'language' => $moduleData['language'],
-            'part1'    => 'article-data',
-            'part2'    => 'detail',
-        ];
-        $additionalVars = [
-            'itemtype' => $moduleData['itemType'],
-            'itid'     => $itemId,
-            'trans'    => '1', // gets also translated field names for given language
-        ];
-
-        // List of countries for sending request.
-        if ($moduleData['settings']['showContactForm']) {
-            $additionalVars['fields'] = 'ccountry';
-            $additionalVars['mergeccountryspec'] = '1'; // for special countries at the begin
-        }
-        $apiResponse = $this->send_request_to_api($urlParts, $additionalVars);
+        $apiResponse = $this->get_data_from_api('detail', $moduleData, $itemId);
 
         // No article (boat, trailer...) given - it has been deleted/deactivated.
         if (empty($apiResponse->advert)) {
@@ -451,6 +462,21 @@ class Yachtino_Api
         } else {
             $templateName = '/templates/public/incl-detail.html';
         }
+
+        // H1 tag - if it is a whole page (route) OR shortcode with desired H1 tag
+        if ($route || !empty($moduleData['settings']['showH1'])) {
+            if (!empty($apiResponse->seo->h1)) {
+                $moduleData['h1_text'] = $apiResponse->seo->h1;
+
+            } elseif (!empty($moduleData['settings']['headline'][$moduleData['language']])) {
+                $moduleData['h1_text'] = $moduleData['settings']['headline'][$moduleData['language']];
+                $placeholders = self::create_placeholders_for_item($moduleData['itemType'], $apiResponse->advert);
+                foreach ($placeholders as $phKey => $phValue) {
+                    $moduleData['h1_text'] = str_replace('{' . $phKey . '}', $phValue, $moduleData['h1_text']);
+                }
+            }
+        }
+
         $itemData->itemType = $moduleData['itemType'];
 
         ob_start();
@@ -458,6 +484,60 @@ class Yachtino_Api
         $templateContent = ob_get_clean();
 
         return $templateContent;
+    }
+
+    public function get_data_from_api(string $pageType, array $moduleData, string $itemId = ''): object
+    {
+        $urlParts = [
+            'language' => $moduleData['language'],
+            'part1'    => 'article-data',
+        ];
+        if ($pageType == 'detail') {
+            $urlParts['part2'] = 'detail';
+        } else {
+            $urlParts['part2'] = 'list';
+        }
+        $additionalVars = [
+            'itemtype' => $moduleData['itemType'],
+            'trans'    => '1', // gets also translated field names for given language
+        ];
+
+        // Article detail.
+        if ($pageType == 'detail') {
+            $additionalVars['itid'] = $itemId;
+
+            // List of countries for sending request.
+            if ($moduleData['settings']['showContactForm']) {
+                $additionalVars['fields'] = 'ccountry';
+                $additionalVars['mergeccountryspec'] = '1'; // for special countries at the begin
+            }
+
+        // Article list.
+        } else {
+
+            if ($moduleData['settings'] && $moduleData['settings']['hitsPerPage']) {
+                $additionalVars['bnr'] = $moduleData['settings']['hitsPerPage'];
+            }
+
+            if (!empty($moduleData['settings']['showHits'])) {
+                $additionalVars['hitsfound'] = '1';
+            }
+
+            if ($moduleData['criteria']) {
+                $additionalVars = array_merge($additionalVars, $moduleData['criteria']);
+            }
+
+            // get options for selectboxes/dropdown for search form (eg. all countries)
+            $fields = '';
+            foreach ($moduleData['searchForm'] as $fieldName) {
+                $fields .= $fieldName . ',';
+            }
+            if ($fields) {
+                $additionalVars['fields'] = substr($fields, 0, -1);
+            }
+        }
+
+        return $this->send_request_to_api($urlParts, $additionalVars);
     }
 
     public static function create_placeholders_for_item(string $itemType, object $advertDataApi): array

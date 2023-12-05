@@ -161,8 +161,8 @@ class Yachtino_Router
     }
 
     /**
-     * Creates $routingData with all important info for given route
-     * Also called from class-yachtino-public.php for shortcodes
+     * Creates $routingData with all important info for given route.
+     * Also called from class-yachtino-public.php for shortcodes.
      */
     public function set_routing_data(
         array $uriParts,
@@ -170,6 +170,7 @@ class Yachtino_Router
         array $module,
         ?object $route = null,
         string $itemId = '',
+        array $addCriteria = [],
     ): void {
 
         require_once YACHTINO_DIR_PATH . '/includes/api/class-yachtino-library.php';
@@ -196,13 +197,22 @@ class Yachtino_Router
             $searchForm = [];
         }
 
-        // get search criteria from URL for article list
+        // Get search criteria from URL for article list.
         if ($module[0]->pageType == 'list') {
             $criteria = Yachtino_Api::get_criteria_from_url($module[0]->itemType);
+
+            // Criteria set by shortcode.
+            if ($addCriteria) {
+                foreach ($addCriteria as $key => $value) {
+                    if (empty($criteria[$key])) {
+                        $criteria[$key] = $value;
+                    }
+                }
+            }
         }
 
-        // if eg. path for sailboats (/en/sailboats) and in search form selected another boat type (/en/sailboats?btid=3)
-        //  => forward to another path
+        // If eg. path for sailboats (/en/sailboats) and in search form selected another boat type (/en/sailboats?btid=3)
+        //  => forward to another path.
         $pathIsCorrect = true;
         if ($uriParts && $module[0]->pageType == 'list' && $criteria && $moduleFilter) {
             foreach ($moduleFilter as $key => $value) {
@@ -265,7 +275,6 @@ class Yachtino_Router
                 'masterId'    => (int)$route->fk_master_id,
                 'routeId'     => (int)$route->route_id,
                 'title'       => $route->title,
-                'h1'          => $route->h1,
                 'description' => $route->description,
             ];
         } else {
@@ -279,11 +288,12 @@ class Yachtino_Router
             'settings'    => $settings,
         ];
         if ($module[0]->pageType == 'list') {
+            $this->routingData->module['itemId']     = '';
             $this->routingData->module['criteria']   = $criteria;
             $this->routingData->module['filter']     = $moduleFilter;
             $this->routingData->module['searchForm'] = $searchForm;
             $this->routingData->module['linkedDetailMaster'] = $module[0]->linkedDetailMaster;
-            $this->routingData->module['linkedDetailUrl']    = $module[0]->linkedDetailUrl;
+            $this->routingData->module['linkedDetailUrl']    = json_decode($module[0]->linkedDetailUrl, true);
 
         // article detail page, item ID necessary
         } else {
@@ -292,7 +302,6 @@ class Yachtino_Router
 
         if ($route) {
             $this->routingData->routeMeta = [
-                'h1'          => $route->h1,
                 'title'       => $route->title,
                 'description' => $route->description,
             ];
@@ -301,8 +310,8 @@ class Yachtino_Router
 
             // check languages
             // language switcher possible only with Polylang plugin (at the moment)
-            $apiSettings = Yachtino::get_plugin_settings();
-            if (count($apiSettings->languages) > 1 && is_plugin_active('polylang/polylang.php')) {
+            $pluginSettings = Yachtino::get_plugin_settings();
+            if (count($pluginSettings->languages) > 1 && is_plugin_active('polylang/polylang.php')) {
 
                 // get other languages
                 $sql = 'SELECT `path`, `language` FROM ' . $this->wpdb->prefix . 'yachtino_routes '

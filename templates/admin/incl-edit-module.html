@@ -1,19 +1,23 @@
 <div class="yachtino-tr">
-    <div class="yachtino-td"><b><?php echo __('Offer', 'yachtino-boat-listing'); ?></b></div>
-    <div class="yachtino-td"><?php echo esc_html($data['itemTypeWord']); ?>
-    <input type="hidden" name="itemtype" value="<?php echo esc_attr($data['itemtype']); ?>"></div>
+    <div class="yachtino-td3" style="font-size: 1.15em"><b><u><?php echo __('General_information', 'yachtino-boat-listing'); ?></u></b></div>
+    <div class="yachtino-td3"></div>
 </div>
 <div class="yachtino-tr">
-    <div class="yachtino-td"><b><?php echo __('Page', 'yachtino-boat-listing'); ?></b></div>
-    <div class="yachtino-td"><?php echo esc_html($data['pageTypeWord']); ?>
+    <div class="yachtino-td3"><b><?php echo __('Offer', 'yachtino-boat-listing'); ?></b></div>
+    <div class="yachtino-td3"><?php echo esc_html($data['itemTypeWord']); ?>
+    <input type="hidden" name="itemtype" id="itemtype" value="<?php echo esc_attr($data['itemtype']); ?>"></div>
+</div>
+<div class="yachtino-tr">
+    <div class="yachtino-td3"><b><?php echo __('Page', 'yachtino-boat-listing'); ?></b></div>
+    <div class="yachtino-td3"><?php echo esc_html($data['pageTypeWord']); ?>
     <input type="hidden" name="pagetype" value="<?php echo esc_attr($data['pagetype']); ?>"></div>
 </div>
 <div class="yachtino-tr">
-    <div class="yachtino-td"><label for="name" id="l-name"<?php
+    <div class="yachtino-td3"><label for="name" id="l-name"<?php
 if (!empty($tplData['errors']['errField']['name'])) :
     echo ' class="yachtino-label-err"';
 endif; ?>><b><?php echo __('Module_name', 'yachtino-boat-listing'); ?>*</b></label></div>
-    <div class="yachtino-td"><input type="text" name="name" id="name" value="<?php
+    <div class="yachtino-td3"><input type="text" name="name" id="name" value="<?php
 if (!empty($data['name'])) :
     echo esc_attr($data['name']);
 endif; ?>" class="yachtino-field-edit-big<?php
@@ -21,14 +25,100 @@ if (!empty($tplData['errors']['errField']['name'])) :
     echo ' yachtino-field-err';
 endif; ?>" required maxlength="150"></div>
 </div>
+<div class="yachtino-tr">
+    <div class="yachtino-td3"><label for="showH1" id="l-showH1"<?php
+if (!empty($tplData['errors']['errField']['showH1'])) :
+    echo ' class="yachtino-label-err"';
+endif; ?>><b><?php echo __('Headline', 'yachtino-boat-listing'); ?> (H1 Tag)</b></label></div>
+    <div class="yachtino-td3">
+<input type="checkbox" name="showH1" id="showH1" value="1"<?php
+if (!empty($data['showH1'])) :
+echo ' checked';
+endif; ?>> <?php echo __('WP_headline_explain', 'yachtino-boat-listing'); ?><br><br>
+
 <?php
+$lng = count($editOptions->langs);
+$counter = 0;
+$fieldKey = 'h1';
+foreach ($editOptions->langs as $lgRow) :
+    $counter++; ?>
+    <div><div style="display: block; float: left"><?php
+    echo 'H1 ' . __('Text', 'yachtino-boat-listing') . ' - ' . $lgRow['name']; ?><br>
+        <input type="text" class="yachtino-field-edit-big<?php
+    if (!empty($tplData['errors']['errField']['langs'][$lgRow['id']])) :
+        echo ' yachtino-field-err';
+    endif; ?>" name="langs[<?php echo $lgRow['id']; ?>][h1]" id="langs-<?php echo $lgRow['id']; ?>-h1" value="<?php
+    if (!empty($data['langs'][$lgRow['id']]['h1'])) :
+        echo esc_attr($data['langs'][$lgRow['id']]['h1']);
+    endif; ?>" placeholder="<?php
+    echo __('eg', 'yachtino-boat-listing') . ' ';
+    if ($data['pagetype'] == 'detail') :
+        if ($data['itemtype'] == 'cboat') :
+            echo '{model} for rent';
+        else :
+            echo '{model} for sale';
+        endif;
+    else :
+        echo 'Boats for sale/rent';
+    endif; ?>">
+    <?php
+    if ($counter != $lng) :
+        echo '<br><br>';
+    endif; ?></div>
+<?php
+    if ($data['pagetype'] == 'detail') : ?>
+    <div class="yachtino-placeholder-box"><br>
+        <a href="javascript:void(0);" class="yo-js-show-placeholder" id="yo-phholder-<?php
+    echo $lgRow['id']; ?>-<?php echo $fieldKey; ?>">Insert placeholder</a>
+        <div id="yachtino-placeholders-<?php echo $lgRow['id']; ?>-<?php echo $fieldKey; ?>" class="yachtino-placeholders yachtino-hidden">
+            <div class="yachtino-close-header"> &nbsp;
+            <div class="yachtino-close-x yo-js-close-placeholders" id="yachtino-pholder-<?php
+            echo $lgRow['id']; ?>-<?php echo $fieldKey; ?>">X</div></div>
+            <div class="yachtino-table-data">
+    <?php
+        foreach ($editOptions->placeholders as $pKey => $subData) :
+            $pKey = esc_attr($pKey);
+            $classHide = '';
+            if (!$data['itemtype'] || !in_array($data['itemtype'], $subData['itypes'])) :
+                $classHide = ' yachtino-hidden';
+            endif; ?>
+                <div class="yachtino-tr yachtino-js-one-pholder-<?php echo $pKey; ?><?php echo $classHide; ?>">
+                    <div class="yachtino-td"><a href="javascript:void(0);" class="yachtino-js-pholder" data-id="<?php
+            echo $lgRow['id'] . '-' . $fieldKey . '-' . $pKey; ?>"><?php echo $pKey; ?></a></div>
+                    <div class="yachtino-td"><?php echo $subData['name']; ?></div>
+                </div>
+    <?php
+        endforeach; ?>
+            </div>
+        </div>
+    </div>
+<?php
+    endif; ?>
+    <br clear="all"></div>
+<?php
+endforeach; ?>
+    </div>
+</div>
+<div class="yachtino-tr">
+    <div class="yachtino-td3">&nbsp;</div>
+    <div class="yachtino-td3"></div>
+</div>
+<div class="yachtino-tr">
+    <div class="yachtino-td3" style="font-size: 1.15em"><b><u><?php echo mb_strtoupper(mb_substr($data['pageTypeWord'], 0, 1))
+    . mb_substr($data['pageTypeWord'], 1); ?></u></b></div>
+    <div class="yachtino-td3"></div>
+</div>
+<?php
+
+// ################# specials for boat list ####################################
+
 if ($data['pagetype'] == 'list') : ?>
 <div class="yachtino-tr">
-    <div class="yachtino-td"><label for="bnr" id="l-bnr"<?php
+    <div class="yachtino-td3"><label for="bnr" id="l-bnr"<?php
     if (!empty($tplData['errors']['errField']['bnr'])) :
         echo ' class="yachtino-label-err"';
     endif; ?>><b><?php echo __('Ads_per_page', 'yachtino-boat-listing'); ?>*</b></label></div>
-    <div class="yachtino-td"><input type="text" name="bnr" id="bnr" value="<?php
+    <div class="yachtino-td3"><input type="text" name="bnr" id="bnr" value="<?php
     if (!empty($data['bnr'])) :
         echo esc_attr($data['bnr']);
     elseif (!filter_input(INPUT_POST, 'isSent')) :
@@ -40,48 +130,81 @@ if ($data['pagetype'] == 'list') : ?>
 </div>
 
 <div class="yachtino-tr">
-    <div class="yachtino-td"><label for="linkedm"<?php
+    <div class="yachtino-td3"><label for="linkedm"<?php
     if (!empty($tplData['errors']['errField']['linkedm'])) :
         echo ' class="yachtino-label-err"';
-    endif; ?>><b><?php echo __('Linked_detail_view', 'yachtino-boat-listing'); ?>*</b></label></div>
-    <div class="yachtino-td"><select name="linkedm" id="linkedm" class="yachtino-field-edit-big<?php
+    endif; ?>><b><?php echo __('Linked_detail_view', 'yachtino-boat-listing'); ?>*</b></label><br>
+        <div class="yachtino-explain-text"><?php echo __('Linked_detail_view_explain', 'yachtino-boat-listing'); ?></div>
+    </div>
+    <div class="yachtino-td3"><input type="radio" name="linked" id="linked_m" value="m"<?php
+    if (empty($data['linked']) || $data['linked'] == 'm') :
+        echo ' checked';
+    endif; ?>><label for="linked_m"<?php
+    if (!empty($tplData['errors']['errField']['linked'])) :
+        echo ' class="yachtino-label-err"';
+    endif; ?>><?php echo __('Plugin_page', 'yachtino-boat-listing'); ?></label> &nbsp;
+
+    <input type="radio" name="linked" id="linked_u" value="u"<?php
+    if (!empty($data['linked']) && $data['linked'] == 'u') :
+        echo ' checked';
+    endif; ?>><label for="linked_u"<?php
+    if (!empty($tplData['errors']['errField']['linked'])) :
+        echo ' class="yachtino-label-err"';
+    endif; ?>><?php echo __('Self_created_page', 'yachtino-boat-listing'); ?></label><br><br>
+
+<?php
+    if (empty($data['linked']) || $data['linked'] == 'm') :
+        $hidden = '';
+    else :
+        $hidden = ' class="yachtino-hidden"';
+    endif; ?>
+        <div id="yachtino-div-linkedm"<?php echo $hidden; ?>>
+            <select name="linkedm" id="linkedm" class="yachtino-field-edit-big<?php
     if (!empty($tplData['errors']['errField']['linkedm'])) :
         echo ' yachtino-field-err';
     endif; ?>">
-        <option value="">-------------------</option>
+                <option value="">-------------------</option>
 <?php
     foreach ($editOptions->detailPages as $row) : ?>
-        <option value="<?php echo esc_attr($row['id']); ?>"<?php
+                <option value="<?php echo esc_attr($row['id']); ?>"<?php
         if (!empty($data['linkedm']) && $data['linkedm'] == $row['id']) :
             echo ' selected';
         endif; ?>><?php echo esc_html($row['name']); ?></option>
 <?php
     endforeach; ?>
-    </select>
-    <br>
-    <?php echo __('OR', 'yachtino-boat-listing'); ?><br>
-    <input type="text" class="yachtino-field-edit-big<?php
-    if (!empty($tplData['errors']['errField']['linkedu'])) :
+            </select>
+        </div>
+
+<?php
+    if (!empty($data['linked']) && $data['linked'] == 'u') :
+        $hidden = '';
+    else :
+        $hidden = ' class="yachtino-hidden"';
+    endif; ?>
+        <div id="yachtino-div-linkedu"<?php echo $hidden; ?>><?php
+    echo __('Wp_explain_link_to_own', 'yachtino-boat-listing'); ?><br><br><?php
+    foreach ($editOptions->langs as $row) :
+        echo __('Link', 'yachtino-boat-listing') . ' - ' . $row['name']; ?><br>
+            <input type="text" class="yachtino-field-edit-big<?php
+    if (!empty($tplData['errors']['errField']['linkedu'][$row['id']])) :
         echo ' yachtino-field-err';
-    endif; ?>" name="linkedu" id="linkedu" value="<?php
-    if (!empty($data['linkedu'])) :
-        echo esc_attr($data['linkedu']);
+    endif; ?>" name="linkedu[<?php echo $row['id']; ?>]" id="linkedu_<?php echo $row['id']; ?>" value="<?php
+    if (!empty($data['linkedu'][$row['id']])) :
+        echo esc_attr($data['linkedu'][$row['id']]);
     endif; ?>" placeholder="<?php
-    echo esc_attr(__('Wp_link_to_other_page', 'yachtino-boat-listing')); ?>"><br><?php
-    echo __('Wp_explain_link_to_own', 'yachtino-boat-listing'); ?>
+    echo esc_attr(__('Wp_link_to_other_page', 'yachtino-boat-listing')); ?>"><br><br>
+<?php
+    endforeach; ?>
+        </div>
     </div>
-</div>
-<div class="yachtino-tr">
-    <div class="yachtino-td">&nbsp;</div>
-    <div class="yachtino-td">&nbsp;</div>
 </div>
 
 <div class="yachtino-tr">
-    <div class="yachtino-td"><label for="layout"<?php
+    <div class="yachtino-td3"><label for="layout"<?php
     if (!empty($tplData['errors']['errField']['layout_list'])) :
         echo ' class="yachtino-label-err"';
     endif; ?>><b><?php echo __('Page_layout', 'yachtino-boat-listing'); ?></b></label></div>
-    <div class="yachtino-td"><input type="radio" name="layout" id="layout_list" value="list"<?php
+    <div class="yachtino-td3"><input type="radio" name="layout" id="layout_list" value="list"<?php
     if (empty($data['layout']) || $data['layout'] == 'list') :
         echo ' checked';
     endif; ?>><label for="layout_list"<?php
@@ -100,14 +223,14 @@ if ($data['pagetype'] == 'list') : ?>
 </div>
 
 <div class="yachtino-tr<?php
-if (empty($data['layout']) || $data['layout'] == 'list') :
-    echo ' yachtino-hidden';
-endif; ?>" id="yachtino-number-columns">
-    <div class="yachtino-td"><label for="columns"<?php
+    if (empty($data['layout']) || $data['layout'] == 'list') :
+        echo ' yachtino-hidden';
+    endif; ?>" id="yachtino-number-columns">
+    <div class="yachtino-td3"><label for="columns"<?php
     if (!empty($tplData['errors']['errField']['columns_3'])) :
         echo ' class="yachtino-label-err"';
     endif; ?>><b><?php echo __('Number_boats_in_row', 'yachtino-boat-listing'); ?></b></label></div>
-    <div class="yachtino-td"><input type="radio" name="columns" id="columns_3" value="3"<?php
+    <div class="yachtino-td3"><input type="radio" name="columns" id="columns_3" value="3"<?php
     if (!empty($data['columns']) && $data['columns'] == '3') :
         echo ' checked';
     endif; ?>><label for="columns_3"<?php
@@ -124,30 +247,38 @@ endif; ?>" id="yachtino-number-columns">
     endif; ?>>4</label>
     </div>
 </div>
+
 <div class="yachtino-tr">
-    <div class="yachtino-td">&nbsp;</div>
-    <div class="yachtino-td">&nbsp;</div>
+    <div class="yachtino-td3"><label for="showhits"<?php
+    if (!empty($tplData['errors']['errField']['showhits'])) :
+        echo ' class="yachtino-label-err"';
+    endif; ?>><b><?php echo __('Number_of_found_boats', 'yachtino-boat-listing'); ?></b></label><br><div class="yachtino-explain-text"><?php
+    echo __('Number_of_found_boats_explain', 'yachtino-boat-listing'); ?></div></div>
+    <div class="yachtino-td3"><input type="checkbox" name="showhits" id="showhits" value="1"<?php
+    if (!empty($data['showhits'])) :
+        echo ' checked';
+    endif; ?>></div>
 </div>
 
 <div class="yachtino-tr">
-    <div class="yachtino-td"><label for="paging"<?php
+    <div class="yachtino-td3"><label for="paging"<?php
     if (!empty($tplData['errors']['errField']['paging'])) :
         echo ' class="yachtino-label-err"';
     endif; ?>><b><?php echo __('Page_numbers', 'yachtino-boat-listing'); ?></b></label><br><div class="yachtino-explain-text"><?php
     echo __('Page_numbers_explain', 'yachtino-boat-listing'); ?></div></div>
-    <div class="yachtino-td"><input type="checkbox" name="paging" id="paging" value="1"<?php
+    <div class="yachtino-td3"><input type="checkbox" name="paging" id="paging" value="1"<?php
     if (!empty($data['paging']) || (empty($data['moduleId']) && !filter_input(INPUT_POST, 'isSent'))) :
         echo ' checked';
     endif; ?>></div>
 </div>
 
 <div class="yachtino-tr">
-    <div class="yachtino-td"><label for="fltr"<?php
+    <div class="yachtino-td3"><label for="fltr"<?php
     if (!empty($tplData['errors']['errField']['fltr'])) :
         echo ' class="yachtino-label-err"';
     endif; ?> ><b><?php echo __('Filters', 'yachtino-boat-listing'); ?></b></label><br><div class="yachtino-explain-text"><?php
     echo __('Filter_fields_explain', 'yachtino-boat-listing'); ?></div></div>
-    <div class="yachtino-td"><input type="checkbox" name="fltr" id="fltr" value="1"<?php
+    <div class="yachtino-td3"><input type="checkbox" name="fltr" id="fltr" value="1"<?php
     if (!empty($data['fltr'])) :
         echo ' checked';
     endif; ?> class="yachtino-js-fltr"><br>
@@ -217,15 +348,15 @@ endif; ?>" id="yachtino-number-columns">
 <?php
     endforeach;
 
-// free field for additional editing
+    // free field for additional editing
     ?>
         <div class="yachtino-tr">
-            <div class="yachtino-td"><label for="yachtino-fi_custom"<?php
+            <div class="yachtino-td3"><label for="yachtino-fi_custom"<?php
     if (!empty($tplData['errors']['errField']['fi_custom'])) :
         echo ' class="yachtino-label-err"';
     endif; ?>><?php
     echo __('Custom', 'yachtino-boat-listing'); ?></label></div>
-            <div class="yachtino-td"><input type="text" name="fi_custom" id="yachtino-fi_custom" value="<?php
+            <div class="yachtino-td3"><input type="text" name="fi_custom" id="yachtino-fi_custom" value="<?php
     if (!empty($data['fi_custom'])) :
         echo esc_attr($data['fi_custom']);
     endif; ?>" placeholder="key1=value1&key2=value2" class="yachtino-field-edit-big<?php
@@ -238,12 +369,12 @@ endif; ?>" id="yachtino-number-columns">
 </div>
 
 <div class="yachtino-tr">
-    <div class="yachtino-td"><label for="sform" id="l-sform"<?php
+    <div class="yachtino-td3"><label for="sform" id="l-sform"<?php
     if (!empty($tplData['errors']['errField']['sform'])) :
         echo ' class="yachtino-label-err"';
     endif; ?> ><b><?php echo __('Show_search_form', 'yachtino-boat-listing'); ?></b></label><br><div class="yachtino-explain-text"><?php
     echo __('Choose_fields_for_search', 'yachtino-boat-listing'); ?></div></div>
-    <div class="yachtino-td"><select name="sform" id="sform" class="yachtino-js-sform">
+    <div class="yachtino-td3"><select name="sform" id="sform" class="yachtino-js-sform">
 <?php
     foreach ($editOptions->searchPlace as $row) : ?>
         <option value="<?php echo esc_attr($row['id']); ?>"<?php
@@ -272,15 +403,16 @@ endif; ?>" id="yachtino-number-columns">
 
 <?php
 
-// detail view
+// ################# specials for boat detail view #############################
+
 else : ?>
 
 <div class="yachtino-tr">
-    <div class="yachtino-td"><label for="contact"<?php
+    <div class="yachtino-td3"><label for="contact"<?php
     if (!empty($tplData['errors']['errField']['contact'])) :
         echo ' class="yachtino-label-err"';
     endif; ?> ><b><?php echo __('Contact_form', 'yachtino-boat-listing'); ?></b></label></div>
-    <div class="yachtino-td"><input type="checkbox" name="contact" id="contact" value="1"<?php
+    <div class="yachtino-td3"><input type="checkbox" name="contact" id="contact" value="1"<?php
     if (!empty($data['contact']) || (empty($data['moduleId']) && !filter_input(INPUT_POST, 'isSent'))) :
         echo ' checked';
     endif; ?>></div>
@@ -289,35 +421,35 @@ else : ?>
     // only for boats for sale
     if ($data['itemtype'] == 'sboat') : ?>
 <div class="yachtino-tr">
-    <div class="yachtino-td">&nbsp;<br><b><?php echo __('Special_requests', 'yachtino-boat-listing'); ?></b></div>
-    <div class="yachtino-td"></div>
+    <div class="yachtino-td3">&nbsp;<br><b><?php echo __('Special_requests', 'yachtino-boat-listing'); ?></b></div>
+    <div class="yachtino-td3"></div>
 </div>
 <div class="yachtino-tr">
-    <div class="yachtino-td"><label for="insurance"<?php
+    <div class="yachtino-td3"><label for="insurance"<?php
         if (!empty($tplData['errors']['errField']['insurance'])) :
             echo ' class="yachtino-label-err"';
         endif; ?> ><b><?php echo __('Insurance_request', 'yachtino-boat-listing'); ?></b></label></div>
-    <div class="yachtino-td"><input type="checkbox" name="insurance" id="insurance" value="1"<?php
+    <div class="yachtino-td3"><input type="checkbox" name="insurance" id="insurance" value="1"<?php
         if (!empty($data['insurance'])) :
             echo ' checked';
         endif; ?>></div>
 </div>
 <div class="yachtino-tr">
-    <div class="yachtino-td"><label for="financing"<?php
+    <div class="yachtino-td3"><label for="financing"<?php
         if (!empty($tplData['errors']['errField']['financing'])) :
             echo ' class="yachtino-label-err"';
         endif; ?> ><b><?php echo __('Financing_request', 'yachtino-boat-listing'); ?></b></label></div>
-    <div class="yachtino-td"><input type="checkbox" name="financing" id="financing" value="1"<?php
+    <div class="yachtino-td3"><input type="checkbox" name="financing" id="financing" value="1"<?php
         if (!empty($data['financing'])) :
             echo ' checked';
         endif; ?>></div>
 </div>
 <div class="yachtino-tr">
-    <div class="yachtino-td"><label for="transport"<?php
+    <div class="yachtino-td3"><label for="transport"<?php
         if (!empty($tplData['errors']['errField']['transport'])) :
             echo ' class="yachtino-label-err"';
         endif; ?> ><b><?php echo __('Transport_request', 'yachtino-boat-listing'); ?></b></label></div>
-    <div class="yachtino-td"><input type="checkbox" name="transport" id="transport" value="1"<?php
+    <div class="yachtino-td3"><input type="checkbox" name="transport" id="transport" value="1"<?php
         if (!empty($data['transport'])) :
             echo ' checked';
         endif; ?>></div>

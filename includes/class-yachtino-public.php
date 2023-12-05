@@ -58,22 +58,61 @@ class Yachtino_Public
         wp_localize_script('yachtino-public', 'yachtino_public', ['ajax_url' => admin_url('admin-ajax.php')]);
     }
 
-    public static function get_shortcode(array $atts, ?string $content = null): string
+    public static function get_shortcode_head(array $atts): StdClass
+    {
+        $output = new StdClass();
+        $output->errors = '';
+        $output->info   = [
+            'title'       => '',
+            'description' => '',
+        ];
+
+        $basicInfo = self::define_shortcode_basics($atts);
+
+        if ($basicInfo['errors']) {
+            $output->errors = $basicInfo['errors'];
+            return $output;
+        }
+
+        require_once YACHTINO_DIR_PATH . '/includes/api/class-yachtino-api.php';
+        $classApi = Yachtino_Api::get_instance();
+
+        $apiResponse = $classApi->get_data_from_api(
+            $basicInfo['routingData']->module['pageType'],
+            $basicInfo['routingData']->module,
+            $basicInfo['routingData']->module['itemId'],
+        );
+
+        require_once YACHTINO_DIR_PATH . '/includes/api/class-yachtino-article.php';
+        $output->info = Yachtino_Article::get_head_shortcode(
+            $basicInfo['routingData']->module['pageType'],
+            $apiResponse
+        );
+
+        return $output;
+    }
+
+    public static function define_shortcode_basics(array $atts): array
     {
         global $wpdb;
 
-        Yachtino::remove_emoji();
+        $output = [
+            'errors'      => '',
+            'routingData' => null,
+        ];
+        require_once YACHTINO_DIR_PATH . '/includes/basics/class-yachtino-router.php';
+        require_once YACHTINO_DIR_PATH . '/includes/api/class-yachtino-api.php';
+        require_once YACHTINO_DIR_PATH . '/includes/api/class-yachtino-library.php';
 
-        $errors = '';
         if (empty($atts['lg']) || !is_string($atts['lg']) || !preg_match('/^[a-z]{2}$/', $atts['lg'])) {
-            $errors .= 'No language given. Please add attribute lg="en" or other language to the shortcode.<br>';
+            $output['errors'] .= 'No language given. Please add attribute lg="en" or other language to the shortcode.<br>';
         }
         if (empty($atts['name']) || !is_string($atts['name'])) {
-            $errors .= 'No name of Yachtino module given. Please add attribute name="xxxxxx" to the shortcode.<br>';
+            $output['errors'] .= 'No name of Yachtino module given. Please add attribute name="xxxxxx" to the shortcode.<br>';
         }
 
         $itemId = '';
-        if (!$errors) {
+        if (!$output['errors']) {
 
             // Get module for this shortcode.
             $sql = 'SELECT `md`.`module_id`, `md`.`itemType`, `md`.`pageType`, `md`.`settings`, '
@@ -83,7 +122,7 @@ class Yachtino_Public
                 . 'WHERE `md`.`name` = "' . addslashes($atts['name']) . '"';
             $module = $wpdb->get_results($sql);
             if (!$module || empty($module[0])) {
-                $errors .= 'There is no module named "' . $atts['name'] . '".<br>';
+                $output['errors'] .= 'There is no module named "' . $atts['name'] . '".<br>';
 
 
             } elseif ($module[0]->pageType == 'detail') {
@@ -91,26 +130,59 @@ class Yachtino_Public
                     $itemId = $atts['itemid'];
 
                 } else {
-                    $errors .= 'No item ID (eg. boat ID) given. Please add attribute '
+                    $output['errors'] .= 'No item ID (eg. boat ID) given. Please add attribute '
                         . 'itemid="s12345" or itemid="c12345" to the shortcode.<br>';
                 }
             }
         }
 
-        if ($errors) {
-            return $errors;
+        if ($output['errors']) {
+            return $output;
+        }
+
+        if ($module[0]->pageType == 'list' && !empty($atts['criteria'])) {
+            $addCriteria = Yachtino_Library::explodeSearchString($atts['criteria']);
+            $addCriteria = Yachtino_Api::filter_criteria($module[0]->itemType, $addCriteria);
+        } else {
+            $addCriteria = [];
         }
 
         $classRouting = new Yachtino_Router();
-        $classRouting->set_routing_data([], $atts['lg'], $module, null, $itemId);
+        $classRouting->set_routing_data([], $atts['lg'], $module, null, $itemId, $addCriteria);
 
         $classApi = Yachtino_Api::get_instance();
-        $routingData = $classApi->get_routing_data();
+        $output['routingData'] = $classApi->get_routing_data();
 
-        if ($module[0]->pageType == 'detail') {
-            return $classApi->get_article_detail($routingData->module, $routingData->module['itemId'], $routingData->route);
+        return $output;
+    }
+
+    public static function get_shortcode(array $atts, ?string $content = null): string
+    {
+        Yachtino::remove_emoji();
+
+// $arrTmp = self::get_shortcode_head($atts);
+// echo '<pre>';
+// var_dump($arrTmp);
+// echo '</pre>';
+        $basicInfo = self::define_shortcode_basics($atts);
+
+        if ($basicInfo['errors']) {
+            return $basicInfo['errors'];
+        }
+
+        $classApi = Yachtino_Api::get_instance();
+
+        // Article detail view.
+        if ($basicInfo['routingData']->module['pageType'] == 'detail') {
+            return $classApi->get_article_detail(
+                $basicInfo['routingData']->module,
+                $basicInfo['routingData']->module['itemId'],
+                $basicInfo['routingData']->route,
+            );
+
+        // Article list.
         } else {
-            return $classApi->get_article_list($routingData->module, $routingData->route);
+            return $classApi->get_article_list($basicInfo['routingData']->module, $basicInfo['routingData']->route);
         }
     }
 

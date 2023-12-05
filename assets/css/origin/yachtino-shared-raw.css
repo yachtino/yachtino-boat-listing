@@ -92,11 +92,11 @@ div.yachtino-table-data {
 div.yachtino-tr {
     display: table-row;
 }
-div.yachtino-td, div.yachtino-td1, div.yachtino-td2 {
+div.yachtino-td, div.yachtino-td1, div.yachtino-td2, div.yachtino-td3 {
     display: table-cell;
 }
 
-div.yachtino-td, div.yachtino-td1 {
+div.yachtino-td, div.yachtino-td1, div.yachtino-td3 {
     vertical-align: top;
 }
 
@@ -108,6 +108,11 @@ div.yachtino-table-data div.yachtino-td,
 div.yachtino-table-data div.yachtino-td1,
 div.yachtino-table-data div.yachtino-td2 {
     padding: 4px 10px 4px 0;
+    line-height: 1.5em;
+}
+
+div.yachtino-table-data div.yachtino-td3 {
+    padding: 20px 15px 4px 0;
     line-height: 1.5em;
 }
 

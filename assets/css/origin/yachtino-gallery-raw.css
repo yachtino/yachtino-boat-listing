@@ -162,7 +162,7 @@
 /* WP bar at the top if logged in has z-index 99999 */
 .yomaxglry-large {
     position: fixed;
-    z-index: 100000;
+    z-index: 999999;
     top: 0;
     left: 0;
     width: 100%;

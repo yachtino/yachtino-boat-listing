@@ -1,4 +1,13 @@
 <?php
+// H1 tag only if it is a whole page or the feature is set in module settings.
+if (!empty($routeMeta['h1'])) : ?>
+<h1><?php echo $routeMeta['h1']; ?></h1>
+<?php
+elseif (!empty($moduleData['h1_text'])) : ?>
+<h1><?php echo $moduleData['h1_text']; ?></h1>
+<?php
+endif;
+
 // for javascript - define item type
 ?>
 <div class="yachtino-hidden" id="yachtino-itemtype"><?php echo $itemData->itemType; ?></div>

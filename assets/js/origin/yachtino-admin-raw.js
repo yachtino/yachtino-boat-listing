@@ -22,6 +22,9 @@ jQuery(document).ready(function () {
         // add / or /c1001/ after <input>
         var x = jQuery('#yachtino-moduleid option:selected').attr('data-addpath');
         var itype = jQuery('#yachtino-moduleid option:selected').attr('data-itemtype');
+        if (typeof itype == 'undefined') {
+            itype = jQuery('#itemtype').val();
+        }
         jQuery('.yachtino-js-add-to-path').text(x);
         if (x == '/') {
             jQuery('.yachtino-placeholder-box').addClass('yachtino-hidden');
@@ -208,6 +211,18 @@ jQuery(document).ready(function () {
             jQuery('#yachtino-number-columns').removeClass('yachtino-hidden');
         } else {
             jQuery('#yachtino-number-columns').addClass('yachtino-hidden');
+        }
+    });
+
+    // Show / hide linked page for editing module for boat list.
+    jQuery('#linked_m, #linked_u').on('click', function () {
+        var isPlugin = jQuery('#linked_m').prop('checked');
+        if (isPlugin) {
+            jQuery('#yachtino-div-linkedm').removeClass('yachtino-hidden');
+            jQuery('#yachtino-div-linkedu').addClass('yachtino-hidden');
+        } else {
+            jQuery('#yachtino-div-linkedm').addClass('yachtino-hidden');
+            jQuery('#yachtino-div-linkedu').removeClass('yachtino-hidden');
         }
     });
 });
