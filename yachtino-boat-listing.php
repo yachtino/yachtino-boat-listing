@@ -3,7 +3,7 @@
  * Plugin Name:       Yachtino boat listing
  * Plugin URI:        https://update.yachtino.com/wordpress-plugin
  * Description:       Display your boats and yachts for sale from yachtall.com or yacht charter offers from happycharter.com in your own website.
- * Version:           1.4.5
+ * Version:           1.4.6
  * Requires at least: 6.0
  * Rquires PHP:       8.0
  * Author:            Yachtino GmbH
@@ -20,9 +20,9 @@ if (!defined('WPINC')) {
 }
 
 /**
- * Currently plugin version.
+ * Current plugin version.
  */
-define('YACHTINO_VERSION', '1.4.5');
+define('YACHTINO_VERSION', '1.4.6');
 define('YACHTINO_MIN_PHP_VERSION', '8.0');
 define('YACHTINO_MIN_WP_VERSION', '6.0');
 define('YACHTINO_DIR_PATH', __DIR__); // NO trailing slash
@@ -90,13 +90,13 @@ yachtino_define_uri();
 
 /**
  * The code that runs during plugin activation.
- * This action is documented in included file
+ * This action is documented in included file.
  */
 function yachtino_activate_plugin()
 {
     // yachtino_define_uri();
-    // first check prerequisites (PHP version, WP version)
-    // prerequisites class is compatible also with older PHP versions
+    /* First check prerequisites (PHP version, WP version)
+    prerequisites class is compatible also with older PHP versions */
     require_once YACHTINO_DIR_PATH . '/includes/basics/class-yachtino-prerequisites.php';
     $isOk = Yachtino_Prerequisites::check_prerequisites();
 
@@ -110,7 +110,7 @@ register_activation_hook(__FILE__, 'yachtino_activate_plugin');
 
 /**
  * The code that runs during plugin deactivation.
- * This action is documented in included file
+ * This action is documented in included file.
  */
 function yachtino_deactivate_plugin()
 {
@@ -124,12 +124,11 @@ register_deactivation_hook(__FILE__, 'yachtino_deactivate_plugin');
 require_once(ABSPATH . 'wp-admin/includes/plugin.php');
 
 /**
- * only if this plugin is active
+ * Run plugin only if this plugin is active.
  */
 function yachtino_run_plugin()
 {
-    // we try to call as few functions as possible
-    // not to create unnecessary hooks
+    // We try to call as few functions as possible, not to create unnecessary hooks.
     require_once YACHTINO_DIR_PATH . '/includes/class-yachtino.php';
     require_once YACHTINO_DIR_PATH . '/includes/basics/class-yachtino-router.php';
     require_once YACHTINO_DIR_PATH . '/includes/class-yachtino-public.php';
@@ -139,7 +138,7 @@ function yachtino_run_plugin()
     $plugin = new Yachtino_Router();
     $plugin->run();
 
-    // run plugin
+    // Run plugin.
     Yachtino::get_instance();
 }
 

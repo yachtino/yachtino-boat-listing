@@ -9,8 +9,9 @@ declare(strict_types=1);
  * @since    1.0.0
  */
 
+// Don't access directly
 if (!defined('ABSPATH')) {
-    exit(); // Don't access directly
+    exit();
 };
 
 class Yachtino_Public
@@ -74,7 +75,7 @@ class Yachtino_Public
         $itemId = '';
         if (!$errors) {
 
-            // get module
+            // Get module for this shortcode.
             $sql = 'SELECT `md`.`module_id`, `md`.`itemType`, `md`.`pageType`, `md`.`settings`, '
                     . '`md`.`filter`, `md`.`searchForm`, '
                     . '`md`.`linkedDetailMaster`, `md`.`linkedDetailUrl` '
@@ -147,7 +148,7 @@ class Yachtino_Public
         $itemType = $formData['itemtype'];
         unset($formData['itemtype']);
 
-        // get route
+        // Get route.
         $classRouter = new Yachtino_Router();
         $arrTmp = $classRouter->get_url_for_list($language, $itemType, $formData);
 
@@ -164,7 +165,7 @@ class Yachtino_Public
             }
         }
 
-        // Make your array as json
+        // Make your array as json.
         wp_send_json($arrayResult);
 
         // Don't forget to stop execution afterward.

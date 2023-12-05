@@ -237,4 +237,12 @@ jQuery('.yachtino-filter-box').addClass('yachtino-hidden');
 }, 300);
 }
 });
+jQuery('#layout_list, #layout_tiles').on('click', function () {
+var isTiles = jQuery('#layout_tiles').prop('checked');
+if (isTiles) {
+jQuery('#yachtino-number-columns').removeClass('yachtino-hidden');
+} else {
+jQuery('#yachtino-number-columns').addClass('yachtino-hidden');
+}
+});
 });

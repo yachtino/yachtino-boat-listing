@@ -10,11 +10,12 @@ declare(strict_types=1);
  */
 
 /*
- * Upgrades the Yachtino plugin from old Shiplisting plugin (in year 2023, yachtino version 1.0.0)
+ * Upgrades the Yachtino plugin from old Shiplisting plugin (in year 2023, yachtino version 1.0.0).
  */
 
+// Don't access directly
 if (!defined('ABSPATH')) {
-    exit(); // Don't access directly
+    exit();
 };
 
 class Yachtino_Shiplisting
@@ -41,13 +42,13 @@ class Yachtino_Shiplisting
     }
 
     /*
-     * Former WordPress plugin's name was Shiplisting, it had another structure
-     * If installing Yachtino plugin, remove Shiplisting but keep data like API key
-     * returns true if the new tables has been installed and updated, false = shiplisting was not used, install new yachtino
+     * Former WordPress plugin's name was Shiplisting, it had another structure.
+     * If installing Yachtino plugin, remove Shiplisting but keep data like API key.
+     * Returns true if the new tables has been installed and updated, false = shiplisting was not used, installs new yachtino.
      */
     public function upgrade_from_shiplisting(): bool
     {
-        // Shiplisting not installed
+        // Shiplisting is not installed.
         $tableName = 'wp_shiplisting_settings';
         if ($this->wpdb->get_var($this->wpdb->prepare('SHOW TABLES LIKE %s', $tableName)) !== $tableName) {
             return false;
@@ -58,10 +59,10 @@ class Yachtino_Shiplisting
         $sql = 'SELECT * FROM wp_shiplisting_settings';
         $result = $this->wpdb->get_results($sql);
 
-        // Shiplisting was not used
+        // Shiplisting was not used.
         if (!$result) {
 
-            // try WP options
+            // Try WP options.
             $apiKey = get_option('shiplisting_api_key');
 
             if (!$apiKey) {
@@ -84,7 +85,7 @@ class Yachtino_Shiplisting
         $showContactForm = (int)$result[0]->contact_form;
         $this->thisTime = date('Y-m-d H:i:s');
 
-        // get set languages
+        // Get set languages.
         $sql = 'SELECT `language` FROM wp_shiplisting_routes GROUP BY `language`';
         $result = $this->wpdb->get_results($sql);
         if ($result) {
@@ -101,7 +102,7 @@ class Yachtino_Shiplisting
         }
         update_option('yachtino_settings', $settings);
 
-        // define whether the urls should be with trailing slash
+        // Define whether the urls should be with trailing slash.
         $permalink = get_option('permalink_structure');
         if (mb_substr($permalink, -1, 1) == '/') {
             $this->trailingSlash = '/';
@@ -109,17 +110,19 @@ class Yachtino_Shiplisting
             $this->trailingSlash = '';
         }
 
-        // create detail views
+        // Create boat detail views.
         $this->shiplisting_detail($showContactForm);
 
-        // create boat lists
+        // Create boat lists.
         $this->shiplisting_list();
 
         $this->remove_shiplisting();
         return true;
     }
 
-    // create master route and single language routes for boat detail view
+    /**
+     * Create master route and single language routes for boat detail view.
+     */
     private function shiplisting_detail(int $showContactForm): void
     {
         $this->detailViews = [];
@@ -145,7 +148,6 @@ class Yachtino_Shiplisting
         foreach ($results as $result) {
             $vars = json_decode($result->vars, false);
 
-            $filterOrig = '';
             foreach ($vars as $field) {
                 if (isset($field->source)) {
                     if (!$field->source) {
@@ -158,7 +160,7 @@ class Yachtino_Shiplisting
                 }
             }
 
-            // module
+            // Module.
             if (!isset($setModules[$itemType])) {
                 $dataDb = [
                     'name'             => $addToName . '_detail_view',
@@ -176,7 +178,7 @@ class Yachtino_Shiplisting
                 $setModules[$itemType] = $this->wpdb->insert_id;
             }
 
-            // masters
+            // Masters.
             $name = 'page_' . $addToName . '_detail_view';
             if (isset($setMasters[$name][$result->language])) {
                 for ($i = 1; $i <= 99999; $i++) {
@@ -188,7 +190,7 @@ class Yachtino_Shiplisting
                 }
             }
 
-            // create master
+            // Create master.
             if (!isset($masterNames[$name])) {
                 $dataDb = [
                     'name'         => $name,
@@ -202,15 +204,17 @@ class Yachtino_Shiplisting
 
             $setMasters[$name][$result->language] = true;
 
-            // insert route
+            // Insert route.
             $this->insert_route((int)$masterNames[$name], $result);
 
-            // set for boat list -> old route ID mapping to new master ID
+            // Set for boat list -> old route ID mapping to new master ID.
             $this->detailViews[$result->id] = $masterNames[$name];
         }
     }
 
-    // create master route and single language routes for boat lists
+    /**
+     * Create master route and single language routes for boat lists.
+     */
     private function shiplisting_list(): void
     {
         $sql = 'SELECT * FROM wp_shiplisting_routes WHERE `callback` = "display_boats" ORDER BY id DESC';
@@ -223,11 +227,9 @@ class Yachtino_Shiplisting
         $setMasters  = [];
         $setModules  = [];
         $moduleNames = [];
-        $masterNames = [];
-        $emptyArray  = json_encode([]);
         foreach ($results as $result) {
 
-            // no detail view for this list
+            // No detail view for this list.
             if (empty($this->detailViews[$result->linked_detail_view])) {
                 continue;
             }
@@ -273,11 +275,12 @@ class Yachtino_Shiplisting
             $settings = [
                 'hitsPerPage' => $hitsPerPage,
                 'layout'      => 'list',
+                'columns'     => 0,
                 'showPaging'  => 1,
                 'searchPlace' => '',
             ];
 
-            // remove fields from search form that are in filters
+            // Remove fields from search form that are in filters.
             if ($result->adv_filter) {
                 $searchForm = json_decode($result->adv_filter, true);
                 foreach ($searchForm as $key => $search) {
@@ -293,7 +296,7 @@ class Yachtino_Shiplisting
             }
             $advFilter = json_encode($searchForm);
 
-            // module + master
+            // Module + master.
             if (!isset($setModules[$itemType][$filter][$advFilter])) {
                 $name = $addToName . '_list_';
                 if (!$filterArr) {
@@ -340,7 +343,6 @@ class Yachtino_Shiplisting
                 $setMasters[$itemType][$filter][$result->adv_filter] = (int)$this->wpdb->insert_id;
             }
 
-            // insert route
             $this->insert_route($setMasters[$itemType][$filter][$result->adv_filter], $result);
         }
     }
@@ -354,7 +356,7 @@ class Yachtino_Shiplisting
         $path = str_replace('(.*)', '([a-z0-9]+)', $path);
         $path = str_replace('(.*?)', '([a-z0-9]+)', $path);
 
-        // add or remove trailing slash - analogic to settings for permalinks in WP options
+        // Add or remove trailing slash - analogic to settings for permalinks in WP options.
         if (strpos($path, '?') === false) {
             $lastLetter = mb_substr($path, -1, 1);
             if ($lastLetter == '/' && $this->trailingSlash != '/') {
@@ -386,6 +388,9 @@ class Yachtino_Shiplisting
         $this->wpdb->insert($this->wpdb->prefix . 'yachtino_routes', $dataDb);
     }
 
+    /**
+     * Removes shiplisting files (PHP) from hard disc and deletes tables from DB.
+     */
     private function remove_shiplisting(): void
     {
         deactivate_plugins('shiplisting/shiplisting.php', false);
@@ -399,7 +404,7 @@ class Yachtino_Shiplisting
         $this->wpdb->query('DROP TABLE IF EXISTS wp_shiplisting_routes');
         $this->wpdb->query('DROP TABLE IF EXISTS wp_shiplisting_settings');
 
-        // delete PHP files/code for Shiplisting from hard disc
+        // Delete PHP files/code for Shiplisting from hard disc.
         $pathToShiplisting = YACHTINO_DIR_PATH . '/../shiplisting';
         if (is_dir($pathToShiplisting)) {
             require_once YACHTINO_DIR_PATH . '/includes/api/class-yachtino-library.php';

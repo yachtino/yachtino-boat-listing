@@ -3,14 +3,15 @@
 declare(strict_types=1);
 
 /**
- * Defines data for a single article - boat, trailer, engine, mooring or marine gear
+ * Defines data for a single article - boat, trailer, engine, mooring or marine gear.
  * @author   Yachtino GmbH
  * @package  yachtino
  * @since    1.0.0
  */
 
+// Don't access directly
 if (!defined('ABSPATH')) {
-    exit(); // Don't access directly
+    exit();
 };
 
 class Yachtino_Article
@@ -32,7 +33,7 @@ class Yachtino_Article
     private array $pricesAsCriteria;
 
     /**
-     * singleton pattern
+     * Singleton pattern.
      */
     private static ?self $instance = null;
 
@@ -41,7 +42,6 @@ class Yachtino_Article
 
     public static function get_instance(): self
     {
-        // global $wpdb;
         if (is_null(self::$instance)) {
             self::$instance = new self();
         }
@@ -49,11 +49,14 @@ class Yachtino_Article
     }
 
     /**
-     * Data for all boats/trailer etc.
-     * $moduleData - control variables
-     *               string $itemType - cboat (charter), sboat (for sale), trailer, engine, mooring, gear
-     * $pageType - list, detail
-     * $apiTranslate - node from JSON response from Yachtino API with translated words
+     * Data for all boats/trailers/engines.
+     *
+     * @param $moduleData {
+     *          Control variables.
+     *
+     *      @type string $itemType Possible: cboat (charter), sboat (for sale), trailer, engine, mooring, gear.
+     *      @type string $pageType Possible: list, detail.
+     * @param $apiTranslate Node from JSON response from Yachtino API with translated words.
      */
     public function set_basics(array $moduleData, string $pageType, object $apiTranslate): void
     {
@@ -63,11 +66,11 @@ class Yachtino_Article
         $this->pageType     = $pageType;
         $this->apiTranslate = $apiTranslate;
 
-        // get link to single boat/engine/trailer from the list
+        // Get link to detail page of boat/engine/trailer from the list.
         $this->singleItemUrl = '';
         if ($pageType == 'list') {
             if ($moduleData['linkedDetailUrl']) {
-                $this->singleItemUrl = $moduleData['linkedDetailUrl'];
+                $this->singleItemUrl = str_replace('{itemId}', '([a-z0-9]+)', $moduleData['linkedDetailUrl']);
 
             } else {
                 $sql = 'SELECT r.path FROM ' . $wpdb->prefix . 'yachtino_routes AS r '
@@ -83,10 +86,10 @@ class Yachtino_Article
             $this->pageLayout = $moduleData['settings']['layout'];
         }
 
-        // price types for charter boats
+        // Price types for charter boats.
         if ($this->itemType == 'cboat') {
 
-            // for list show only the most important prices
+            // For list show only the most important prices.
             if ($this->pageType == 'list') {
                 $this->priceTypes = ['boatWeek', 'boatDay', 'boatHour', 'berthWeek',];
 
@@ -97,7 +100,7 @@ class Yachtino_Article
                     'hrprc' => 'boatHour',
                 ];
 
-            // in detail view show all prices
+            // In detail view show all prices.
             } else {
                 $this->priceTypes = ['boatWeek', 'boatDay', 'berthWeek', 'boatWeekend', 'boatShortweek', 'cabinWeek', 'boatHour',];
             }
@@ -105,7 +108,7 @@ class Yachtino_Article
     }
 
     /**
-     * Gets data for a single article
+     * Gets data for a single article.
      */
     public function get_data(object $advert): StdClass
     {
@@ -326,7 +329,9 @@ class Yachtino_Article
         }
     }
 
-    // data for engines for sale (not for boat)
+    /**
+     * Data for engines for sale (not for boat).
+     */
     private function define_engine_data(): void
     {
         if ($this->pageType == 'list') {
@@ -352,7 +357,9 @@ class Yachtino_Article
         $this->mainDataBlock = array_merge($this->mainDataBlock, $arrTmp);
     }
 
-    // data for boat trailers for sale
+    /**
+     * Cata for boat trailers for sale.
+     */
     private function define_trailer_data(): void
     {
         if ($this->pageType == 'list') {
@@ -503,6 +510,9 @@ class Yachtino_Article
         }
     }
 
+    /*
+     * Special information for charter boats.
+     */
     private function define_charter_data(): void
     {
         // countries
@@ -592,7 +602,7 @@ class Yachtino_Article
             }
         }
 
-        // prices - for detail view see below
+        // Prices - for detail view see below.
         if ($this->pageType == 'list') {
             $this->output->prices = [];
             foreach ($this->priceTypes as $priceType) {
@@ -610,7 +620,7 @@ class Yachtino_Article
                 }
             }
 
-            // discount possible?
+            // Is a discount possible?
             if ($this->advert->charterData->discounts->hasAny) {
                 $this->output->discountPossible = $this->apiTranslate->advert->charterData->discountPossible;
             }
@@ -722,6 +732,9 @@ class Yachtino_Article
         }
     }
 
+    /**
+     * Description / marketing texts for a boat/trailer/engine.
+     */
     private function define_texts(): void
     {
         if ($this->pageType == 'list') {
@@ -765,7 +778,7 @@ class Yachtino_Article
     }
 
     /*
-     * Engine data for boat (charter, for sale) AND for engines for sale
+     * Engine data for boat (charter, for sale) AND for engines for sale.
      */
     private function get_engine_data(object $engineNode): array
     {
@@ -944,7 +957,7 @@ class Yachtino_Article
     }
 
     /*
-     * All fields are alredy in an array; now we create single lines for the list as tiles (not rows)
+     * All fields are alredy in an array; now we create single lines for the list as tiles (not rows).
      */
     private function prepare_output_tiles(): void
     {
@@ -1108,7 +1121,7 @@ class Yachtino_Article
     }
 
     /*
-     * All fields are alredy in an array; now we create single lines for the list
+     * All fields are alredy in an array; now we create single lines for the list.
      */
     private function prepare_output_list(): void
     {
@@ -1312,7 +1325,7 @@ class Yachtino_Article
     }
 
     /*
-     * All fields are alredy in an array; now we order/sort the fields in a logical content way
+     * All fields are alredy in an array; now we order/sort the fields in a logical content way.
      */
     private function prepare_output_detail(): void
     {
@@ -1403,7 +1416,7 @@ class Yachtino_Article
         }
     }
 
-// ############ help functions #################################################
+// ############ help methods ###################################################
 
     private function help_measure(object $node, string $fieldName): void
     {
@@ -1442,7 +1455,7 @@ class Yachtino_Article
     }
 
     /**
-     * $tankName - water, fuel, holding
+     * @param $tankName Possible: water, fuel, holding.
      */
     private function help_tank(string $tankName): void
     {

@@ -66,7 +66,7 @@ jQuery(document).ready(function () {
             jQuery('.yachtino-placeholder-box').removeClass('yachtino-hidden');
         }
 
-        // set placeholder for this module
+        // Set placeholder for this module.
         var x = jQuery('#yachtino-moduleid option:selected').attr('data-pholder');
         jQuery('.yachtino-js-placeholder').attr('placeholder', x);
     }
@@ -127,7 +127,7 @@ jQuery(document).ready(function () {
         closePlaceholder(lg, pType);
     });
 
-    // click on placeholder name -> set it into input field
+    // Click on placeholder name -> set it into input field.
     jQuery('.yachtino-js-pholder').on('click', function () {
         var id = jQuery(this).attr('data-id');
         var p = id.split('-');
@@ -143,21 +143,21 @@ jQuery(document).ready(function () {
         jQuery('#langs-' + lg + '-' + fieldname).val(txt);
     });
 
-    // click for deleting a page or module
+    // Click for deleting a page or module.
     jQuery('.yachtino-js-delete-item').on('click', function () {
         var cont = jQuery('#yachtino-deleting-box').html();
 
-        // remove content from temporary box to avoid double ids
+        // Remove content from temporary box to avoid double ids.
         yachtinoIdContentLightBox[1] = 'yachtino-deleting-box';
         jQuery('#yachtino-deleting-box').html('');
 
-        // set data from THIS item
+        // Set data from THIS item.
         var id = jQuery(this).attr('data-id');
         var p = id.split('-');
 
         yachtinoShowLightBoxWhole(1, cont);
 
-        // after creating HTML -> set values
+        // After creating HTML -> set values.
         if (p[0] == 'page') { // delete page
             jQuery('#masterid').val(p[1]);
 
@@ -167,12 +167,12 @@ jQuery(document).ready(function () {
         jQuery('#yachtino-placeholder-name').text(jQuery(this).attr('data-name'));
     });
 
-    // click for adding module
+    // Click for adding module.
     jQuery('#yachtino-add-module').on('click', function () {
         openAddModule();
     });
 
-    // show / hide search form options for editing module
+    // Show / hide search form options for editing module.
     jQuery('.yachtino-js-sform').on('change', function () {
         var vl = jQuery('#sform').val();
         console.log('vl = ' + vl);
@@ -187,7 +187,7 @@ jQuery(document).ready(function () {
         }
     });
 
-    // show / hide filter options for editing module
+    // Show / hide filter options for editing module.
     jQuery('.yachtino-js-fltr').on('click', function () {
         var isChecked = jQuery('#fltr').prop('checked');
         if (isChecked) {
@@ -198,6 +198,16 @@ jQuery(document).ready(function () {
             setTimeout(function(){
                 jQuery('.yachtino-filter-box').addClass('yachtino-hidden');
             }, 300);
+        }
+    });
+
+    // Show / hide number of columns for boat list - layout tiles.
+    jQuery('#layout_list, #layout_tiles').on('click', function () {
+        var isTiles = jQuery('#layout_tiles').prop('checked');
+        if (isTiles) {
+            jQuery('#yachtino-number-columns').removeClass('yachtino-hidden');
+        } else {
+            jQuery('#yachtino-number-columns').addClass('yachtino-hidden');
         }
     });
 });

@@ -3,14 +3,15 @@
 declare(strict_types=1);
 
 /**
- * Yachtino boat listing
+ * Yachtino boat listing.
  * @author   Yachtino GmbH
  * @package  yachtino
  * @since    1.0.0
  */
 
+ // Don't access directly.
 if (!defined('ABSPATH')) {
-    exit(); // Don't access directly
+    exit();
 };
 
 require_once ABSPATH . 'wp-admin/includes/upgrade.php';
@@ -19,16 +20,12 @@ require_once YACHTINO_DIR_PATH . '/includes/basics/class-yachtino-shiplisting.ph
 
 class Yachtino_Activator
 {
-    private object $wpdb;
-
     public function __construct()
-    {
-        global $wpdb;
-        $this->wpdb = $wpdb;
-    }
+    {}
 
     /**
      * Activates this plugin
+     *
      * @since 1.0.0
      */
     public function activate(): void
@@ -47,6 +44,9 @@ class Yachtino_Activator
         self::update_assets();
     }
 
+    /**
+     * Checks whether a table exists in the db.
+     */
     public static function table_exists(string $tableName): bool
     {
         global $wpdb;
@@ -57,7 +57,10 @@ class Yachtino_Activator
         }
     }
 
-    // !! called also from Yachtino_Shiplisting in class-yachtino-shiplisting.php
+    /**
+     * Creates tables in the db for this plugin
+     * !! Called also from Yachtino_Shiplisting in class-yachtino-shiplisting.php.
+     */
     public static function create_db_tables(): void
     {
         global $wpdb;
@@ -126,7 +129,9 @@ class Yachtino_Activator
         }
     }
 
-    // creates output css and js (merge all files, remove comments)
+    /**
+     * Creates output css and js (merge all files, remove comments).
+     */
     public static function update_assets(): void
     {
         // ########## css #####################
@@ -209,6 +214,9 @@ class Yachtino_Activator
         file_put_contents($pathToMain, $content);
     }
 
+    /**
+     * Remove comments in a javascript file.
+     */
     public static function remove_comments(string $content): string
     {
         $content = preg_replace('/\/\/ [^\n]+\n/ui', '', $content);
@@ -218,14 +226,17 @@ class Yachtino_Activator
         return $content;
     }
 
+    /**
+     * Updates fields and database with a plugin update.
+     */
     public static function update_plugin_version(): void
     {
         $settings = get_option('yachtino_settings');
 
-        // Do some special things when we update
+        // Do some special things when we update.
         global $wpdb;
 
-        // in version 1.3.0 new settings for module for detail view (special requests)
+        // In version 1.3.0 new settings for module for detail view (special requests).
         if (version_compare($settings['version'], '1.3.0', '<')
         && version_compare(YACHTINO_VERSION, '1.3.0', '>=')) {
             $sql = 'SELECT `module_id`, `settings` FROM `' . $wpdb->prefix . 'yachtino_modules` '
@@ -255,7 +266,7 @@ class Yachtino_Activator
             }
         }
 
-        // new in version 1.4.0: possibility to define where the search form for boat is is (top / side)
+        // New in version 1.4.0: possibility to define where the search form for boat is is (top / side).
         if (version_compare($settings['version'], '1.4.0', '<')
         && version_compare(YACHTINO_VERSION, '1.4.0', '>=')) {
 
@@ -289,16 +300,55 @@ class Yachtino_Activator
             }
         }
 
-        // change in version 1.4.3: db fields other length for VARCHAR
+        // Change in version 1.4.3: db fields other length for VARCHAR.
         if (version_compare($settings['version'], '1.4.3', '<')
         && version_compare(YACHTINO_VERSION, '1.4.3', '>=')) {
             self::update_database_fields();
+        }
+
+        // Possibility to set number of columns (grid) for boat list.
+        if (version_compare($settings['version'], '1.4.6', '<')
+        && version_compare(YACHTINO_VERSION, '1.4.6', '>=')) {
+            $sql = 'SELECT `module_id`, `settings`, `searchForm` FROM `' . $wpdb->prefix . 'yachtino_modules` '
+                . 'WHERE `pageType` = "list"';
+            $results = $wpdb->get_results($sql);
+            if ($results) {
+                foreach ($results as $result) {
+                    $setts = json_decode($result->settings, true);
+                    if (isset($setts['columns'])) {
+                        continue;
+                    }
+                    $settsNew = [
+                        'hitsPerPage' => $setts['hitsPerPage'],
+                        'layout'      => $setts['layout'],
+                        'columns'     => 0,
+                        'showPaging'  => $setts['showPaging'],
+                        'searchPlace' => $setts['searchPlace'],
+                    ];
+                    if ($settsNew['layout'] == 'list') {
+                        $settsNew['columns'] = 0;
+                    } else {
+                        $settsNew['columns'] = 4;
+                    }
+
+                    $dataDb = [
+                        'settings' => json_encode($settsNew),
+                    ];
+                    $where = [
+                        'module_id' => $result->module_id,
+                    ];
+                    $wpdb->update($wpdb->prefix . 'yachtino_modules', $dataDb, $where);
+                }
+            }
         }
 
         $settings['version'] = YACHTINO_VERSION;
         update_option('yachtino_settings', $settings);
     }
 
+    /**
+     * Updates database fields for update to 1.4.3.
+     */
     public static function update_database_fields(): void
     {
         global $wpdb;
@@ -344,7 +394,7 @@ class Yachtino_Activator
                 }
             }
 
-            // length former 255, now 100
+            // Field length was former 255, now 100.
             $sql = 'ALTER TABLE `' . $table . '` CHANGE `name` `name` VARCHAR(' . (string)$newLength . ') NOT NULL DEFAULT "";';
             // dbDelta($sql); - does not work
             $wpdb->get_results($sql);

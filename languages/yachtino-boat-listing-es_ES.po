@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Yachtino ES\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-07 15:28+0200\n"
+"POT-Creation-Date: 2023-09-17 12:09+0200\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Yachtino GmbH <webinfo@yachtino.com>\n"
 "Language-Team: \n"
@@ -10,11 +10,11 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 "X-Poedit-KeywordsList: translate;gettext\n"
 "X-Poedit-Basepath: E:/_htdocs/wordpress\n"
-"X-Generator: Yachtino\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.3.2\n"
 "X-Poedit-SearchPath-0: test-install/wp-content/plugins/yachtino-boat-listing/includes\n"
 "X-Poedit-SearchPath-1: test-install/wp-content/plugins/yachtino-boat-listing/templates\n"
 
@@ -450,10 +450,8 @@ msgstr "Por favor, cree primero al menos un módulo."
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Module_explain"
 msgstr ""
-"Un módulo puede contener una lista de barcos o una página detallada con un "
-"barco. A continuación, puede insertar este módulo como shortcode en "
-"cualquier lugar de su sitio web o puede crear una página completa con este "
-"módulo (véase el punto \"Páginas\")."
+"Un módulo puede contener una lista de barcos o una página detallada con un barco. A continuación, puede insertar este módulo como shortcode en cualquier lugar "
+"de su sitio web o puede crear una página completa con este módulo (véase el punto \"Páginas\")."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-page.html
@@ -470,9 +468,7 @@ msgstr "catamarán"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_wp_page_lg"
-msgstr ""
-"Por favor, introduzca al menos una página - una ruta a la subpágina "
-"específica."
+msgstr "Por favor, introduzca al menos una página - una ruta a la subpágina específica."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_wp_module_not_exists"
@@ -493,10 +489,8 @@ msgstr "Desea eliminar la página siguiente:"
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Yo_settings_explain"
 msgstr ""
-"Para poder acceder a sus barcos desde Yachtino, necesita la clave API y el "
-"ID del sitio.<br>Puede generarlos usted mismo en Boatadmin:<br>%1$s (se "
-"requiere inicio de sesión)<br>O escriba envíenos un correo electrónico a "
-"%2$s."
+"Para poder acceder a sus barcos desde Yachtino, necesita la clave API y el ID del sitio.<br>Puede generarlos usted mismo en Boatadmin:<br>%1$s (se requiere "
+"inicio de sesión)<br>O escriba envíenos un correo electrónico a %2$s."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
 msgid "You_want_delete_module"
@@ -531,10 +525,8 @@ msgstr "Vista detallada vinculada"
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Filter_fields_explain"
 msgstr ""
-"Aquí puede limitar la selección de barcos para mostrar. Por ejemplo, sólo "
-"puede mostrar barcos de vela. Esta restricción se aplica siempre, "
-"independientemente de los criterios de búsqueda seleccionados en el "
-"formulario de búsqueda."
+"Aquí puede limitar la selección de barcos para mostrar. Por ejemplo, sólo puede mostrar barcos de vela. Esta restricción se aplica siempre, independientemente "
+"de los criterios de búsqueda seleccionados en el formulario de búsqueda."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/page-list-modules.html
@@ -547,15 +539,11 @@ msgstr "Números de página"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Page_numbers_explain"
-msgstr ""
-"Debajo/encima de la lista: Números para desplazarse entre las páginas de "
-"resultados individuales."
+msgstr "Debajo/encima de la lista: Números para desplazarse entre las páginas de resultados individuales."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino.php
 msgid "Display your boats and yachts for sale from yachtall.com or yacht charter offers from happycharter.com in your own website."
-msgstr ""
-"Integre sus barcos y yates en venta de yachtall.com o las ofertas de "
-"alquiler de yates de happycharter.com en su propio sitio web."
+msgstr "Integre sus barcos y yates en venta de yachtall.com o las ofertas de alquiler de yates de happycharter.com en su propio sitio web."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_not_both_fields"
@@ -563,28 +551,21 @@ msgstr "Sólo puede rellenarse uno de los dos campos."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Wp_path_language"
-msgstr ""
-"Si tiene un sitio web <b>multilingüe</b>, ingrese las rutas/URL aquí <b>con "
-"la abreviatura del idioma</b> como con otros sitios, por ejemplo, /en/boats."
+msgstr "Si tiene un sitio web <b>multilingüe</b>, ingrese las rutas/URL aquí <b>con la abreviatura del idioma</b> como con otros sitios, por ejemplo, /en/boats."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino.php
 msgid "You need to have an account on yachtall.com or happycharter.com to use this plugin. Then you can integrate your boats into your website with a few clicks."
 msgstr ""
-"Debe tener una cuenta en yachtall.com o happycharter.com para utilizar este "
-"plugin. A continuación, puede integrar sus barcos en su sitio web con unos "
-"pocos clics."
+"Debe tener una cuenta en yachtall.com o happycharter.com para utilizar este plugin. A continuación, puede integrar sus barcos en su sitio web con unos pocos "
+"clics."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_wp_module_delete_not_possible_page"
-msgstr ""
-"El módulo no se puede eliminar porque todavía hay al menos una página que "
-"utiliza este módulo."
+msgstr "El módulo no se puede eliminar porque todavía hay al menos una página que utiliza este módulo."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_wp_page_delete_not_possible_module"
-msgstr ""
-"La página no se puede eliminar porque todavía hay al menos un módulo que "
-"enlaza con esta página como vista detallada."
+msgstr "La página no se puede eliminar porque todavía hay al menos un módulo que enlaza con esta página como vista detallada."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
@@ -616,3 +597,18 @@ msgstr "formulario de búsqueda de barcos"
 msgid "search_form_at_left"
 msgstr "búsqueda por la izquierda de los barcos"
 
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Wp_explain_link_to_own"
+msgstr "The link must contain a placeholder for the boot ID: {itemId}"
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Wp_link_to_other_page"
+msgstr "Link to another (own) page."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
+msgid "err_wp_link_item_id"
+msgstr "The link must contain a placeholder for boat ID (or trailer ID). The placeholder is <b>{itemId}</b>."
+
+#: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
+msgid "Number_boats_in_row"
+msgstr "Number of boats in a row"

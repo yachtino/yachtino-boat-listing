@@ -22,7 +22,7 @@ class Yachtino_Api
     private string $apiHost = 'https://api.boatadmin.com';
 
     /**
-     * singleton pattern
+     * Singleton pattern.
      */
     private static ?self $instance = null;
 
@@ -60,7 +60,7 @@ class Yachtino_Api
         }
     }
 
-    // languages from API and default locale
+    // Possible languages from API and default locale for each language.
     public static function allowed_languages(): array
     {
         return [
@@ -79,7 +79,7 @@ class Yachtino_Api
         ];
     }
 
-    // remove this silly microsoft minus from output
+    // Remove this silly microsoft minus from output.
     public static function yachtino_correct_content(string $content): string
     {
         if ('yachtino_page' === get_post_type()) {
@@ -89,7 +89,7 @@ class Yachtino_Api
         return $content;
     }
 
-    // special encoding for Yachtino API
+    // Special encoding for Yachtino API.
     public static function escape_url_for_api(string $var): string
     {
         $var = str_replace(['/', '\\'], ['~~', '§~§'], $var);
@@ -100,7 +100,7 @@ class Yachtino_Api
     {
         $settings = Yachtino::get_plugin_settings();
 
-        // for initial editing of configuration - there is no API key yet; use tempporary key
+        // For initial editing of configuration - there is no API key yet; use tempporary key.
         if (!$settings->apiKey && $urlParts['part2'] == 'get-mixed' && !empty($additionalVars['lgs'])) {
             $apiKey = 'plgwp_tmp_2zo5k3qs9jvn8wy1plk6i';
             $siteId = '2';
@@ -141,14 +141,20 @@ class Yachtino_Api
 
     /**
      * Send request to Yachtino API and returns json object
-     * $urlParts - language, part1, part2 (for building URL: /en/controller/action)
-     * $additionalVars - additional params in the URL ($_GET)
-     * $postVars - variables to be sent as $_POST variables
+     * 
+     * @param $urlParts {
+     *      Single parts for building URL: /en/controller/action.
+     *      @type string $language
+     *      @type string $part1
+     *      @type string $part2
+     * }
+     * @param $additionalVars Additional params in the URL ($_GET).
+     * @param $postVars Variables to be sent as $_POST variables.
      */
     public function send_request_to_api(array $urlParts, array $additionalVars = [], array $postVars = []): object
     {
         $url = $this->create_api_url($urlParts, $additionalVars);
-// echo "\r\n" . $url . '<br />';
+        // echo "\r\n" . $url . '<br />';
 
         $args = [
             'timeout'    => 15,
@@ -169,7 +175,7 @@ class Yachtino_Api
             wp_die('Sorry, an unknown error occured.');
         }
 
-        // success
+        // Success.
         if ($response['response']['code'] == 200) {
             if (isset($response['body'])) {
                 return json_decode($response['body'], false);
@@ -180,8 +186,8 @@ class Yachtino_Api
         } elseif ($response['response']['code'] == 403) {
             wp_die('Forbidden', 403);
 
-        // save errors in a log file on Yachtino server
-        // avoid looping this function (plugin-errors already called)
+        /* Save errors in a log file on Yachtino server,
+        avoid looping this function (plugin-errors already called) */
         } elseif ($urlParts['part2'] != 'plugin-errors') {
             $arr = [
                 'u' => str_replace('https://api.boatadmin.com', '', $url),
@@ -205,24 +211,27 @@ class Yachtino_Api
             $this->send_request_to_api($urlPartsNew, $additionalNew);
 
         } else {
-// echo "\r\n" . '<pre>';
+        // echo "\r\n" . '<pre>';
         // ob_start();
         // var_dump($response);
         // $buffer = ob_get_clean();
         // echo htmlentities($buffer, ENT_NOQUOTES, 'UTF-8');
-// echo '</pre>';
+        // echo '</pre>';
         }
         wp_die('Sorry, an unknown error occured.');
     }
 
     /**
      * Gets data for a list of boats/trailers/engines... from API
-     * $moduleData - object with yachtino module from wp database
-     *              string $itemType: cboat (charter), sboat (for sale), trailer, engine, mooring, gear
-     *              array $filter - variables to limit the result (eg. btid=1 for only sailboats)
-     *              array $searchForm - fieldNames that should be shown in search form, get options for selectboxes (eg. all countries)
-     * $route - is filled if the output is a whole page (not only embedded module/shortcode)
-     * @return - HTML code (filled template)
+     * Returns HTML code (filled template)
+     * 
+     * @param $moduleData {
+     *      Module data from yachtino module from wp database.
+     *      @type string $itemType Types: cboat (charter), sboat (for sale), trailer, engine, mooring, gear.
+     *      @type array $filter Variables to limit the result (eg. btid=1 for only sailboats).
+     *      @type array $searchForm Field names that should be shown in search form, get options for selectboxes (eg. all countries).
+     * }
+     * @param $route Is filled if the output is a whole page (not only embedded module/shortcode).
      */
     public function get_article_list(array $moduleData, array $route): string
     {
@@ -265,6 +274,7 @@ class Yachtino_Api
         $allData->translation = [];
         $allData->pageLayout  = $moduleData['settings']['layout'];
         $allData->searchPlace = $moduleData['settings']['searchPlace'];
+        $allData->columns = $moduleData['settings']['columns'];
 
         foreach ($apiResponse->adverts as $advert) {
             $allData->items[] = $classArticle->get_data($advert);
@@ -313,7 +323,7 @@ class Yachtino_Api
             }
         }
 
-        // return whole page
+        // Return whole page.
         if ($route) {
             $routeMeta = [
                 'h1'          => $route['h1'],
@@ -331,11 +341,14 @@ class Yachtino_Api
     }
 
     /**
-     * Gets data for a single boat/trailer/engine... from API
-     * $moduleData - array with yachtino module from wp database
-     *              string $itemType: cboat (charter), sboat (for sale), trailer, engine, mooring, gear
-     * $route - is filled if the output is a whole page (not only embedded module/shortcode)
-     * @return - HTML code (filled template)
+     * Gets data for a single boat/trailer/engine... from API.
+     * Returns - HTML code (filled template).
+     * 
+     * @param $moduleData {
+     *      Yachtino module from wp database.
+     *      @type string $itemType Types: cboat (charter), sboat (for sale), trailer, engine, mooring, gear.
+     * }
+     * @param $route Is filled if the output is a whole page (not only embedded module/shortcode).
      */
     public function get_article_detail(array $moduleData, string $itemId, array $route): string
     {
@@ -350,21 +363,21 @@ class Yachtino_Api
             'trans'    => '1', // gets also translated field names for given language
         ];
 
-        // list of countries for sending request
+        // List of countries for sending request.
         if ($moduleData['settings']['showContactForm']) {
             $additionalVars['fields'] = 'ccountry';
             $additionalVars['mergeccountryspec'] = '1'; // for special countries at the begin
         }
         $apiResponse = $this->send_request_to_api($urlParts, $additionalVars);
 
-        // no article (boat, trailer...) given - it has been deleted/deactivated
+        // No article (boat, trailer...) given - it has been deleted/deactivated.
         if (empty($apiResponse->advert)) {
 
             if ($route) {
                 global $wpdb;
 
-                // redirect to article list
-                // first look for general list
+                // Redirect to article list.
+                // First look for general list.
                 $sql = 'SELECT `rt`.`path` FROM `' . $wpdb->prefix . 'yachtino_routes` AS `rt` '
                     . 'INNER JOIN `' . $wpdb->prefix . 'yachtino_route_master` AS `ms` ON `rt`.`fk_master_id` = `ms`.`master_id` '
                     . 'INNER JOIN `' . $wpdb->prefix . 'yachtino_modules` AS `md` ON `ms`.`fk_module_id` = `md`.`module_id` '
@@ -372,7 +385,7 @@ class Yachtino_Api
                     . ' AND `md`.`filter` LIKE "[]"';
                 $results = $wpdb->get_results($sql);
 
-                // if no general list, take any list (of course, the same item type)
+                // If no general list, take any list (of course, the same item type).
                 if (!$results) {
                     $sql = 'SELECT `rt`.`path` FROM `' . $wpdb->prefix . 'yachtino_routes` AS `rt` '
                         . 'INNER JOIN `' . $wpdb->prefix . 'yachtino_route_master` AS `ms` ON `rt`.`fk_master_id` = `ms`.`master_id` '
@@ -389,8 +402,8 @@ class Yachtino_Api
             }
             return '';
 
-        // after Big relaunch in October 2022, all boats got a new ID
-        // if some link goes to old ID -> redirect to new ID
+        /* After Big relaunch in October 2022, all boats got a new ID.
+        If some link goes to old ID -> redirect to new ID. */
         } elseif ($itemId != $apiResponse->advert->managing->itemId) {
             $redirectUrl = home_url()
                 . str_replace('/' . $itemId, '/' . $apiResponse->advert->managing->itemId, YACHTINO_REQUEST_URI);
@@ -421,7 +434,7 @@ class Yachtino_Api
             }
         }
 
-        // return whole page
+        // Return whole page.
         if ($route) {
             $placeholders = self::create_placeholders_for_item($moduleData['itemType'], $apiResponse->advert);
             foreach ($this->routingData->routeMeta as $metaKey => $metaValue) {
@@ -434,7 +447,7 @@ class Yachtino_Api
 
             $templateName = '/templates/public/page-detail.html';
 
-        // return only a module / shortcode for embedding
+        // Return only a module / shortcode for embedding.
         } else {
             $templateName = '/templates/public/incl-detail.html';
         }

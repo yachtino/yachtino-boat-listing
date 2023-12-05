@@ -32,7 +32,7 @@ if ($data['pagetype'] == 'list') : ?>
     if (!empty($data['bnr'])) :
         echo esc_attr($data['bnr']);
     elseif (!filter_input(INPUT_POST, 'isSent')) :
-        echo '15';
+        echo '12';
     endif; ?>" class="yachtino-field-edit-big<?php
     if (!empty($tplData['errors']['errField']['bnr'])) :
         echo ' yachtino-field-err';
@@ -58,7 +58,7 @@ if ($data['pagetype'] == 'list') : ?>
 <?php
     endforeach; ?>
     </select>
-    <!-- <br>
+    <br>
     <?php echo __('OR', 'yachtino-boat-listing'); ?><br>
     <input type="text" class="yachtino-field-edit-big<?php
     if (!empty($tplData['errors']['errField']['linkedu'])) :
@@ -66,8 +66,14 @@ if ($data['pagetype'] == 'list') : ?>
     endif; ?>" name="linkedu" id="linkedu" value="<?php
     if (!empty($data['linkedu'])) :
         echo esc_attr($data['linkedu']);
-    endif; ?>" placeholder="link to a foreign page">/s1001/ -->
+    endif; ?>" placeholder="<?php
+    echo esc_attr(__('Wp_link_to_other_page', 'yachtino-boat-listing')); ?>"><br><?php
+    echo __('Wp_explain_link_to_own', 'yachtino-boat-listing'); ?>
     </div>
+</div>
+<div class="yachtino-tr">
+    <div class="yachtino-td">&nbsp;</div>
+    <div class="yachtino-td">&nbsp;</div>
 </div>
 
 <div class="yachtino-tr">
@@ -91,6 +97,36 @@ if ($data['pagetype'] == 'list') : ?>
         echo ' class="yachtino-label-err"';
     endif; ?>><?php echo __('page_layout_tiles', 'yachtino-boat-listing'); ?></label>
     </div>
+</div>
+
+<div class="yachtino-tr<?php
+if (empty($data['layout']) || $data['layout'] == 'list') :
+    echo ' yachtino-hidden';
+endif; ?>" id="yachtino-number-columns">
+    <div class="yachtino-td"><label for="columns"<?php
+    if (!empty($tplData['errors']['errField']['columns_3'])) :
+        echo ' class="yachtino-label-err"';
+    endif; ?>><b><?php echo __('Number_boats_in_row', 'yachtino-boat-listing'); ?></b></label></div>
+    <div class="yachtino-td"><input type="radio" name="columns" id="columns_3" value="3"<?php
+    if (!empty($data['columns']) && $data['columns'] == '3') :
+        echo ' checked';
+    endif; ?>><label for="columns_3"<?php
+    if (!empty($tplData['errors']['errField']['columns_list'])) :
+        echo ' class="yachtino-label-err"';
+    endif; ?>>3</label> &nbsp;
+
+    <input type="radio" name="columns" id="columns_4" value="4"<?php
+    if (empty($data['columns']) || $data['columns'] == '4') :
+        echo ' checked';
+    endif; ?>><label for="columns_4"<?php
+    if (!empty($tplData['errors']['errField']['columns_4'])) :
+        echo ' class="yachtino-label-err"';
+    endif; ?>>4</label>
+    </div>
+</div>
+<div class="yachtino-tr">
+    <div class="yachtino-td">&nbsp;</div>
+    <div class="yachtino-td">&nbsp;</div>
 </div>
 
 <div class="yachtino-tr">

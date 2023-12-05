@@ -7,8 +7,13 @@
 if (!empty($allData->paging)) :
     echo $allData->paging;
 endif;
-if ($allData->items) : ?>
-    <div class="yachtino-tiles-block">
+if ($allData->items) :
+    if ($allData->columns == 3) :
+        $addToItemClass = '3';
+    else :
+        $addToItemClass = '';
+    endif; ?>
+    <div class="yachtino-tiles-block<?php echo $addToItemClass; ?>">
 <?php
     foreach ($allData->items as $itemData) :
         include 'incl-tiles-item.html';
