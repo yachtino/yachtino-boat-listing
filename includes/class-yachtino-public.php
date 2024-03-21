@@ -126,7 +126,7 @@ class Yachtino_Public
 
 
             } elseif ($module[0]->pageType == 'detail') {
-                if (!empty($atts['itemid']) && preg_match('/^[csetmg][0-9]+$/', $atts['itemid'])) {
+                if (!empty($atts['itemid']) && preg_match('/^[csetmg]?[0-9]+$/', $atts['itemid'])) {
                     $itemId = $atts['itemid'];
 
                 } else {
@@ -160,10 +160,6 @@ class Yachtino_Public
     {
         Yachtino::remove_emoji();
 
-// $arrTmp = self::get_shortcode_head($atts);
-// echo '<pre>';
-// var_dump($arrTmp);
-// echo '</pre>';
         $basicInfo = self::define_shortcode_basics($atts);
 
         if ($basicInfo['errors']) {

@@ -246,6 +246,9 @@ class Yachtino_Router
                     }
                 }
 
+                if (!empty($criteria['pg']) && $criteria['pg'] == 1) {
+                    unset($criteria['pg']);
+                }
                 $addToUrl = Yachtino_Library::makePostToUrl($criteria);
 
                 // if the criteria are not in the correct ordering in the URL -> redirect to correct permalink

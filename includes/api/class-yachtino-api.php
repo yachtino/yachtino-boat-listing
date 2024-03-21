@@ -35,10 +35,13 @@ class Yachtino_Api
         if (is_null(self::$instance)) {
             self::$instance = new self();
 
-            // template data
+            // template data (needed in template - included file)
             self::$instance->imagePaths = [
                 'placeholderImg' => plugins_url('/assets/images/loading-wheel.gif', YACHTINO_DIR_PATH . '/yachtino-boat-listing.php'),
             ];
+
+            // If API called from outside of plugin (eg. contact form for Yachtino websites).
+            require_once YACHTINO_DIR_PATH . '/includes/api/class-yachtino-library.php';
 
             add_filter('the_content', self::class . '::yachtino_correct_content', 100);
         }
@@ -346,6 +349,10 @@ class Yachtino_Api
                 'title'       => $route['title'],
                 'description' => $route['description'],
             ];
+            if (!empty($allData->criteria['pg']) && $allData->criteria['pg'] != 1) {
+                $routeMeta['title'] .= ' ' . $apiResponse->translation->words->pageShort . ' ' . $allData->criteria['pg'];
+                $routeMeta['description'] .= ' ' . $apiResponse->translation->words->pageShort . ' ' . $allData->criteria['pg'];
+            }
 
             $this->routingData->routeMeta = $routeMeta;
         }
@@ -357,6 +364,9 @@ class Yachtino_Api
 
             } elseif (!empty($moduleData['settings']['headline'][$moduleData['language']])) {
                 $moduleData['h1_text'] = $moduleData['settings']['headline'][$moduleData['language']];
+                if (!empty($allData->criteria['pg']) && $allData->criteria['pg'] != 1) {
+                    $moduleData['h1_text'] .= ' ' . $apiResponse->translation->words->pageShort . ' ' . $allData->criteria['pg'];
+                }
             }
         }
 
@@ -412,13 +422,6 @@ class Yachtino_Api
                 }
             }
             return '';
-
-        /* After Big relaunch in October 2022, all boats got a new ID.
-        If some link goes to old ID -> redirect to new ID. */
-        } elseif ($itemId != $apiResponse->advert->managing->itemId) {
-            $redirectUrl = home_url()
-                . str_replace('/' . $itemId, '/' . $apiResponse->advert->managing->itemId, YACHTINO_REQUEST_URI);
-            wp_redirect($redirectUrl, 301);
         }
 
         require_once YACHTINO_DIR_PATH . '/includes/api/class-yachtino-article.php';
@@ -504,7 +507,12 @@ class Yachtino_Api
 
         // Article detail.
         if ($pageType == 'detail') {
-            $additionalVars['itid'] = $itemId;
+            if (preg_match('/^[0-9]+$/', $itemId)) {
+                $additionalVars['bid'] = $itemId;
+
+            } else {
+                $additionalVars['itid'] = $itemId;
+            }
 
             // List of countries for sending request.
             if ($moduleData['settings']['showContactForm']) {
@@ -537,7 +545,85 @@ class Yachtino_Api
             }
         }
 
-        return $this->send_request_to_api($urlParts, $additionalVars);
+        $apiResponse = $this->send_request_to_api($urlParts, $additionalVars);
+
+        if (headers_sent()) {
+            return $apiResponse;
+        }
+
+        // page with boats of a user profile - profile name changed -> redirect to new url
+        if (!empty($moduleData['criteria']['pfidurl']) && !empty($apiResponse->searchVars->pfidurlNew)) {
+            if (strpos(YACHTINO_REQUEST_URI, $moduleData['criteria']['pfidurl']) !== false) {
+                $newUrl = home_url()
+                    . str_replace($moduleData['criteria']['pfidurl'], $apiResponse->searchVars->pfidurlNew, YACHTINO_REQUEST_URI);
+                wp_redirect($newUrl, 301);
+                exit();
+            }
+
+        } elseif ($pageType == 'detail') {
+
+            /* After Big relaunch in October 2022, all boats got a new ID.
+            If some link goes to old ID -> redirect to new ID. */
+            if (!empty($apiResponse->advert->managing) && $itemId != $apiResponse->advert->managing->itemId) {
+                $redirectUrl = home_url()
+                    . str_replace('/' . $itemId, '/' . $apiResponse->advert->managing->itemId, YACHTINO_REQUEST_URI);
+                wp_redirect($redirectUrl, 301);
+                exit();
+            }
+        }
+
+        return $apiResponse;
+    }
+
+    public function get_new_boat_id(string $itemType, string $oldBoatId): array
+    {
+        $urlParts = [
+            'language' => 'de',
+            'part1'    => 'article-special',
+            'part2'    => 'get-boat-info',
+        ];
+        $additionalVars = [
+            'itemtype' => $itemType,
+            'bid'      => $oldBoatId,
+            'deleted'  => 'criteria',
+        ];
+        $apiResponse = $this->send_request_to_api($urlParts, $additionalVars);
+
+        if (!empty($apiResponse->advert->managing)) {
+            $output = [
+                'pageType' => 'articleDetail',
+                'itemId'   => $apiResponse->advert->managing->itemId,
+            ];
+
+        // boat list with some search criteria
+        } elseif (!empty($apiResponse->deleted->criteria)) {
+            $output = [
+                'pageType' => 'articleList',
+                'criteria' => [
+                    'btid' => $apiResponse->deleted->criteria->btid,
+                ],
+            ];
+            if (!empty($apiResponse->deleted->criteria->manfb)) {
+                $output['criteria']['q'] = $apiResponse->deleted->itemData->manfbName;
+            }
+
+            if (!empty($apiResponse->deleted->criteria->lngf)) {
+                $output['criteria']['lngf'] = $apiResponse->deleted->criteria->lngf;
+            }
+
+            if (!empty($apiResponse->deleted->criteria->lngt)) {
+                $output['criteria']['lngt'] = $apiResponse->deleted->criteria->lngt;
+            }
+
+        // general boat list
+        } else {
+            $output = [
+                'pageType' => 'articleList',
+                'criteria' => [],
+            ];
+        }
+
+        return $output;
     }
 
     public static function create_placeholders_for_item(string $itemType, object $advertDataApi): array
@@ -668,27 +754,32 @@ class Yachtino_Api
      * Gets search criteria from URL and brings them in the right ordering
      * IMPORTANT!!! for permalinks the ordering must be everytime the same
      */
-    public static function get_criteria_from_url(string $itemType): array
+    public static function get_criteria_from_url(string $itemType, bool $alsoEmpty = false): array
     {
         $criteria = [];
         $currentUrl = home_url() . YACHTINO_REQUEST_URI;
         $urlComponents = parse_url($currentUrl);
         if (isset($urlComponents['query'])) {
+
+            // correct old mistakes (eg. boats/?hmid=4/?pg=6)
+            $urlComponents['query'] = rawurldecode($urlComponents['query']);
+            $urlComponents['query'] = preg_replace('/(\/?\?)/ui', '&', $urlComponents['query']);
+
             parse_str($urlComponents['query'], $criteriaTmp);
 
-            $criteria = self::filter_criteria($itemType, $criteriaTmp);
+            $criteria = self::filter_criteria($itemType, $criteriaTmp, $alsoEmpty);
         }
 
         return $criteria;
     }
 
-    public static function filter_criteria(string $itemType, array $criteriaOrig): array
+    public static function filter_criteria(string $itemType, array $criteriaOrig, bool $alsoEmpty = false): array
     {
         $criteria = [];
         $possibleCriteria = self::possible_criteria($itemType);
         foreach ($possibleCriteria as $key => $one) {
             if (isset($criteriaOrig[$key])) {
-                if ($criteriaOrig[$key]) {
+                if ($alsoEmpty || $criteriaOrig[$key]) {
                     $criteria[$key] = $criteriaOrig[$key];
                 }
             }
@@ -702,7 +793,7 @@ class Yachtino_Api
     public static function possible_criteria(string $itemType): array
     {
         // IMPORTANT!!!!
-        // If you change the ordering of the params here -> also change in assets/js/yachtino-public.js
+        // If you change the ordering of the params here -> also change in assets/js/origin/yachtino-public-raw.js
         if ($itemType == 'cboat' || $itemType == 'sboat') {
             $output = [
                 'btid'   => true, // boat type (sailboat, motorboat, inflatable, small boat, jet ski / gadgets)
@@ -778,9 +869,11 @@ class Yachtino_Api
             ];
         }
 
+        $output['pfidurl'] = true; // url slug for user profile (profile ID as URL)
         $output['q']       = true; // quick search (free text)
         $output['orderby'] = true; // sorting
         $output['pg']      = true; // page number
+        $output['msg']     = true; // message through URL (eg. offer_not)
 
         return $output;
     }

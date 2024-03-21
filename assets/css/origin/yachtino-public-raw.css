@@ -794,6 +794,14 @@ h3.yachtino-tiles-item-title, h3.yachtino-tiles-item-title a {
     white-space: nowrap;
 }
 
+.yachtino-tiles-item-line-single {
+    display: block;
+    text-align: left;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .yachtino-tiles-item-line-c {
     display: block;
     text-align: center;

@@ -1,9 +1,6 @@
 <?php
 // H1 tag only if it is a whole page or the feature is set in module settings.
-if (!empty($routeMeta['h1'])) : ?>
-<h1><?php echo $routeMeta['h1']; ?></h1>
-<?php
-elseif (!empty($moduleData['h1_text'])) : ?>
+if (!empty($moduleData['h1_text'])) : ?>
 <h1><?php echo $moduleData['h1_text']; ?></h1>
 <?php
 endif;
@@ -62,8 +59,11 @@ if (!empty($specRequests['insurance']) || !empty($specRequests['financing'])
 endif;
 ?>
     </div>
-    <div class="yachtino-detail-wrapper">
+    <div class="yachtino-detail-wrapper"><?php
+if (empty($moduleData['h1_text'])) : ?>
         <h2><?php echo $itemData->model; ?></h2>
+<?php
+endif; ?>
         <div id="general_data" class="yachtino-detail-block">
 <?php
 // sale price

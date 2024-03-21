@@ -3,7 +3,7 @@ Contributors: yachtino
 Tags: boats, yachts, yachting, yachtcharter, yachtall, happycharter, sale, brokerage, boating, charter, listing, yacht-charter
 Requires at least: 6.0
 Tested up to: 6.4
-Stable tag: 1.5.1
+Stable tag: 1.5.5
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -27,6 +27,25 @@ You need to have an account on yachtall.com or happycharter.com to use this plug
 * That's it!
 
 == Changelog ==
+
+= 1.5.5 =
+19 January 2024
+Fixed: Boat list - tiles for charter boats, displaying of charter price whole visible if no discounts.
+Changed: You can get sent search criteria from outside, also all sent empty params.
+
+= 1.5.4 =
+17 January 2024
+New: possible to build a boat list with boats of a single user (for portals with more users)
+Change: better catching of old boat IDs, possible to call the new boat ID from outside (if integrated as shortcode)
+Fixed: Search form - field sailboat/motorboat was not cleared if the URL contained "sailboat" - wrong routing
+
+= 1.5.3 =
+10 January 2024
+New: for boats for sale - new fields in boat data: price for auction, price for boat sharing
+
+= 1.5.2 =
+26 December 2023
+Change: set page number into page title tag and H1 tag if it is not first page (boat list, for SEO)
 
 = 1.5.1 =
 05 December 2023

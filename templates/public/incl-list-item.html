@@ -28,6 +28,12 @@ if ($allData->itemType != 'cboat') : ?>
     if (!empty($itemData->priceEuro)) : ?>
         <span class="yachtino-list-price-value yachtino-nowrap">(≈ <?php echo $itemData->priceEuro; ?>)</span><?php
     endif;
+    if (!empty($itemData->auction)) :
+        echo ', <span class="yachtino-color-red">' . $itemData->auction . '</span>';
+    endif;
+    if (!empty($itemData->sharing)) :
+        echo ', <span class="yachtino-color-red">' . $itemData->sharing . '</span>';
+    endif;
     if (!empty($itemData->vatPaid)) :
         echo ', ' . $itemData->vatPaid;
     endif; ?>

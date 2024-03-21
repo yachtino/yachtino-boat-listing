@@ -29,11 +29,19 @@ if ($allData->itemType == 'cboat') : ?>
             <div><?php echo $itemData->boatType; ?></div>
             <div><?php echo $itemData->singlePoints['allCabins']; ?></div>
         </div>
+<?php
+    if (!$itemData->singlePoints['discount']) : ?>
+        <div class="yachtino-tiles-item-line-single">
+            <div><?php echo $itemData->singlePoints['price']; ?></div>
+        </div>
+<?php
+    else : ?>
         <div class="yachtino-tiles-item-line">
             <div><?php echo $itemData->singlePoints['price']; ?></div>
             <div><?php echo $itemData->singlePoints['discount']; ?></div>
         </div>
 <?php
+    endif;
 elseif ($allData->itemType == 'sboat') : ?>
         <div class="yachtino-tiles-item-line-c"><?php echo $itemData->singlePoints['specLine']; ?></div>
         <div class="yachtino-tiles-item-line">

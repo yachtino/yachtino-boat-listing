@@ -83,24 +83,24 @@ jQuery(document).ready(function () {
 
     function post_filter_options()
     {
-        /* IMPORTANT!!! copy in the same order like /includes/api/class-yachtino-article.php */
+        /* IMPORTANT!!! copy in the same order like /includes/api/class-yachtino-api.php */
         var itemType = jQuery('#yachtino-itemtype').text();
         if (itemType == 'cboat' || itemType == 'sboat') {
             orderingVars = ['btid', 'bcid', 'btcid', 'ct', 'provid', 'fuel', 'hmid',
                 'lngf', 'lngt', 'ybf', 'ybt', 'powf', 'powt', 'cabf', 'cabt', 'fly',
                 'newused', 'sprcf', 'sprct',
                 'rgww', 'tn', 'wkprcf', 'wkprct', 'daprcf', 'daprct', 'hrprcf', 'hrprct', 'beprcf', 'beprct',
-                'q', 'orderby'];
+                'pfidurl', 'q', 'orderby'];
 
         } else if (itemType == 'engine') {
             orderingVars = ['oclass', 'ct', 'provid', 'manfe', 'etype', 'fuel',
                 'powf', 'powt', 'ybf', 'ybt', 'sprcf', 'sprct',
-                'q', 'orderby'];
+                'pfidurl', 'q', 'orderby'];
 
         } else if (itemType == 'trailer') {
             orderingVars = ['oclass', 'ct', 'provid', 'manft', 'trmid',
                 'lngf', 'lngt', 'ybf', 'ybt', 'sprcf', 'sprct',
-                'q', 'orderby'];
+                'pfidurl', 'q', 'orderby'];
         }
         var data = {};
         data['lg'] = jQuery('#yachtino-srchform-lg').val();
@@ -119,9 +119,7 @@ jQuery(document).ready(function () {
                     }
 
                 } else {
-                    if (jQuery('#yachtino-srchform-' + val).val()) {
-                        postUrl += '&' + val + '=' + jQuery('#yachtino-srchform-' + val).val();
-                    }
+                    postUrl += '&' + val + '=' + jQuery('#yachtino-srchform-' + val).val();
                     data[val] = jQuery('#yachtino-srchform-' + val).val();
                 }
             }
@@ -130,7 +128,6 @@ jQuery(document).ready(function () {
             postUrl = postUrl.substr(1);
         }
 
-        var redir = '';
         var redirBasic = window.location.href.split('?')[0];
         if (postUrl) {
             redirBasic += '?' + postUrl;
@@ -157,8 +154,7 @@ jQuery(document).ready(function () {
             });
 
         } else {
-            redir = redirBasic;
-            window.location.href = redir;
+            window.location.href = redirBasic;
         }
     }
 

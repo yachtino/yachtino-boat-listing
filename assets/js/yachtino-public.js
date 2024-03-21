@@ -565,15 +565,15 @@ orderingVars = ['btid', 'bcid', 'btcid', 'ct', 'provid', 'fuel', 'hmid',
 'lngf', 'lngt', 'ybf', 'ybt', 'powf', 'powt', 'cabf', 'cabt', 'fly',
 'newused', 'sprcf', 'sprct',
 'rgww', 'tn', 'wkprcf', 'wkprct', 'daprcf', 'daprct', 'hrprcf', 'hrprct', 'beprcf', 'beprct',
-'q', 'orderby'];
+'pfidurl', 'q', 'orderby'];
 } else if (itemType == 'engine') {
 orderingVars = ['oclass', 'ct', 'provid', 'manfe', 'etype', 'fuel',
 'powf', 'powt', 'ybf', 'ybt', 'sprcf', 'sprct',
-'q', 'orderby'];
+'pfidurl', 'q', 'orderby'];
 } else if (itemType == 'trailer') {
 orderingVars = ['oclass', 'ct', 'provid', 'manft', 'trmid',
 'lngf', 'lngt', 'ybf', 'ybt', 'sprcf', 'sprct',
-'q', 'orderby'];
+'pfidurl', 'q', 'orderby'];
 }
 var data = {};
 data['lg'] = jQuery('#yachtino-srchform-lg').val();
@@ -589,9 +589,7 @@ data[val] = jQuery('#yachtino-srchform-' + val).val();
 data[val] = '0';
 }
 } else {
-if (jQuery('#yachtino-srchform-' + val).val()) {
 postUrl += '&' + val + '=' + jQuery('#yachtino-srchform-' + val).val();
-}
 data[val] = jQuery('#yachtino-srchform-' + val).val();
 }
 }
@@ -599,7 +597,6 @@ data[val] = jQuery('#yachtino-srchform-' + val).val();
 if (postUrl) {
 postUrl = postUrl.substr(1);
 }
-var redir = '';
 var redirBasic = window.location.href.split('?')[0];
 if (postUrl) {
 redirBasic += '?' + postUrl;
@@ -623,8 +620,7 @@ console.log(XMLHttpRequest);
 }
 });
 } else {
-redir = redirBasic;
-window.location.href = redir;
+window.location.href = redirBasic;
 }
 }
 jQuery('form#yachtino-searchform').on('change', function () {

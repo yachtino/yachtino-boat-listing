@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Yachtino TR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-04 21:22+0100\n"
+"POT-Creation-Date: 2024-01-17 19:38+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Yachtino GmbH <webinfo@yachtino.com>\n"
 "Language-Team: \n"
@@ -620,34 +620,34 @@ msgstr "Sıradaki tekne sayısı"
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Linked_detail_view_explain"
 msgstr ""
-"You have 2 options:<br>1. You link to a page created with the Yachtino plugin.<br>This page automatically displays the correct boat.<br>2. You link to a page "
-"you created by yourself, in which you integrate the detailed view with a shortcode. Here you have to ensure that the boot ID from the URL is passed to the "
-"shortcode."
+"2 seçeneğiniz var:<br>1. Yachtino eklentisi ile oluşturulmuş bir sayfaya bağlantı verirsiniz.<br>Bu sayfa otomatik olarak doğru tekneyi görüntüler.<br>2. Kendi "
+"oluşturduğunuz sayfaya bağlantı verirsiniz ama bu seçenekte ayrıntılı görünüm sayfasını shortcode'la entegre etemeniz gerekir ve URL'deki tekne ID'sinin "
+"(kimliğinin) shortcode ile aktarıldığından emin olmanız gerekir."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Wp_optional_attributes_list"
-msgstr "The \"criteria\" attribute is optional, you can use it to pass additional search criteria."
+msgstr "Kiriter niteliği isteğe bağlıdır, ek arama kriterleri iletmek için kullanabilirsiniz."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Plugin_page"
-msgstr "Plugin page"
+msgstr "Eklenti sayfası"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Self_created_page"
-msgstr "Self-created page"
+msgstr "Kendi oluşturduğunuz sayfa"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "WP_headline_explain"
-msgstr "Show heading (H1), even if integrated with shortcode"
+msgstr "Shortcode ile entegre edilmiş olsa bile başlığı (H1) göster"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "General_information"
-msgstr "General information"
+msgstr "Genel bilgi"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Number_of_found_boats"
-msgstr "Number of found boats"
+msgstr "Bulunan tekne sayısı"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Number_of_found_boats_explain"
-msgstr "Show the number of search results, e.g. \"25 boats found\"."
+msgstr "Arama sonuçlarının sayısını gösterin, örneğin \"25 tekne bulundu\"."

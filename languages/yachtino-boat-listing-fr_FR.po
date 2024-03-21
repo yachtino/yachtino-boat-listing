@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Yachtino FR\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-12-04 21:22+0100\n"
+"POT-Creation-Date: 2024-01-17 19:38+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Yachtino GmbH <webinfo@yachtino.com>\n"
 "Language-Team: \n"
@@ -593,63 +593,63 @@ msgstr "Autres paramètres"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "no_search_form"
-msgstr "no search form"
+msgstr "pas de formulaire de recherche"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "search_form_at_top"
-msgstr "search form above boats"
+msgstr "formulaire de recherche au-dessus des bateaux"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "search_form_at_left"
-msgstr "search form to the left of boats"
+msgstr "formulaire de recherche à gauche des bateaux"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Wp_explain_link_to_own"
-msgstr "The link must contain a placeholder for the boat ID: {itemId}, e.g. /en/buy/{itemId}/"
+msgstr "Le lien doit contenir un emplacement pour la référence du bateau : {itemId}, par exemple /fr/acheter/{itemId}/"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Wp_link_to_other_page"
-msgstr "Link to another (own) page."
+msgstr "Lien vers une autre page (qui vous appartient)."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "err_wp_link_item_id"
-msgstr "The link must contain a placeholder for boat ID (or trailer ID). The placeholder is <b>{itemId}</b>."
+msgstr "Le lien doit contenir un emplacement pour la référence du bateau (ou celle de la remorque). L’emplacement est <b>{itemId}</b>."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Number_boats_in_row"
-msgstr "Number of boats in a row"
+msgstr "Nombre de bateaux par ligne"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Linked_detail_view_explain"
 msgstr ""
-"You have 2 options:<br>1. You link to a page created with the Yachtino plugin.<br>This page automatically displays the correct boat.<br>2. You link to a page "
-"you created by yourself, in which you integrate the detailed view with a shortcode. Here you have to ensure that the boot ID from the URL is passed to the "
-"shortcode."
+"Vous avez 2 options :<br>1. Vous pointez vers un lien créé avec le plugin Yachtino, qui affiche automatiquement le bon bateau.<br>2. Vous pointez vers une page "
+"que vous avez créée vous-même, dans laquelle vous intégrez la vue détaillée à l’aide d’un shortcode. Assurez-vous que la référence du bateau située dans l’URL "
+"soit transmise au shortcode."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/includes/class-yachtino-admin.php
 msgid "Wp_optional_attributes_list"
-msgstr "The \"criteria\" attribute is optional, you can use it to pass additional search criteria."
+msgstr "L’attribut \"critères\" est facultatif, vous pouvez l’utiliser pour ajouter des critères de recherche supplémentaires."
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Plugin_page"
-msgstr "Plugin page"
+msgstr "Page du plugin"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Self_created_page"
-msgstr "Self-created page"
+msgstr "Page créée par l’utilisateur"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "WP_headline_explain"
-msgstr "Show heading (H1), even if integrated with shortcode"
+msgstr "Afficher le titre (H1), même s’il est intégré avec un shortcode"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "General_information"
-msgstr "General information"
+msgstr "Informations générales"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Number_of_found_boats"
-msgstr "Number of found boats"
+msgstr "Nombre de bateaux trouvés"
 
 #: test-install/wp-content/plugins/yachtino-boat-listing/templates/admin/incl-edit-module.html
 msgid "Number_of_found_boats_explain"
-msgstr "Show the number of search results, e.g. \"25 boats found\"."
+msgstr "Afficher le nombre de résultats de la recherche, par exemple \"25 bateaux trouvés\"."

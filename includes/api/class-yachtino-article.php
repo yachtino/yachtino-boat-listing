@@ -501,6 +501,11 @@ class Yachtino_Article
 
         $this->output->vatPaid = $this->advert->saleData->vatPaid;
 
+        if ($this->itemType == 'sboat') {
+            $this->output->auction = $this->advert->saleData->auction;
+            $this->output->sharing = $this->advert->saleData->sharing;
+        }
+
         if ($this->pageType == 'list') {
             return;
         }
@@ -512,6 +517,14 @@ class Yachtino_Article
         ];
 
         $addToPrice = [];
+        if ($this->itemType == 'sboat') {
+            if ($this->advert->saleData->auction) {
+                $addToPrice[] = '<b class="yachtino-color-red">' . $this->advert->saleData->auction . '</b>';
+            }
+            if ($this->advert->saleData->sharing) {
+                $addToPrice[] = $this->advert->saleData->sharing;
+            }
+        }
         if ($this->advert->saleData->vatPaid) {
             $addToPrice[] = $this->advert->saleData->vatPaid;
         }
