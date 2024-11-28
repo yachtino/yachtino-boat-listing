@@ -3,7 +3,7 @@
  * Plugin Name:       Yachtino boat listing
  * Plugin URI:        https://update.yachtino.com/wordpress-plugin
  * Description:       Display your boats and yachts for sale from yachtall.com or yacht charter offers from happycharter.com in your own website.
- * Version:           1.5.5
+ * Version:           1.5.7
  * Requires at least: 6.0
  * Rquires PHP:       8.0
  * Author:            Yachtino GmbH
@@ -22,7 +22,7 @@ if (!defined('WPINC')) {
 /**
  * Current plugin version.
  */
-define('YACHTINO_VERSION', '1.5.5');
+define('YACHTINO_VERSION', '1.5.7');
 define('YACHTINO_MIN_PHP_VERSION', '8.0');
 define('YACHTINO_MIN_WP_VERSION', '6.0');
 define('YACHTINO_DIR_PATH', __DIR__); // NO trailing slash

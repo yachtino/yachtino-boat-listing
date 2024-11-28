@@ -793,7 +793,8 @@ class Yachtino_Api
     public static function possible_criteria(string $itemType): array
     {
         // IMPORTANT!!!!
-        // If you change the ordering of the params here -> also change in assets/js/origin/yachtino-public-raw.js
+        // If you change the ordering of the params here -> also change in
+        // assets/js/origin/yachtino-public-raw.js -> post_filter_options()
         if ($itemType == 'cboat' || $itemType == 'sboat') {
             $output = [
                 'btid'   => true, // boat type (sailboat, motorboat, inflatable, small boat, jet ski / gadgets)

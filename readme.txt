@@ -2,8 +2,8 @@
 Contributors: yachtino
 Tags: boats, yachts, yachting, yachtcharter, yachtall, happycharter, sale, brokerage, boating, charter, listing, yacht-charter
 Requires at least: 6.0
-Tested up to: 6.4
-Stable tag: 1.5.5
+Tested up to: 6.7
+Stable tag: 1.5.7
 Requires PHP: 8.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -27,6 +27,14 @@ You need to have an account on yachtall.com or happycharter.com to use this plug
 * That's it!
 
 == Changelog ==
+
+= 1.5.7 =
+28 November 2024
+Fixed: Searching boats for boat manufacturer
+
+= 1.5.6 =
+17 June 2024
+Fixed: Security lack for form sending for boat insurance/financing
 
 = 1.5.5 =
 19 January 2024

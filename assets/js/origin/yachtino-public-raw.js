@@ -83,10 +83,10 @@ jQuery(document).ready(function () {
 
     function post_filter_options()
     {
-        /* IMPORTANT!!! copy in the same order like /includes/api/class-yachtino-api.php */
+        /* IMPORTANT!!! copy in the same order like /includes/api/class-yachtino-api.php -> possible_criteria() */
         var itemType = jQuery('#yachtino-itemtype').text();
         if (itemType == 'cboat' || itemType == 'sboat') {
-            orderingVars = ['btid', 'bcid', 'btcid', 'ct', 'provid', 'fuel', 'hmid',
+            orderingVars = ['btid', 'bcid', 'btcid', 'manfb', 'ct', 'provid', 'fuel', 'hmid',
                 'lngf', 'lngt', 'ybf', 'ybt', 'powf', 'powt', 'cabf', 'cabt', 'fly',
                 'newused', 'sprcf', 'sprct',
                 'rgww', 'tn', 'wkprcf', 'wkprct', 'daprcf', 'daprct', 'hrprcf', 'hrprct', 'beprcf', 'beprct',

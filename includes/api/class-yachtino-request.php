@@ -164,7 +164,14 @@ class Yachtino_Request
             $formData = json_decode($req, true);
             $formData = Yachtino_Library::adjustArray($formData, ['stripslashes', 'strip_tags', 'trim',]);
 
-            if (empty($formData['lg'])) {
+            if (!empty($formData['lg'])) {
+
+                // language variable does not contain language but spam values
+                if (!preg_match('/^[a-z]{2}$/', $formData['lg'])) {
+                    wp_die('Forbidden', 403);
+                }
+
+            } else {
                 $locale = determine_locale();
                 $formData['lg'] = substr($locale, 0, 2);
             }
@@ -178,6 +185,12 @@ class Yachtino_Request
         if (empty($formData['itemtype']) || empty($formData['itid'])) {
             wp_send_json($arrayResult);
             wp_die();
+        }
+        if (!preg_match('/^[csetmg][0-9]+$/', $formData['itid'])) {
+            wp_die('Forbidden', 403);
+        }
+        if (!in_array($formData['itemtype'], ['cboat', 'sboat', 'mooring', 'trailer', 'engine', 'gear'])) {
+            wp_die('Forbidden', 403);
         }
 
         // send to API
@@ -242,7 +255,14 @@ class Yachtino_Request
             $formData = json_decode($req, true);
             $formData = Yachtino_Library::adjustArray($formData, ['stripslashes', 'strip_tags', 'trim',]);
 
-            if (empty($formData['lg'])) {
+            if (!empty($formData['lg'])) {
+
+                // language variable does not contain language but spam values
+                if (!preg_match('/^[a-z]{2}$/', $formData['lg'])) {
+                    wp_die('Forbidden', 403);
+                }
+
+            } else {
                 $locale = determine_locale();
                 $formData['lg'] = substr($locale, 0, 2);
             }
@@ -256,6 +276,13 @@ class Yachtino_Request
         if (empty($formData['rtype']) || empty($formData['itid'])) {
             wp_send_json($arrayResult);
             wp_die();
+        }
+        if (!preg_match('/^[csetmg][0-9]+$/', $formData['itid'])) {
+            wp_die('Forbidden', 403);
+        }
+        if ($formData['rtype'] != 'financing' && $formData['rtype'] != 'insurance'
+        && $formData['rtype'] != 'transport') {
+            wp_die('Forbidden', 403);
         }
 
         // send to API
@@ -498,7 +525,14 @@ class Yachtino_Request
             $formData = json_decode($req, true);
             $formData = Yachtino_Library::adjustArray($formData, ['stripslashes', 'strip_tags', 'trim',]);
 
-            if (empty($formData['lg'])) {
+            if (!empty($formData['lg'])) {
+
+                // language variable does not contain language but spam values
+                if (!preg_match('/^[a-z]{2}$/', $formData['lg'])) {
+                    wp_die('Forbidden', 403);
+                }
+
+            } else {
                 $locale = determine_locale();
                 $formData['lg'] = substr($locale, 0, 2);
             }
@@ -511,6 +545,13 @@ class Yachtino_Request
         if (empty($formData['itemtype']) || empty($formData['itid']) || empty($formData['kind'])) {
             wp_send_json($arrayResult);
             wp_die();
+        }
+        if (!preg_match('/^[csetmg][0-9]+$/', $formData['itid'])) {
+            wp_die('Forbidden', 403);
+        }
+        if ($formData['rtype'] != 'financing' && $formData['rtype'] != 'insurance'
+        && $formData['rtype'] != 'transport') {
+            wp_die('Forbidden', 403);
         }
 
         // send to API
